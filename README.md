@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org)
 [![Docker](https://img.shields.io/badge/docker-compose-blue.svg)](docker/docker-compose.yml)
-
+[![GitHub stars](https://img.shields.io/github/stars/wrm3/galdr?style=social)](https://github.com/wrm3/galdr)
 ---
 
 ## Why galdr?
