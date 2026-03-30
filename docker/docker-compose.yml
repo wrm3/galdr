@@ -1,0 +1,182 @@
+# galdr - Docker Compose Configuration
+# Unified MCP Server with PostgreSQL for RAG, Research, and Video Analysis
+#
+# .env is loaded from the PROJECT ROOT (../.env). Put one .env at repo root and run:
+#   cd docker && docker compose up -d
+# To reset DB/MediaWiki and re-init with current .env: docker compose down -v && docker compose up -d
+
+name: galdr_docker
+
+services:
+  # Main MCP Server (RAG, Research, Install, Video Analysis)
+  galdr:
+    env_file:
+      - ../.env
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: galdr_docker
+    ports:
+      - "8092:8092"  # HTTP/SSE transport
+    environment:
+      # Hardcoded container-internal values (cannot come from env_file)
+      - MCP_HOST=0.0.0.0
+      - MCP_PORT=8092
+      - MCP_TRANSPORT=streamable-http
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - VIDEO_CACHE_DIR=/app/cache
+      # All other vars come from env_file (../.env) — NOT listed here to avoid
+      # Windows shell interpolation overriding .env values with empty strings.
+      # Vars sourced from env_file: POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD,
+      # OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY, MEDIAWIKI_*, GITHUB_TOKEN,
+      # PGADMIN_URL, GALDR_URL, LOG_LEVEL, GITHUB_REPO, FIRECRAWL_API_KEY,
+      # EMBEDDING_*, FRAME_INTERVAL, MAX_FRAMES, PLAYLIST_LIMIT
+      - VIDEO_FRAMES_DIR=/app/frames
+      - VIDEO_STATE_FILE=/app/data/video_state.json
+      - FRAME_INTERVAL=${FRAME_INTERVAL:-30}
+      - MAX_FRAMES=${MAX_FRAMES:-10}
+      - PLAYLIST_LIMIT=${PLAYLIST_LIMIT:-50}
+      # galdr task visualizer — set to mount path for the project to visualize
+      # Override in .env: GALDR_PROJECT_PATH=/projects/galdr
+      - GALDR_PROJECT_PATH=${GALDR_PROJECT_PATH:-/projects/galdr}
+    volumes:
+      # Persist data and logs
+      - galdr_data:/app/data
+      - galdr_logs:/app/logs
+      - galdr_research:/app/research_output
+      # Video analyzer storage
+      - video_cache:/app/cache
+      - video_frames:/app/frames
+      # galdr project for task visualizer (read-only, set GALDR_PROJECT_HOST_PATH in .env)
+      - ${GALDR_PROJECT_HOST_PATH:-G:/galdr}:/projects/galdr:ro
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8082/ || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - galdr_network
+
+  # PostgreSQL Database (for RAG with pgvector)
+  postgres:
+    env_file:
+      - ../.env
+    image: pgvector/pgvector:pg16
+    container_name: galdr_postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Initialization scripts
+      - ./init_db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5433:5432"  # External access on 5433
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-galdr} -d ${POSTGRES_DB:-rag_knowledge}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - galdr_network
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    env_file:
+      - ../.env
+    image: dpage/pgadmin4:latest
+    container_name: galdr_pgadmin
+    profiles:
+      - admin  # Only starts with: docker compose --profile admin up
+    environment:
+      # pgAdmin validates email strictly — set explicitly, do NOT use env_file passthrough
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@example.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-CHANGE_ME_strong_password}
+    ports:
+      - "8083:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - galdr_network
+
+  # MediaWiki — private knowledge base (Postgres backend, no MySQL)
+  mediawiki:
+    env_file:
+      - ../.env
+    build:
+      context: ./mediawiki
+      dockerfile: Dockerfile
+    container_name: galdr_mediawiki
+    profiles:
+      - mediawiki  # Start with: docker compose --profile mediawiki up -d
+    environment:
+      # Identity
+      - MEDIAWIKI_SITE_NAME=${MEDIAWIKI_SITE_NAME:-galdr Knowledge Base}
+      - MEDIAWIKI_SERVER=${MEDIAWIKI_SERVER:-http://localhost:8880}
+      - MEDIAWIKI_PUBLIC=${MEDIAWIKI_PUBLIC:-false}
+      # Admin account (created on first run)
+      - MEDIAWIKI_ADMIN_USER=${MEDIAWIKI_ADMIN_USER:-WikiAdmin}
+      - MEDIAWIKI_ADMIN_PASSWORD=${MEDIAWIKI_ADMIN_PASSWORD:-CHANGE_ME_before_starting}
+      - MEDIAWIKI_ADMIN_EMAIL=${MEDIAWIKI_ADMIN_EMAIL:-admin@localhost}
+      # Database (shared Postgres instance)
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER:-galdr}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-CHANGE_ME_postgres}
+      - MEDIAWIKI_DB_NAME=${MEDIAWIKI_DB_NAME:-mediawiki}
+      - MEDIAWIKI_DB_PREFIX=${MEDIAWIKI_DB_PREFIX:-mw_}
+      # Security keys — MUST be set in .env (generate: openssl rand -hex 32)
+      - MEDIAWIKI_SECRET_KEY=${MEDIAWIKI_SECRET_KEY:-CHANGE_ME_generate_with_openssl}
+      - MEDIAWIKI_UPGRADE_KEY=${MEDIAWIKI_UPGRADE_KEY:-CHANGE_ME_generate_with_openssl}
+      # Bot credentials for MCP mediawiki_* tools
+      - MEDIAWIKI_USERNAME=${MEDIAWIKI_USERNAME:-}
+      - MEDIAWIKI_PASSWORD=${MEDIAWIKI_PASSWORD:-}
+    ports:
+      - "8880:80"
+    volumes:
+      - mediawiki_images:/var/www/html/images
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost/wiki/Main_Page || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - galdr_network
+
+  # Platform Docs Crawling
+  # Firecrawl has been replaced by crawl4ai (free, open-source, host-side).
+  # Run: python scripts/platform_crawl.py --target all
+  # Or use the @g-platform-crawl command.
+  # The update_crawl_registry MCP tool records crawl results in the DB.
+
+volumes:
+  postgres_data:
+    driver: local
+  galdr_data:
+    driver: local
+  galdr_logs:
+    driver: local
+  galdr_research:
+    driver: local
+  video_cache:
+    driver: local
+  video_frames:
+    driver: local
+  mediawiki_images:
+    driver: local
+
+networks:
+  galdr_network:
+    driver: bridge

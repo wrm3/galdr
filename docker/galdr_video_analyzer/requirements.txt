@@ -1,0 +1,24 @@
+# Core MCP dependencies
+mcp>=1.0.0
+fastmcp>=0.4.0
+
+# YouTube extraction
+yt-dlp>=2024.1.0
+
+# Frame extraction and image processing
+opencv-python-headless>=4.8.0
+Pillow>=10.0.0
+
+# AI/Vision analysis
+anthropic>=0.25.0
+
+# Async utilities
+aiofiles>=23.0.0
+aiohttp>=3.9.0
+
+# Configuration
+python-dotenv>=1.0.0
+
+# HTTP transport (for Docker deployment)
+uvicorn>=0.25.0
+starlette>=0.35.0

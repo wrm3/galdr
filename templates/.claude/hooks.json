@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/session-start.ps1"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/audit.ps1"
+      }
+    ],
+    "stop": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/agent-complete.ps1"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/audit.ps1"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/validate-shell.ps1"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/audit.ps1"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/audit.ps1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/session-start.ps1"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/audit.ps1"
+      }
+    ],
+    "stop": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/agent-complete.ps1"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/audit.ps1"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/validate-shell.ps1"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/audit.ps1"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -File .cursor/hooks/audit.ps1"
+      }
+    ]
+  }
+}

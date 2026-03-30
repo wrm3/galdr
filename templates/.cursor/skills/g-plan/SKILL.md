@@ -1,0 +1,57 @@
+---
+name: g-plan
+description: Create or update .galdr/PRD.md with 27-question process, scope validation, subsystems, and phase planning.
+---
+# galdr-plan
+
+## When to Use
+@g-plan, "create plan", "define requirements", "write PRD". New projects or major feature planning.
+
+## Steps
+
+1. **Scope validation questions** (ask first, before writing anything):
+   1. Personal use / small team (2-10) / broader deployment (10+)?
+   2. Security level: minimal / standard / enhanced / enterprise?
+   3. Scalability: basic / moderate / high / enterprise?
+   4. Feature complexity: minimal / standard / feature-rich?
+   5. Integrations: standalone / basic / standard / enterprise?
+
+2. **Gather requirements** (ask 27-question framework if needed):
+   - Project context (Q1-7): problem, success, users, scale, frequency
+   - Technical (Q8-16): deployment, maintenance, security, performance, data
+   - Features (Q17-22): MVP, nice-to-have, avoid, priorities
+   - Timeline (Q23-27): drivers, delivery, constraints
+
+3. **Identify shared modules** (BEFORE writing feature sections):
+   "What logic will be needed by 2+ features/subsystems?"
+   → Plan extraction to `lib/` before implementation begins
+
+4. **Write PRD.md** at `.galdr/PRD.md`:
+   ```markdown
+   # PRD: [Project Name]
+   
+   ## 1. Product Overview
+   ### 1.1 Document Title and Version
+   ### 1.2 Product Summary
+   
+   ## 2. Goals
+   ### 2.1 Business Goals
+   ### 2.2 User Goals
+   ### 2.3 Non-Goals
+   
+   ## 3. User Personas
+   ## 4. Phases (reference TASKS.md for detail)
+   ## 5. User Experience
+   ## 6. Narrative
+   ## 7. Success Metrics
+   ## 8. Technical Considerations
+   ### 8.6 Shared Modules and Reusability
+   ## 9. Milestones & Sequencing
+   ## 10. User Stories
+   ```
+
+5. **Generate TASKS.md skeleton** with phase headers and initial tasks
+
+6. **Create SUBSYSTEMS.md** with detected/defined subsystems
+
+7. **Offer ARCHITECTURE_CONSTRAINTS.md** creation for non-negotiable constraints

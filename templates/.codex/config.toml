@@ -1,0 +1,403 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# galdr — Codex Project Configuration
+# This file configures OpenAI Codex for the galdr task management system.
+# See: https://developers.openai.com/codex/config-reference
+
+model = "gpt-5-codex"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+model_reasoning_effort = "high"
+personality = "pragmatic"
+
+[windows]
+sandbox = "elevated"
+
+[sandbox_workspace_write]
+network_access = true
+writable_roots = []
+
+[features]
+multi_agent = true
+shell_tool = true
+shell_snapshot = true
+undo = true
+
+# ---------------------------------------------------------------------------
+# MCP Servers
+# ---------------------------------------------------------------------------
+
+[mcp_servers.galdr]
+url = "http://localhost:8082/sse"
+tool_timeout_sec = 600
+startup_timeout_sec = 30
+enabled = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+enabled = true
+
+# ---------------------------------------------------------------------------
+# Skills — registered explicitly for Codex discovery
+# Codex resolves paths relative to the project root.
+# ---------------------------------------------------------------------------
+
+[[skills.config]]
+path = ".codex/skills/g-task-management"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-planning"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-qa"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-code-reviewer"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-ideas-goals"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-task-new"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-task-update"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-task-sync-check"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-plan"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-phase-add"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-phase-pivot"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-phase-sync-check"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-bug-report"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-bug-fix"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-review"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-git-commit"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-setup"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-status"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-sprint"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-workflow"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-cleanup"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-vault"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-harvest"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-knowledge-refresh"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-continual-learning"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-topology"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-inbox"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-broadcast"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-request"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-peer-sync"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-graph"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-grooming"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-goal-update"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-idea-capture"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-idea-review"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-dependency-graph"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-visualizer"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-phase-archive"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-qa-report"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-codebase-analysis"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/g-harvest"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/github-integration"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/mcp-builder"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/project-setup"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/skill-creator"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/agent-creator"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/database-standards"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/ai-ml-development"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/cloud-engineering"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/cicd-pipelines"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/kubernetes-operations"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/portainer-management"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/cursor-project-config"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/claude-code-project-config"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/cursor-cli"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/claude-cli"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/research-methodology"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/norse-mythology-reference"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/web-tools"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/web3-blockchain"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/youtube-video-analysis"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/social-media-marketing"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/business-operations"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/startup-business-formation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/startup-product-development"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/startup-resource-access"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/startup-vc-fundraising"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/nonprofit-formation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/patent-filing-ai"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/manim-animation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/remotion-video"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/storyboard-creation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/explainer-video"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/animation-principles"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/3d-performance"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/asset-optimization"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/algorithmic-art"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/animated-gif-creator"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/pipeline-validation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/ai-video-generation"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/ai-avatar-lipsync"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/video-ad-specs"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/artifacts-builder"
+enabled = true
+
+# ---------------------------------------------------------------------------
+# Agent Roles (Codex multi-agent configuration)
+# ---------------------------------------------------------------------------
+
+[agents]
+max_threads = 6
+max_depth = 2
+
+[agents.task-manager]
+description = "Manages galdr task lifecycle — creates, updates, completes tasks in .galdr/. Handles TASKS.md sync, task file creation, status transitions, and phase numbering."
+
+[agents.planner]
+description = "Creates and manages PRDs, phase definitions, scope validation, and project planning in .galdr/PLAN.md."
+
+[agents.qa-engineer]
+description = "Tracks bugs in .galdr/BUGS.md, classifies severity, documents fixes, and manages quality processes."
+
+[agents.code-reviewer]
+description = "Performs comprehensive code reviews covering security, performance, maintainability, and best practices."
+
+[agents.infrastructure]
+description = "Manages project file organization, folder structure, scope boundaries, and subsystem registry."
+
+[agents.verifier]
+description = "Verifies completed tasks by reviewing evidence of completion and cross-checking acceptance criteria. Never verifies tasks it implemented."

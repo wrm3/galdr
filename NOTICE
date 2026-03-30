@@ -1,0 +1,13 @@
+galdr - AI Development System for Cursor IDE
+Copyright 2025-2026 Warren R. Martel III. All rights reserved.
+
+This software is licensed under the MIT License. See the LICENSE file for
+the full license text.
+
+This project provides:
+- Task management system for AI-assisted development
+- Specialized AI agents for various development roles
+- Skills and commands for Cursor IDE and Claude Code
+- MCP server with RAG, research, and database tools
+
+For licensing inquiries, contact the author: Warren R. Martel III
