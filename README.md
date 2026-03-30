@@ -1,12 +1,18 @@
-# galdr
+<p align="center">
+  <img src="logo/Galdr_Logo_Big.jpg" alt="galdr banner" width="800">
+</p>
 
-> **Song magic for your codebase.** An AI-powered development system that gives your coding agents structured memory, task management, and specialized skills across every major AI IDE.
+<p align="center">
+  <strong>Song magic for your codebase.</strong> An AI-powered development system that gives your coding agents structured memory, task management, and specialized skills across every major AI IDE.
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org)
-[![Docker](https://img.shields.io/badge/docker-compose-blue.svg)](docker/docker-compose.yml)
-[![GitHub stars](https://img.shields.io/github/stars/wrm3/galdr?style=social)](https://github.com/wrm3/galdr)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.0.0-green.svg" alt="Version"></a>
+  <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
+  <a href="docker/docker-compose.yml"><img src="https://img.shields.io/badge/docker-compose-blue.svg" alt="Docker"></a>
+  <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
+</p>
 ---
 
 ## Why galdr?
