@@ -174,6 +174,53 @@ def calculate_team_score(team):
 
 ---
 
+### Step 3b: Reusability Checklist (HIGH — Check Every Review)
+
+#### Duplication Detection
+- [ ] No copy-pasted logic across files (3-strike rule: 3+ occurrences → extract)
+- [ ] Utility functions in shared modules (`lib/utils/`), not defined inline
+- [ ] Existing shared modules used where applicable (check `lib/`, `shared/`, `packages/`)
+- [ ] Magic numbers and repeated constants extracted to `lib/config/constants`
+
+#### Shared Module Quality
+- [ ] New shared modules have clear single responsibility
+- [ ] Barrel exports used for clean import paths (`index.ts` / `__init__.py`)
+- [ ] Shared modules documented (docstring/JSDoc on exported functions)
+- [ ] Shared modules have 2+ consumers (no premature abstraction)
+
+#### Folder Convention Compliance
+| Category | Expected Location |
+|---|---|
+| Utilities | `lib/utils/` or `src/lib/utils/` |
+| Services (API, DB, auth) | `lib/services/` or `src/lib/services/` |
+| Types/DTOs/Enums | `lib/types/` or `src/lib/types/` |
+| Config/Constants | `lib/config/` or `src/lib/config/` |
+| Shared UI Components | `components/shared/` or `lib/components/` |
+| Hooks (React/framework) | `lib/hooks/` or `src/lib/hooks/` |
+
+#### Anti-Patterns to Flag
+```
+❌ Copy-pasted logic across files → extract to lib/utils/
+❌ Inline utility in component/route → move to lib/utils/
+❌ Fat class/component mixing concerns → decompose into composable units
+❌ Hardcoded values repeated across files → extract to lib/config/constants
+❌ Re-implementing stdlib (custom date parsing, string helpers) → use standard library
+❌ Functions > 30 lines with extractable sub-logic → decompose
+❌ Files importing 0 shared modules → review for reinvention
+```
+
+#### Reusability in Review Output
+Add a **🟢 Reusability** section to every review report:
+```markdown
+## 🟢 Reusability
+- [Logic] duplicated in [file1] and [file2] → extract to lib/utils/
+- [Constant] hardcoded in N files → move to lib/config/constants
+- [Function] is inline utility → move to lib/utils/[name]
+- ✅ Shared modules used appropriately (no issues found)
+```
+
+---
+
 ### Step 4: Style and Conventions
 
 #### Naming Conventions
