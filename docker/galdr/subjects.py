@@ -106,22 +106,16 @@ class SubjectManager:
                 "work_knowledge": {
                     "display_name": "Work Knowledge",
                     "description": "Work-related documents, processes, and standards",
-                    "database": "rag_work_knowledge",
+                    "database": os.getenv("POSTGRES_DB", "knowledge_base"),
                     "aliases": ["work", "wk", "docs"],
                     "is_default": True
-                },
-                "ai_coding": {
-                    "display_name": "AI & Coding",
-                    "description": "AI-related information, coding tutorials, development knowledge",
-                    "database": "rag_ai_coding",
-                    "aliases": ["ai", "coding", "programming", "dev", "development"]
                 }
             },
             "connection": {
-                "host": "localhost",
-                "port": 5432,
-                "user": "postgres",
-                "password": "postgres"
+                "host": os.getenv("POSTGRES_HOST", "localhost"),
+                "port": int(os.getenv("POSTGRES_PORT", "5432")),
+                "user": os.getenv("POSTGRES_USER", "knowledge_base"),
+                "password": os.getenv("POSTGRES_PASSWORD", "knowledge_base")
             }
         }
 
@@ -314,11 +308,11 @@ class SubjectManager:
             subject = self.get_default_subject()
 
         return {
-            'host': self._connection_config.get('host', 'localhost'),
-            'port': self._connection_config.get('port', 5432),
-            'user': self._connection_config.get('user', 'postgres'),
-            'password': self._connection_config.get('password', 'postgres'),
-            'database': subject.database if subject else 'rag_work_knowledge'
+            'host': self._connection_config.get('host') or os.getenv('POSTGRES_HOST', 'localhost'),
+            'port': self._connection_config.get('port') or int(os.getenv('POSTGRES_PORT', '5432')),
+            'user': self._connection_config.get('user') or os.getenv('POSTGRES_USER', 'knowledge_base'),
+            'password': self._connection_config.get('password') or os.getenv('POSTGRES_PASSWORD', 'knowledge_base'),
+            'database': subject.database if subject else os.getenv('POSTGRES_DB', 'knowledge_base')
         }
 
     def get_connection(self, subject_identifier: Optional[str] = None):
@@ -349,11 +343,12 @@ class SubjectManager:
 
     def _create_database(self, database_name: str) -> None:
         """Create a new PostgreSQL database with pgvector extension."""
+        cfg = self.get_connection_config()
         conn = psycopg2.connect(
-            host=self._connection_config.get('host', 'localhost'),
-            port=self._connection_config.get('port', 5432),
-            user=self._connection_config.get('user', 'postgres'),
-            password=self._connection_config.get('password', 'postgres'),
+            host=cfg['host'],
+            port=cfg['port'],
+            user=cfg['user'],
+            password=cfg['password'],
             database='postgres'
         )
         conn.autocommit = True
@@ -373,10 +368,10 @@ class SubjectManager:
             conn.close()
 
         new_conn = psycopg2.connect(
-            host=self._connection_config.get('host', 'localhost'),
-            port=self._connection_config.get('port', 5432),
-            user=self._connection_config.get('user', 'postgres'),
-            password=self._connection_config.get('password', 'postgres'),
+            host=cfg['host'],
+            port=cfg['port'],
+            user=cfg['user'],
+            password=cfg['password'],
             database=database_name
         )
         new_conn.autocommit = True
@@ -441,11 +436,12 @@ class SubjectManager:
 
     def _drop_database(self, database_name: str) -> None:
         """Drop a PostgreSQL database (DANGEROUS!)."""
+        cfg = self.get_connection_config()
         conn = psycopg2.connect(
-            host=self._connection_config.get('host', 'localhost'),
-            port=self._connection_config.get('port', 5432),
-            user=self._connection_config.get('user', 'postgres'),
-            password=self._connection_config.get('password', 'postgres'),
+            host=cfg['host'],
+            port=cfg['port'],
+            user=cfg['user'],
+            password=cfg['password'],
             database='postgres'
         )
         conn.autocommit = True

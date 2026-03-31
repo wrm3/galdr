@@ -14,6 +14,23 @@
 /.cursor/
 /.opencode/
 
+# ============================================================
+# Project-local personality & fandom (NOT synced, NOT propagated)
+# These are opt-in per-project. galdr ships norse_personality by default.
+# Projects can swap in their own personality rule + fandom skill.
+# Listed here so they exist in the working tree but never hit git.
+# ============================================================
+# Personality rules (only one active at a time; norse is the default)
+.cursor/rules/silicon_valley_personality.mdc
+.claude/rules/silicon_valley_personality.md
+.agent/rules/silicon_valley_personality.md
+.codex/rules/silicon_valley_personality.md
+# Fandom skills
+.cursor/skills/silicon-valley-superfan/
+.claude/skills/silicon-valley-superfan/
+.agent/skills/silicon-valley-superfan/
+.codex/skills/silicon-valley-superfan/
+
 # galdr project data (live project state, not template)
 /.galdr/
 
@@ -29,7 +46,6 @@
 # Cursor/IDE machine-specific
 /.mcp.json
 /.cursorignore
-/.dockerignore
 
 # ============================================================
 # Environment and secrets

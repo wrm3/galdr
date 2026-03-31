@@ -176,8 +176,18 @@ if (Test-Path $fallbackFile) {
     } catch {}
 }
 
-# ── Memory Context Retrieval ─────────────────────────────────────────────────
+# ── .project_id auto-heal ────────────────────────────────────────────────────
 $projectIdFile = ".galdr/.project_id"
+if (Test-Path $projectIdFile) {
+    $projectId = (Get-Content $projectIdFile -Raw).Trim()
+    $uuidPattern = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+    if (-not ($projectId -match $uuidPattern)) {
+        $projectId = [guid]::NewGuid().ToString()
+        try { Set-Content -Path $projectIdFile -Value $projectId -Encoding UTF8 } catch {}
+    }
+}
+
+# ── Memory Context Retrieval ─────────────────────────────────────────────────
 if (Test-Path $projectIdFile) {
     $projectId = (Get-Content $projectIdFile -Raw).Trim()
     if ($projectId -ne "" -and $projectId -ne "{GENERATED_ON_INSTALL}") {

@@ -55,7 +55,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8082/ || exit 0"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:8092/admin/db || exit 0"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -72,12 +72,10 @@ services:
     container_name: galdr_postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # Initialization scripts
-      - ./init_db:/docker-entrypoint-initdb.d:ro
     ports:
       - "5433:5432"  # External access on 5433
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-galdr} -d ${POSTGRES_DB:-rag_knowledge}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-knowledge_base} -d ${POSTGRES_DB:-knowledge_base}"]
       interval: 10s
       timeout: 5s
       retries: 5

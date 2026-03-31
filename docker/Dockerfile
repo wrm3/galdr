@@ -15,6 +15,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    postgresql-client \
     curl \
     git \
     unzip \
@@ -55,6 +56,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir crawl4ai && \
     python -m crawl4ai.install || true
 
+# Copy DB init scripts (run at startup if schema is missing)
+COPY docker/init_db/*.sql ./init_db/
+
 # Copy application code
 COPY docker/galdr/ ./galdr/
 
@@ -73,9 +77,12 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV LOG_LEVEL=INFO
 
-# Expose port for HTTP/SSE transport
-EXPOSE 8082
+# Copy entrypoint (runs DB init if schema missing, then starts server)
+COPY docker/entrypoint.sh ./entrypoint.sh
+RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh
 
-# Default command - stdio transport (for IDE integration)
-# Override with docker run command for HTTP transport
-CMD ["python", "-m", "galdr.server"]
+# Expose port for HTTP/SSE transport
+EXPOSE 8092
+
+# Entrypoint: init DB schema if needed, then start MCP server
+ENTRYPOINT ["./entrypoint.sh"]

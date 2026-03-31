@@ -138,25 +138,37 @@ async def execute(
     merge_note = f" Merged: {list(existing_files.keys())}." if existing_files else ''
     skip_note = f" Preserved (skipped): {skip_files}." if skip_files else ''
 
-    # Post-install: generate .project_id, set .vault_location to local default
-    project_name = target_path.replace('\\', '/').rstrip('/').split('/')[-1].lower().replace(' ', '-')[:20]
+    # Post-install: generate .project_id (UUID), resolve .user_id, set .vault_location
+    # .project_id: UUID4 — matches g-grooming, g-setup, and g-memory expectations
+    # .user_id: read from %APPDATA%/galdr/user_config.json first, then {SETUP_NEEDED}
     post_install_ps = (
-        f"$hash = (python -c \"import hashlib; print(hashlib.sha256(r'{target_path}'.encode()).hexdigest()[:8])\") 2>$null; "
-        f"if (-not $hash) {{ $hash = (Get-Random -Maximum 99999999).ToString('x8') }}; "
-        f"$projId = 'proj-{project_name}-' + $hash; "
-        f"Set-Content -Path '{target_path}\\.galdr\\.project_id' -Value $projId; "
+        f"$projId = [guid]::NewGuid().ToString(); "
+        f"Set-Content -Path '{target_path}\\.galdr\\.project_id' -Value $projId -Encoding UTF8; "
         f"Write-Host \"Project ID: $projId\"; "
         f"$vaultLoc = '{target_path}\\.galdr\\.vault_location'; "
-        f"if (-not (Test-Path $vaultLoc)) {{ Set-Content -Path $vaultLoc -Value '{{LOCAL}}' }}; "
-        f"$userId = '{target_path}\\.galdr\\.user_id'; "
-        f"if (-not (Test-Path $userId)) {{ Set-Content -Path $userId -Value '{{SETUP_NEEDED}}' }}"
+        f"if (-not (Test-Path $vaultLoc)) {{ Set-Content -Path $vaultLoc -Value '{{LOCAL}}' -Encoding UTF8 }}; "
+        f"$userIdFile = '{target_path}\\.galdr\\.user_id'; "
+        f"if (-not (Test-Path $userIdFile)) {{ "
+        f"$resolved = $null; "
+        f"$appCfg = if ($env:APPDATA) {{ Join-Path $env:APPDATA 'galdr\\user_config.json' }} else {{ Join-Path $env:HOME '.config/galdr/user_config.json' }}; "
+        f"if (Test-Path $appCfg) {{ try {{ $cfg = Get-Content $appCfg -Raw | ConvertFrom-Json; if ($cfg.user_id -and $cfg.user_id -ne 'SETUP_NEEDED') {{ $resolved = $cfg.user_id }} }} catch {{}} }}; "
+        f"if ($resolved) {{ Set-Content -Path $userIdFile -Value $resolved -Encoding UTF8; Write-Host \"User ID: $resolved (from global config)\" }} "
+        f"else {{ Set-Content -Path $userIdFile -Value '{{SETUP_NEEDED}}' -Encoding UTF8; Write-Host 'User ID: {{SETUP_NEEDED}} — run session-start hook or edit .galdr/.user_id' }} "
+        f"}}"
     )
     post_install_bash = (
-        f"hash=$(python3 -c \"import hashlib; print(hashlib.sha256('{target_path}'.encode()).hexdigest()[:8])\"); "
-        f"echo \"proj-{project_name}-$hash\" > '{target_path}/.galdr/.project_id'; "
-        f"echo \"Project ID: proj-{project_name}-$hash\"; "
+        f"projId=$(python3 -c \"import uuid; print(uuid.uuid4())\"); "
+        f"echo \"$projId\" > '{target_path}/.galdr/.project_id'; "
+        f"echo \"Project ID: $projId\"; "
         f"[ -f '{target_path}/.galdr/.vault_location' ] || echo '{{LOCAL}}' > '{target_path}/.galdr/.vault_location'; "
-        f"[ -f '{target_path}/.galdr/.user_id' ] || echo '{{SETUP_NEEDED}}' > '{target_path}/.galdr/.user_id'"
+        f"userIdFile='{target_path}/.galdr/.user_id'; "
+        f"if [ ! -f \"$userIdFile\" ]; then "
+        f"resolved=''; "
+        f"cfgFile=\"${{XDG_CONFIG_HOME:-$HOME/.config}}/galdr/user_config.json\"; "
+        f"if [ -f \"$cfgFile\" ]; then resolved=$(python3 -c \"import json; c=json.load(open('$cfgFile')); uid=c.get('user_id',''); print(uid if uid and uid != 'SETUP_NEEDED' else '')\" 2>/dev/null); fi; "
+        f"if [ -n \"$resolved\" ]; then echo \"$resolved\" > \"$userIdFile\"; echo \"User ID: $resolved (from global config)\"; "
+        f"else echo '{{SETUP_NEEDED}}' > \"$userIdFile\"; echo 'User ID: {{SETUP_NEEDED}} — edit .galdr/.user_id'; fi; "
+        f"fi"
     )
 
     return {

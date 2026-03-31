@@ -40,7 +40,7 @@ import shutil
 import logging
 from pathlib import Path
 
-from ._GALDR_shared import (
+from ._galdr_shared import (
     get_github_token,
     get_github_repo,
     get_os_info,
