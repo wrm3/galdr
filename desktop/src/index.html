@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>galdr</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 420px;
+      padding: 2rem;
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #58a6ff, #bc8cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+
+    .status {
+      font-size: 1.1rem;
+      color: #8b949e;
+      margin-bottom: 2rem;
+      min-height: 1.4em;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #21262d;
+      border-top-color: #58a6ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 2rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error {
+      display: none;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .error h3 {
+      color: #f85149;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .error code {
+      display: block;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.85rem;
+      color: #79c0ff;
+      margin: 0.4rem 0;
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+
+    .error p {
+      font-size: 0.85rem;
+      color: #8b949e;
+      line-height: 1.5;
+    }
+
+    .retry-btn {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.5rem 1.25rem;
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+
+    .retry-btn:hover { background: #30363d; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">galdr</div>
+    <div class="spinner" id="spinner"></div>
+    <div class="status" id="status">Connecting to galdr server&hellip;</div>
+
+    <div class="error" id="error">
+      <h3>Server not running</h3>
+      <p>The galdr Docker container doesn't appear to be running. Start it with:</p>
+      <code>cd docker &amp;&amp; docker compose up -d</code>
+      <p>Then wait a few seconds for the server to initialize.</p>
+    </div>
+
+    <button class="retry-btn" id="retryBtn" onclick="startPolling()">Retry Connection</button>
+  </div>
+
+  <script>
+    const SERVER_URL = 'http://localhost:8092';
+    const STATUS_ENDPOINT = SERVER_URL + '/api/status';
+    const REDIRECT_URL = SERVER_URL + '/static/index.html';
+    const POLL_INTERVAL_MS = 3000;
+    const TIMEOUT_MS = 30000;
+
+    let pollTimer = null;
+    let startTime = 0;
+
+    async function checkServer() {
+      try {
+        const resp = await fetch(STATUS_ENDPOINT, {
+          method: 'GET',
+          signal: AbortSignal.timeout(4000),
+        });
+        if (resp.ok) {
+          clearInterval(pollTimer);
+          document.getElementById('status').textContent = 'Connected — loading galdr\u2026';
+          window.location.href = REDIRECT_URL;
+          return;
+        }
+      } catch (_) { /* server not ready */ }
+
+      if (Date.now() - startTime > TIMEOUT_MS) {
+        clearInterval(pollTimer);
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('status').textContent = '';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('retryBtn').style.display = 'inline-block';
+      }
+    }
+
+    function startPolling() {
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('status').textContent = 'Connecting to galdr server\u2026';
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('retryBtn').style.display = 'none';
+      startTime = Date.now();
+      clearInterval(pollTimer);
+      checkServer();
+      pollTimer = setInterval(checkServer, POLL_INTERVAL_MS);
+    }
+
+    startPolling();
+  </script>
+</body>
+</html>

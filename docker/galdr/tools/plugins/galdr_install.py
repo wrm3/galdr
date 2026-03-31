@@ -77,7 +77,7 @@ async def execute(
 ) -> dict:
     """Return a shell command that downloads and installs galdr into target_path."""
     cfg = (context or {}).get('config', _config or {})
-    GALDR_url = cfg.get('GALDR_url', 'http://localhost:8082').rstrip('/')
+    GALDR_url = cfg.get('GALDR_url', 'http://localhost:8092').rstrip('/')
     endpoint = f"{GALDR_url}/install/download"
 
     if skip_files is None:

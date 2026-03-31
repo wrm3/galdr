@@ -1,0 +1,66 @@
+<div class="page-sessions">
+<style>
+.page-sessions { padding: 20px; }
+.page-sessions h1 { color: #38bdf8; font-size: 16px; margin-bottom: 16px; }
+.page-sessions .input-bar { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+.page-sessions .input-bar label { color: #64748b; font-size: 12px; }
+.page-sessions .input-bar input { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; padding: 6px 12px;
+  border-radius: 4px; font-family: monospace; font-size: 13px; width: 300px; }
+.page-sessions .input-bar button { background: #1e40af; color: #e2e8f0; border: none; padding: 6px 14px;
+  border-radius: 3px; cursor: pointer; font-size: 12px; font-family: monospace; }
+.page-sessions .input-bar button:hover { background: #1d4ed8; }
+.page-sessions .meta { color: #64748b; font-size: 11px; margin-bottom: 20px; }
+.page-sessions .session { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 10px 14px; margin-bottom: 8px; }
+.page-sessions .sess-id { color: #64748b; font-size: 10px; }
+.page-sessions .sess-summary { color: #94a3b8; font-size: 11px; margin-top: 4px; }
+.page-sessions .sess-meta { color: #475569; font-size: 10px; margin-top: 3px; }
+.page-sessions .badge { font-size: 9px; padding: 1px 5px; border-radius: 2px; background: #0c4a6e; color: #7dd3fc; margin-left: 4px; }
+.page-sessions .empty { color: #334155; padding: 40px; text-align: center; }
+</style>
+
+<h1>&#9670; User Sessions</h1>
+<div class="input-bar">
+  <label>User ID:</label>
+  <input id="sess-user-id" type="text" placeholder="Enter user_id…"
+    onkeydown="if(event.key==='Enter')sessLoad()">
+  <button onclick="sessLoad()">Load Sessions</button>
+</div>
+<div class="meta" id="sess-meta"></div>
+<div id="sess-list"><div class="empty">Enter a user_id above and click Load Sessions</div></div>
+
+<script>
+(function() {
+'use strict';
+
+window.sessLoad = async function() {
+  const uid = document.getElementById('sess-user-id').value.trim();
+  if (!uid) return;
+  const container = document.getElementById('sess-list');
+  const meta = document.getElementById('sess-meta');
+  container.innerHTML = '<div class="empty">Loading…</div>';
+  meta.textContent = 'user_id: ' + uid;
+
+  try {
+    const r = await fetch('/users/' + encodeURIComponent(uid) + '/sessions/data');
+    const d = await r.json();
+    if (!d.sessions || !d.sessions.length) {
+      container.innerHTML = '<div class="empty">No sessions found</div>';
+      return;
+    }
+    container.innerHTML = d.sessions.map(s => {
+      const ts = s.ended_at ? s.ended_at.slice(0, 16) : 'ongoing';
+      return '<div class="session"><span class="sess-id">' + (s.conversation_id || '?') + '</span>' +
+        '<span class="badge">' + (s.platform || '?') + '</span>' +
+        '<span class="badge">' + (s.capture_tier || '?') + '</span>' +
+        '<div class="sess-summary">' + (s.session_summary || '(no summary)') + '</div>' +
+        '<div class="sess-meta">' + ts + ' · ' + (s.turn_count || 0) + ' turns · ' + (s.project_name || '') + '</div></div>';
+    }).join('');
+  } catch (e) {
+    container.innerHTML = '<div class="empty" style="color:#f87171">' + e.message + '</div>';
+  }
+};
+
+window.pageInit = function() {};
+})();
+</script>
+</div>

@@ -1,0 +1,267 @@
+<div class="page-heartbeat">
+<style>
+.page-heartbeat { padding: 0; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.page-heartbeat .hb-body { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+.page-heartbeat .status-bar {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 14px 16px; background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.page-heartbeat .status-bar .enabled-badge {
+  font-size: 13px; font-weight: 700; padding: 4px 14px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: .6px;
+}
+.page-heartbeat .enabled-badge.on  { background: rgba(74,222,128,.15); color: var(--accent-green); }
+.page-heartbeat .enabled-badge.off { background: rgba(248,113,113,.15); color: var(--accent-red); }
+
+.page-heartbeat .budget-block { display: flex; flex-direction: column; gap: 4px; min-width: 180px; }
+.page-heartbeat .budget-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.page-heartbeat .budget-nums  { font-size: 12px; color: var(--text-primary); }
+
+.page-heartbeat .meta-item { display: flex; flex-direction: column; gap: 2px; }
+.page-heartbeat .meta-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.page-heartbeat .meta-value { font-size: 12px; color: var(--text-primary); }
+
+.page-heartbeat .trigger-btn {
+  background: rgba(56,189,248,.12); border: 1px solid var(--accent); color: var(--accent);
+  padding: 3px 10px; border-radius: var(--radius); cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  transition: background .15s;
+}
+.page-heartbeat .trigger-btn:hover { background: rgba(56,189,248,.25); }
+.page-heartbeat .trigger-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.page-heartbeat .toggle-enabled {
+  display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 600;
+  border-radius: 3px; text-transform: uppercase; letter-spacing: .4px; cursor: default;
+}
+.page-heartbeat .toggle-enabled.on  { background: rgba(74,222,128,.15); color: var(--accent-green); }
+.page-heartbeat .toggle-enabled.off { background: var(--bg-elevated); color: var(--text-muted); }
+
+.page-heartbeat .expand-row { display: none; }
+.page-heartbeat .expand-row.open { display: table-row; }
+.page-heartbeat .expand-row td {
+  padding: 8px 12px; background: var(--bg-base); white-space: pre-wrap;
+  font-size: 11px; color: var(--text-secondary); line-height: 1.6;
+  max-width: none; overflow: visible;
+}
+
+.page-heartbeat .toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  padding: 10px 18px; border-radius: var(--radius); font-size: 12px;
+  font-family: var(--font-mono); box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.page-heartbeat .toast.show { opacity: 1; transform: translateY(0); }
+.page-heartbeat .toast.success { background: rgba(74,222,128,.2); border: 1px solid var(--accent-green); color: var(--accent-green); }
+.page-heartbeat .toast.error   { background: rgba(248,113,113,.2); border: 1px solid var(--accent-red); color: var(--accent-red); }
+
+.page-heartbeat .load-more-row { text-align: center; padding: 12px; }
+</style>
+
+<div class="page-header">
+  <h1>Heartbeat</h1>
+  <span class="subtitle">Autonomous scheduler</span>
+</div>
+
+<div class="hb-body">
+  <div class="status-bar" id="hb-status">
+    <div class="spinner"></div>
+    <span class="text-muted">Loading status…</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Routines</div>
+    <div class="card-body" style="padding:0; overflow-x:auto;" id="hb-routines">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span>Run History</span>
+      <span class="text-xs text-muted" id="hb-history-count"></span>
+    </div>
+    <div class="card-body" style="padding:0; overflow-x:auto;" id="hb-history">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="hb-toast"></div>
+
+<script>
+(function() {
+'use strict';
+
+let historyOffset = 0;
+const HISTORY_LIMIT = 20;
+let historyTotal = 0;
+
+function showToast(msg, type) {
+  const el = document.getElementById('hb-toast');
+  el.textContent = msg;
+  el.className = 'toast ' + type + ' show';
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function renderStatus(d) {
+  const on = d.enabled;
+  const pct = d.budget_limit > 0 ? Math.min(100, (d.budget_spent / d.budget_limit) * 100) : 0;
+  const budgetColor = pct > 80 ? 'var(--accent-red)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent)';
+
+  document.getElementById('hb-status').innerHTML =
+    '<span class="enabled-badge ' + (on ? 'on' : 'off') + '">' + (on ? 'Enabled' : 'Disabled') + '</span>' +
+    '<div class="budget-block">' +
+      '<span class="budget-label">Budget</span>' +
+      '<span class="budget-nums">$' + (d.budget_spent || 0).toFixed(2) + ' / $' + (d.budget_limit || 0).toFixed(2) + ' spent</span>' +
+      '<div class="progress-bar" style="width:180px">' +
+        '<div class="progress-fill" style="width:' + pct.toFixed(1) + '%;background:' + budgetColor + '"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="meta-item"><span class="meta-label">Last Run</span><span class="meta-value">' + (d.last_run ? timeAgo(d.last_run) : 'Never') + '</span></div>' +
+    '<div class="meta-item"><span class="meta-label">Next Scheduled</span><span class="meta-value">' + (d.next_scheduled || 'N/A') + '</span></div>' +
+    '<div class="meta-item"><span class="meta-label">Routines</span><span class="meta-value">' + (d.routines_count || 0) + '</span></div>';
+}
+
+function renderRoutines(routines) {
+  const container = document.getElementById('hb-routines');
+  if (!routines || !routines.length) {
+    container.innerHTML = '<div class="empty-state"><span class="icon">∅</span><span>No routines configured</span></div>';
+    return;
+  }
+  let html = '<table><thead><tr>' +
+    '<th>Name</th><th>Schedule</th><th>Agent</th><th>Skill</th><th>Enabled</th><th>Actions</th>' +
+    '</tr></thead><tbody>';
+  for (const r of routines) {
+    const eid = 'hb-trig-' + r.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+    html += '<tr>' +
+      '<td style="font-weight:600">' + escHtml(r.name) + '</td>' +
+      '<td>' + escHtml(formatCron(r.schedule)) + '</td>' +
+      '<td>' + escHtml(r.agent || '—') + '</td>' +
+      '<td>' + escHtml(r.skill || '—') + '</td>' +
+      '<td><span class="toggle-enabled ' + (r.enabled ? 'on' : 'off') + '">' + (r.enabled ? 'On' : 'Off') + '</span></td>' +
+      '<td><button class="trigger-btn" id="' + eid + '" onclick="hbTrigger(\'' + escHtml(r.name) + '\',\'' + eid + '\')">Trigger</button></td>' +
+      '</tr>';
+  }
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function renderHistory(runs, append) {
+  const container = document.getElementById('hb-history');
+  if (!runs.length && !append) {
+    container.innerHTML = '<div class="empty-state"><span class="icon">∅</span><span>No run history</span></div>';
+    return;
+  }
+
+  let tbody;
+  if (append) {
+    tbody = container.querySelector('tbody');
+    const loadRow = container.querySelector('.load-more-row');
+    if (loadRow) loadRow.closest('tr').remove();
+  } else {
+    container.innerHTML = '<table><thead><tr>' +
+      '<th></th><th>Timestamp</th><th>Routine</th><th>Duration</th><th>Status</th><th>Cost</th>' +
+      '</tr></thead><tbody></tbody></table>';
+    tbody = container.querySelector('tbody');
+  }
+
+  for (const run of runs) {
+    const rowId = 'hb-run-' + historyOffset + '-' + Math.random().toString(36).slice(2, 6);
+    const dur = run.duration_ms != null ? (run.duration_ms / 1000).toFixed(1) + 's' : '—';
+    const cost = run.budget_cost != null ? '$' + run.budget_cost.toFixed(4) : '—';
+    const hasLog = run.log_excerpt && run.log_excerpt.trim();
+
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="width:24px;text-align:center;cursor:' + (hasLog ? 'pointer' : 'default') + ';color:var(--text-muted)"' +
+        (hasLog ? ' onclick="hbToggleLog(\'' + rowId + '\')"' : '') + '>' +
+        (hasLog ? '▸' : '') + '</td>' +
+      '<td>' + escHtml(run.timestamp || '') + '</td>' +
+      '<td style="font-weight:600">' + escHtml(run.routine || '') + '</td>' +
+      '<td>' + dur + '</td>' +
+      '<td>' + statusBadge(run.status) + '</td>' +
+      '<td>' + cost + '</td>';
+    tbody.appendChild(tr);
+
+    if (hasLog) {
+      const expandTr = document.createElement('tr');
+      expandTr.className = 'expand-row';
+      expandTr.id = rowId;
+      expandTr.innerHTML = '<td></td><td colspan="5">' + escHtml(run.log_excerpt) + '</td>';
+      tbody.appendChild(expandTr);
+    }
+  }
+
+  if (historyOffset + HISTORY_LIMIT < historyTotal) {
+    const ltr = document.createElement('tr');
+    ltr.innerHTML = '<td colspan="6" class="load-more-row">' +
+      '<button class="btn btn-sm" onclick="hbLoadMore()">Load More (' + (historyTotal - historyOffset - HISTORY_LIMIT) + ' remaining)</button>' +
+      '</td>';
+    tbody.appendChild(ltr);
+  }
+}
+
+window.hbToggleLog = function(id) {
+  const row = document.getElementById(id);
+  if (!row) return;
+  row.classList.toggle('open');
+  const arrow = row.previousElementSibling.querySelector('td');
+  if (arrow) arrow.textContent = row.classList.contains('open') ? '▾' : '▸';
+};
+
+window.hbTrigger = async function(name, btnId) {
+  const btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    const res = await api('/api/heartbeat/trigger', {
+      method: 'POST',
+      body: JSON.stringify({ routine: name }),
+    });
+    showToast(res.message || ('Triggered ' + name), 'success');
+  } catch (e) {
+    showToast('Failed: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Trigger'; }
+  }
+};
+
+window.hbLoadMore = async function() {
+  historyOffset += HISTORY_LIMIT;
+  try {
+    const h = await api('/api/heartbeat/history?limit=' + HISTORY_LIMIT + '&offset=' + historyOffset);
+    historyTotal = h.total || 0;
+    document.getElementById('hb-history-count').textContent = historyTotal + ' total runs';
+    renderHistory(h.runs || [], true);
+  } catch (e) {
+    showToast('Failed to load history: ' + e.message, 'error');
+  }
+};
+
+async function init() {
+  try {
+    const [status, routines, history] = await Promise.all([
+      api('/api/status/heartbeat'),
+      api('/api/heartbeat/routines'),
+      api('/api/heartbeat/history?limit=' + HISTORY_LIMIT + '&offset=0'),
+    ]);
+    renderStatus(status);
+    renderRoutines(routines);
+    historyTotal = history.total || 0;
+    document.getElementById('hb-history-count').textContent = historyTotal + ' total runs';
+    renderHistory(history.runs || [], false);
+  } catch (e) {
+    document.getElementById('hb-status').innerHTML =
+      '<span class="text-red">Failed to load: ' + escHtml(e.message) + '</span>';
+  }
+}
+
+window.pageInit = init;
+init();
+})();
+</script>
+</div>

@@ -68,6 +68,7 @@ from .memory_rest import MEMORY_ROUTES, init_memory_rest
 from .admin_db_rest import ADMIN_ROUTES, init_admin_db
 from .install_rest import INSTALL_ROUTES, init_install_rest
 from .vault_rest import VAULT_ROUTES, init_vault_rest
+from .status_rest import STATUS_ROUTES, init_status_rest
 from .sync_ws import SYNC_ROUTES, init_sync_ws
 
 # Initialize components
@@ -231,7 +232,7 @@ async def galdr_server_status() -> dict:
         'default_subject': subject_manager.default_subject_id if subject_manager else None,
         'warnings': warnings if warnings else None,
         'service_urls': {
-            'galdr': config.get('GALDR_url', 'http://localhost:8082'),
+            'galdr': config.get('GALDR_url', 'http://localhost:8092'),
             'mediawiki': config.get('mediawiki_url') or 'not configured',
             'pgadmin': config.get('pgadmin_url', 'http://localhost:8083'),
         }
@@ -268,7 +269,7 @@ def main():
 
     elif transport in ('sse', 'streamable-http', 'http'):
         host = os.getenv('MCP_HOST', '0.0.0.0')
-        port = int(os.getenv('MCP_PORT', '8082'))
+        port = int(os.getenv('MCP_PORT', '8092'))
 
         logger.info(f"Starting galdr MCP server ({transport} transport)")
         logger.info(f"Listening on http://{host}:{port}")
@@ -286,15 +287,24 @@ def main():
         init_admin_db(db=db)
         init_install_rest(config=config)
         init_vault_rest(db=db, embedding_generator=embedding_generator)
+        init_status_rest(db=db, embedding_generator=embedding_generator, config=config)
         init_sync_ws(db=db)
         from starlette.applications import Starlette
-        from starlette.routing import Mount
+        from starlette.routing import Mount, Route
+        from starlette.staticfiles import StaticFiles
+        from starlette.responses import RedirectResponse
         from contextlib import asynccontextmanager
+
+        static_dir = Path(__file__).parent / "static"
+        static_mount = Mount("/static", app=StaticFiles(directory=str(static_dir), html=True))
+
+        async def _root_redirect(request):
+            return RedirectResponse(url="/static/index.html")
 
         if transport == 'sse':
             mcp_app = mcp.sse_app()
             app = Starlette(
-                routes=SYNC_ROUTES + ADMIN_ROUTES + MEMORY_ROUTES + INSTALL_ROUTES + VAULT_ROUTES + [Mount("/", app=mcp_app)],
+                routes=[Route("/", _root_redirect)] + SYNC_ROUTES + ADMIN_ROUTES + MEMORY_ROUTES + INSTALL_ROUTES + VAULT_ROUTES + STATUS_ROUTES + [static_mount, Mount("/", app=mcp_app)],
             )
         else:
             # streamable-http: Starlette does NOT propagate lifespan to mounted
@@ -311,14 +321,19 @@ def main():
 
             app = Starlette(
                 lifespan=lifespan,
-                routes=SYNC_ROUTES + ADMIN_ROUTES + MEMORY_ROUTES + INSTALL_ROUTES + VAULT_ROUTES + [Mount("/", app=mcp_app)],
+                routes=[Route("/", _root_redirect)] + SYNC_ROUTES + ADMIN_ROUTES + MEMORY_ROUTES + INSTALL_ROUTES + VAULT_ROUTES + STATUS_ROUTES + [static_mount, Mount("/", app=mcp_app)],
             )
 
         logger.info("MCP server ready")
-        logger.info("  /admin/db          — DB Explorer UI")
-        logger.info("  /vault             — Vault Knowledge Graph Browser")
-        logger.info("  /memory/*          — agent memory REST bridge")
+        logger.info("  /                  — Unified Web UI (redirects to /static/)")
+        logger.info("  /static/           — SPA with dashboard, tasks, vault, search")
+        logger.info("  /admin/db          — DB Explorer (legacy, also in SPA)")
+        logger.info("  /vault             — Vault Browser (legacy, also in SPA)")
+        logger.info("  /memory/*          — Agent memory REST bridge")
+        logger.info("  /api/status        — Status aggregation REST API")
+        logger.info("  /api/search/*      — Unified knowledge search API")
         logger.info("  /sync/{project_id} — WebSocket file sync")
+        logger.info("  /mcp               — MCP protocol endpoint (streamable-http)")
         logger.info("use galdr_server_status tool to check health")
         uvicorn.run(app, host=host, port=port, log_level="info")
 

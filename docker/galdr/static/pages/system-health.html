@@ -1,0 +1,249 @@
+<div class="page-system-health">
+<style>
+.page-system-health { padding: 0; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.page-system-health .sh-body { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+
+.page-system-health .svc-card {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.page-system-health .svc-header { display: flex; align-items: center; gap: 8px; }
+.page-system-health .svc-name { font-weight: 600; font-size: 13px; color: var(--text-primary); }
+.page-system-health .svc-status-text { font-size: 11px; }
+
+.page-system-health .svc-details { display: flex; flex-direction: column; gap: 4px; }
+.page-system-health .svc-detail-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; padding: 2px 0;
+}
+.page-system-health .svc-detail-key { color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; font-size: 10px; }
+.page-system-health .svc-detail-val { color: var(--text-secondary); text-align: right; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.page-system-health .sysinfo-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media (max-width: 700px) {
+  .page-system-health .sysinfo-grid { grid-template-columns: 1fr; }
+}
+
+.page-system-health .info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 12px; }
+.page-system-health .info-key { color: var(--text-muted); }
+.page-system-health .info-val { color: var(--text-primary); font-weight: 500; }
+
+.page-system-health .plugin-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.page-system-health .plugin-tag {
+  display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 600;
+  border-radius: 3px; background: rgba(167,139,250,.12); color: var(--accent-purple);
+  letter-spacing: .3px;
+}
+
+.page-system-health .url-table { width: 100%; }
+.page-system-health .url-table td { padding: 4px 0; border-bottom: 1px solid var(--border-subtle); font-size: 12px; }
+.page-system-health .url-table td:first-child { color: var(--text-muted); width: 140px; }
+.page-system-health .url-table td:last-child { color: var(--accent); }
+
+.page-system-health .refresh-btn {
+  background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary);
+  padding: 4px 12px; border-radius: var(--radius); cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px; transition: background .15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.page-system-health .refresh-btn:hover { background: #475569; color: var(--text-primary); }
+.page-system-health .refresh-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.page-system-health .health-score-bar {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.page-system-health .health-score-num { font-size: 28px; font-weight: 700; line-height: 1; }
+.page-system-health .health-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+</style>
+
+<div class="page-header">
+  <h1>System Health</h1>
+  <span class="subtitle">Service status</span>
+  <span style="margin-left:auto">
+    <button class="refresh-btn" id="sh-refresh" onclick="shRefresh()">↻ Refresh</button>
+  </span>
+</div>
+
+<div class="sh-body">
+  <div class="health-score-bar" id="sh-score">
+    <div class="spinner"></div>
+    <span class="text-muted">Loading…</span>
+  </div>
+
+  <div class="grid-3" id="sh-services">
+    <div class="svc-card"><div class="empty-state"><div class="spinner"></div></div></div>
+    <div class="svc-card"><div class="empty-state"><div class="spinner"></div></div></div>
+    <div class="svc-card"><div class="empty-state"><div class="spinner"></div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">System Info</div>
+    <div class="card-body" id="sh-sysinfo">
+      <div class="empty-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+let refreshTimer = null;
+
+function statusDotClass(status) {
+  if (!status) return 'offline';
+  const s = String(status).toLowerCase();
+  if (s === 'healthy' || s === 'online' || s === 'connected' || s === 'running') return 'healthy';
+  if (s === 'warning' || s === 'degraded') return 'warning';
+  if (s === 'critical' || s === 'error') return 'critical';
+  return 'offline';
+}
+
+function statusLabel(status) {
+  if (!status) return 'Offline';
+  return String(status).charAt(0).toUpperCase() + String(status).slice(1);
+}
+
+function renderDetails(details) {
+  if (!details || typeof details !== 'object') return '';
+  let html = '<div class="svc-details">';
+  for (const [k, v] of Object.entries(details)) {
+    let display;
+    if (k.toLowerCase().includes('time') || k.toLowerCase().includes('uptime') || k.toLowerCase().includes('sync')) {
+      display = v ? timeAgo(v) : '—';
+    } else {
+      display = fmt(v);
+    }
+    const label = k.replace(/_/g, ' ');
+    html += '<div class="svc-detail-row">' +
+      '<span class="svc-detail-key">' + escHtml(label) + '</span>' +
+      '<span class="svc-detail-val">' + display + '</span>' +
+      '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderServices(services) {
+  const container = document.getElementById('sh-services');
+  if (!services || !services.length) {
+    container.innerHTML = '<div class="svc-card"><div class="empty-state"><span class="icon">∅</span><span>No services</span></div></div>';
+    return;
+  }
+  container.innerHTML = services.map(svc => {
+    const cls = statusDotClass(svc.status);
+    return '<div class="svc-card">' +
+      '<div class="svc-header">' +
+        '<span class="status-dot ' + cls + '"></span>' +
+        '<span class="svc-name">' + escHtml(svc.name) + '</span>' +
+        '<span class="svc-status-text" style="color:' +
+          (cls === 'healthy' ? 'var(--accent-green)' : cls === 'warning' ? 'var(--accent-amber)' : cls === 'critical' ? 'var(--accent-red)' : 'var(--text-muted)') +
+          '">' + statusLabel(svc.status) + '</span>' +
+      '</div>' +
+      renderDetails(svc.details || {}) +
+    '</div>';
+  }).join('');
+}
+
+function renderScore(data) {
+  const score = data.health_score != null ? data.health_score : null;
+  const container = document.getElementById('sh-score');
+  if (score == null) {
+    container.innerHTML = '<span class="health-score-num text-muted">—</span>' +
+      '<div><span class="health-score-label text-muted">Health score unavailable</span></div>';
+    return;
+  }
+  container.innerHTML =
+    '<span class="health-score-num" style="color:' + healthColor(score) + '">' + score + '</span>' +
+    '<div>' +
+      '<span class="health-score-label" style="color:' + healthColor(score) + '">' + healthLabel(score) + '</span>' +
+    '</div>' +
+    '<div style="flex:1">' +
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + score + '%;background:' + healthColor(score) + '"></div></div>' +
+    '</div>';
+}
+
+function renderSysinfo(system) {
+  const container = document.getElementById('sh-sysinfo');
+  const envBadge = system.environment === 'production'
+    ? '<span class="badge badge-danger">' + escHtml(system.environment) + '</span>'
+    : '<span class="badge badge-info">' + escHtml(system.environment || 'dev') + '</span>';
+
+  let pluginsHtml = '<span class="text-muted">None</span>';
+  if (system.plugins && system.plugins.length) {
+    pluginsHtml = '<div class="plugin-list">' +
+      system.plugins.map(p => '<span class="plugin-tag">' + escHtml(p) + '</span>').join('') +
+      '</div>';
+  }
+
+  let urlsHtml = '';
+  if (system.service_urls && system.service_urls.length) {
+    urlsHtml = '<table class="url-table">' +
+      system.service_urls.map(u =>
+        '<tr><td>' + escHtml(u.name) + '</td><td><a href="' + escHtml(u.url) + '" target="_blank">' + escHtml(u.url) + '</a></td></tr>'
+      ).join('') +
+      '</table>';
+  }
+
+  container.innerHTML =
+    '<div class="sysinfo-grid">' +
+      '<div>' +
+        '<div class="info-row"><span class="info-key">Server Version</span><span class="info-val">' + escHtml(system.version || '—') + '</span></div>' +
+        '<div class="info-row"><span class="info-key">Python Version</span><span class="info-val">' + escHtml(system.python_version || '—') + '</span></div>' +
+        '<div class="info-row"><span class="info-key">Environment</span><span class="info-val">' + envBadge + '</span></div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="info-row"><span class="info-key">Plugins</span></div>' +
+        '<div style="padding:6px 0">' + pluginsHtml + '</div>' +
+      '</div>' +
+    '</div>' +
+    (urlsHtml ? '<div style="margin-top:16px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Service URLs</div>' + urlsHtml + '</div>' : '');
+}
+
+async function load() {
+  const btn = document.getElementById('sh-refresh');
+  if (btn) { btn.disabled = true; btn.textContent = '↻ Loading…'; }
+
+  try {
+    const [system, status] = await Promise.all([
+      api('/api/status/system'),
+      api('/api/status').catch(() => ({})),
+    ]);
+
+    renderScore(status);
+    renderServices(system.services || []);
+    renderSysinfo(system);
+  } catch (e) {
+    document.getElementById('sh-score').innerHTML =
+      '<span class="text-red">Failed to load: ' + escHtml(e.message) + '</span>';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
+  }
+}
+
+window.shRefresh = function() { load(); };
+
+function startAutoRefresh() {
+  refreshTimer = setInterval(load, 30000);
+}
+
+function cleanup() {
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+}
+
+window.addEventListener('hashchange', cleanup);
+
+async function init() {
+  cleanup();
+  await load();
+  startAutoRefresh();
+}
+
+window.pageInit = init;
+init();
+})();
+</script>
+</div>

@@ -1,0 +1,376 @@
+<div class="page-knowledge-search">
+<style>
+.page-knowledge-search { display: flex; flex-direction: column; height: 100%; }
+.page-knowledge-search .page-header { display: flex; align-items: baseline; gap: 12px; padding: 18px 24px 14px; border-bottom: 1px solid var(--border-subtle); flex-shrink: 0; }
+.page-knowledge-search .page-header h1 { font-size: 18px; font-weight: 600; }
+.page-knowledge-search .page-header .subtitle { font-size: 12px; color: var(--text-muted); }
+
+/* Search bar */
+.page-knowledge-search .search-bar { padding: 20px 24px 16px; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.page-knowledge-search .search-input-wrap { flex: 1; position: relative; }
+.page-knowledge-search .search-input-wrap .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-faint); font-size: 16px; pointer-events: none; }
+.page-knowledge-search .search-input { width: 100%; height: 48px; padding: 0 14px 0 42px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-primary); font-family: var(--font-mono); font-size: 14px; transition: border-color .15s; }
+.page-knowledge-search .search-input:focus { outline: none; border-color: var(--accent); }
+.page-knowledge-search .search-input::placeholder { color: var(--text-faint); }
+.page-knowledge-search .source-select { height: 48px; padding: 0 12px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; cursor: pointer; }
+.page-knowledge-search .source-select:focus { outline: none; border-color: var(--accent); }
+.page-knowledge-search .kbd-hint { font-size: 10px; color: var(--text-faint); padding: 3px 6px; border: 1px solid var(--border); border-radius: 3px; white-space: nowrap; }
+
+/* Main layout: results + sidebar */
+.page-knowledge-search .main-area { flex: 1; display: flex; overflow: hidden; }
+.page-knowledge-search .results-area { flex: 1; overflow-y: auto; padding: 0 24px 24px; }
+.page-knowledge-search .filters-sidebar { width: 240px; flex-shrink: 0; background: var(--bg-surface); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+.page-knowledge-search .filters-sidebar.collapsed { display: none; }
+
+/* Results meta */
+.page-knowledge-search .results-meta { font-size: 11px; color: var(--text-muted); padding: 8px 0 12px; display: flex; gap: 12px; align-items: center; }
+
+/* Result cards */
+.page-knowledge-search .result-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid var(--border); transition: border-color .15s; }
+.page-knowledge-search .result-card:hover { border-color: var(--accent); }
+.page-knowledge-search .result-card.src-vault { border-left-color: var(--accent-purple); }
+.page-knowledge-search .result-card.src-platform_docs { border-left-color: var(--accent); }
+.page-knowledge-search .result-card.src-memory { border-left-color: var(--accent-green); }
+
+.page-knowledge-search .result-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.page-knowledge-search .src-badge { display: inline-block; padding: 2px 8px; font-size: 10px; font-weight: 600; border-radius: 3px; text-transform: uppercase; letter-spacing: .4px; }
+.page-knowledge-search .src-vault-badge { background: rgba(167, 139, 250, .15); color: var(--accent-purple); }
+.page-knowledge-search .src-platform-badge { background: rgba(56, 189, 248, .15); color: var(--accent); }
+.page-knowledge-search .src-memory-badge { background: rgba(74, 222, 128, .15); color: var(--accent-green); }
+
+.page-knowledge-search .result-title { font-size: 13px; font-weight: 600; color: var(--accent); cursor: pointer; }
+.page-knowledge-search .result-title:hover { text-decoration: underline; }
+.page-knowledge-search .result-snippet { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin: 6px 0; }
+.page-knowledge-search .result-snippet mark { background: rgba(251, 191, 36, .3); color: var(--text-primary); padding: 0 2px; border-radius: 2px; }
+.page-knowledge-search .result-meta { font-size: 10px; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.page-knowledge-search .relevance-bar { height: 4px; background: var(--bg-elevated); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.page-knowledge-search .relevance-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+
+/* Sidebar filters */
+.page-knowledge-search .filter-section { margin-bottom: 18px; }
+.page-knowledge-search .filter-title { font-size: 10px; text-transform: uppercase; letter-spacing: .8px; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
+.page-knowledge-search .filter-check { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; cursor: pointer; }
+.page-knowledge-search .filter-check input { accent-color: var(--accent); }
+.page-knowledge-search .filter-input { width: 100%; background: var(--bg-base); border: 1px solid var(--border); color: var(--text-primary); padding: 5px 8px; border-radius: var(--radius); font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px; }
+.page-knowledge-search .filter-input:focus { outline: none; border-color: var(--accent); }
+.page-knowledge-search .filter-select { width: 100%; background: var(--bg-base); border: 1px solid var(--border); color: var(--text-primary); padding: 5px 8px; border-radius: var(--radius); font-family: var(--font-mono); font-size: 11px; cursor: pointer; }
+
+/* Load more */
+.page-knowledge-search .load-more { text-align: center; padding: 12px; }
+
+/* Empty state */
+.page-knowledge-search .search-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px; color: var(--text-muted); text-align: center; gap: 12px; }
+.page-knowledge-search .search-empty .icon { font-size: 36px; opacity: .4; }
+.page-knowledge-search .example-queries { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.page-knowledge-search .example-query { font-size: 12px; color: var(--accent); cursor: pointer; padding: 4px 12px; border: 1px solid var(--border); border-radius: var(--radius); transition: background .15s; }
+.page-knowledge-search .example-query:hover { background: var(--bg-elevated); }
+
+.page-knowledge-search .toggle-sidebar { font-size: 10px; color: var(--text-muted); cursor: pointer; }
+.page-knowledge-search .toggle-sidebar:hover { color: var(--text-primary); }
+
+@media (max-width: 900px) {
+  .page-knowledge-search .filters-sidebar { display: none; }
+  .page-knowledge-search .search-bar { flex-wrap: wrap; }
+  .page-knowledge-search .kbd-hint { display: none; }
+}
+</style>
+
+<div class="page-header">
+  <h1>Knowledge Search</h1>
+  <span class="subtitle">Search vault, docs, and memory</span>
+</div>
+
+<div class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="ks-input" class="search-input" type="text" placeholder="Search across all ingested knowledge…" autocomplete="off">
+  </div>
+  <select id="ks-source" class="source-select">
+    <option value="all">All Sources</option>
+    <option value="vault">Vault Notes</option>
+    <option value="platform_docs">Platform Docs</option>
+    <option value="memory">Agent Memory</option>
+  </select>
+  <button class="btn" onclick="ksDoSearch()">Search</button>
+  <span class="kbd-hint">Ctrl+K</span>
+</div>
+
+<div class="main-area">
+  <div class="results-area">
+    <div id="ks-meta" class="results-meta hidden"></div>
+    <div id="ks-results">
+      <div class="search-empty">
+        <span class="icon">🔍</span>
+        <span>Search across all ingested knowledge</span>
+        <span style="font-size:11px;color:var(--text-faint)">Vault notes, crawled platform docs, and agent memory</span>
+        <div class="example-queries">
+          <span class="example-query" onclick="ksExample('How does galdr task management work?')">How does galdr task management work?</span>
+          <span class="example-query" onclick="ksExample('Cursor MCP configuration')">Cursor MCP configuration</span>
+          <span class="example-query" onclick="ksExample('Docker deployment patterns')">Docker deployment patterns</span>
+        </div>
+      </div>
+    </div>
+    <div id="ks-load-more" class="load-more hidden">
+      <button class="btn" onclick="ksLoadMore()">Load More</button>
+    </div>
+  </div>
+
+  <div id="ks-sidebar" class="filters-sidebar">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:12px;font-weight:600;color:var(--text-primary)">Filters</span>
+      <span class="toggle-sidebar" onclick="ksToggleSidebar()">Hide ✕</span>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Source</div>
+      <label class="filter-check"><input type="checkbox" data-src="vault" checked onchange="ksApplyFilters()"> Vault Notes</label>
+      <label class="filter-check"><input type="checkbox" data-src="platform_docs" checked onchange="ksApplyFilters()"> Platform Docs</label>
+      <label class="filter-check"><input type="checkbox" data-src="memory" checked onchange="ksApplyFilters()"> Agent Memory</label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Date Range</div>
+      <input id="ks-date-from" class="filter-input" type="date" placeholder="From" onchange="ksApplyFilters()">
+      <input id="ks-date-to" class="filter-input" type="date" placeholder="To" onchange="ksApplyFilters()">
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Type</div>
+      <select id="ks-type-filter" class="filter-select" onchange="ksApplyFilters()">
+        <option value="">All types</option>
+        <option value="research">Research</option>
+        <option value="session">Session</option>
+        <option value="decision">Decision</option>
+        <option value="knowledge_card">Knowledge Card</option>
+        <option value="platform_docs">Platform Docs</option>
+        <option value="session_capture">Session Capture</option>
+        <option value="harvest">Harvest</option>
+        <option value="video_summary">Video Summary</option>
+      </select>
+    </div>
+
+    <div class="filter-section" id="ks-platform-section">
+      <div class="filter-title">Platform</div>
+      <select id="ks-platform-filter" class="filter-select" onchange="ksApplyFilters()">
+        <option value="">All platforms</option>
+        <option value="cursor">Cursor</option>
+        <option value="claude">Claude</option>
+        <option value="gemini">Gemini</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+let allResults = [];
+let filteredResults = [];
+let searchOffset = 0;
+let searchTotal = 0;
+let currentQuery = '';
+const PAGE_SIZE = 10;
+let sidebarVisible = true;
+
+function srcBadge(source) {
+  const s = (source || '').toLowerCase();
+  if (s === 'vault') return '<span class="src-badge src-vault-badge">vault</span>';
+  if (s === 'platform_docs') return '<span class="src-badge src-platform-badge">platform</span>';
+  if (s === 'memory') return '<span class="src-badge src-memory-badge">memory</span>';
+  return '<span class="src-badge" style="background:var(--bg-elevated);color:var(--text-muted)">' + escHtml(source) + '</span>';
+}
+
+function srcCardClass(source) {
+  const s = (source || '').toLowerCase();
+  if (s === 'vault') return 'src-vault';
+  if (s === 'platform_docs') return 'src-platform_docs';
+  if (s === 'memory') return 'src-memory';
+  return '';
+}
+
+function highlightSnippet(text, query) {
+  if (!text || !query) return escHtml(text || '');
+  const escaped = escHtml(text);
+  const terms = query.split(/\s+/).filter(function(t) { return t.length > 2; });
+  if (!terms.length) return escaped;
+  const pattern = new RegExp('(' + terms.map(function(t) {
+    return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }).join('|') + ')', 'gi');
+  return escaped.replace(pattern, '<mark>$1</mark>');
+}
+
+function renderResults(results, append) {
+  const container = document.getElementById('ks-results');
+  const meta = document.getElementById('ks-meta');
+
+  if (!results.length && !append) {
+    meta.classList.add('hidden');
+    container.innerHTML =
+      '<div class="search-empty"><span class="icon">∅</span><span>No results found for "' + escHtml(currentQuery) + '"</span></div>';
+    document.getElementById('ks-load-more').classList.add('hidden');
+    return;
+  }
+
+  meta.classList.remove('hidden');
+  meta.innerHTML = '<span>' + searchTotal + ' result' + (searchTotal !== 1 ? 's' : '') + '</span>';
+
+  let html = '';
+  results.forEach(function(r) {
+    const snippet = highlightSnippet(r.snippet || '', currentQuery);
+    const score = Math.round((r.score || 0) * 100);
+    const scoreWidth = Math.min(100, Math.max(5, score));
+    const meta_parts = [];
+    if (r.type) meta_parts.push(escHtml(r.type));
+    if (r.date) meta_parts.push(escHtml(r.date));
+    if (r.topics && r.topics.length) meta_parts.push(r.topics.map(function(t) { return escHtml(t); }).join(', '));
+
+    html += '<div class="result-card ' + srcCardClass(r.source) + '">' +
+      '<div class="result-top">' + srcBadge(r.source) +
+        '<span class="result-title" onclick="ksClickResult(\'' + escHtml((r.path || '').replace(/'/g, "\\'")) + '\')">' + escHtml(r.title || r.path || 'Untitled') + '</span>' +
+      '</div>' +
+      (snippet ? '<div class="result-snippet">' + snippet + '</div>' : '') +
+      (meta_parts.length ? '<div class="result-meta">' + meta_parts.join(' · ') + '</div>' : '') +
+      '<div class="relevance-bar"><div class="relevance-fill" style="width:' + scoreWidth + '%"></div></div>' +
+    '</div>';
+  });
+
+  if (append) {
+    container.insertAdjacentHTML('beforeend', html);
+  } else {
+    container.innerHTML = html;
+  }
+
+  document.getElementById('ks-load-more').classList.toggle('hidden', filteredResults.length <= (searchOffset + PAGE_SIZE));
+}
+
+function getActiveSourceFilters() {
+  var checks = document.querySelectorAll('.page-knowledge-search .filter-check input[data-src]');
+  var active = [];
+  checks.forEach(function(cb) { if (cb.checked) active.push(cb.dataset.src); });
+  return active;
+}
+
+window.ksApplyFilters = function() {
+  var sources = getActiveSourceFilters();
+  var typeFilter = document.getElementById('ks-type-filter').value;
+  var platformFilter = document.getElementById('ks-platform-filter').value;
+  var dateFrom = document.getElementById('ks-date-from').value;
+  var dateTo = document.getElementById('ks-date-to').value;
+
+  filteredResults = allResults.filter(function(r) {
+    if (sources.length && sources.indexOf(r.source) < 0) return false;
+    if (typeFilter && r.type !== typeFilter) return false;
+    if (platformFilter && r.source === 'platform_docs') {
+      var meta = r.metadata || {};
+      if (meta.platform && meta.platform !== platformFilter) return false;
+    }
+    if (dateFrom && r.date && r.date < dateFrom) return false;
+    if (dateTo && r.date && r.date > dateTo) return false;
+    return true;
+  });
+
+  searchTotal = filteredResults.length;
+  searchOffset = 0;
+  renderResults(filteredResults.slice(0, PAGE_SIZE), false);
+};
+
+async function doSearch() {
+  var q = document.getElementById('ks-input').value.trim();
+  if (!q) return;
+
+  currentQuery = q;
+  searchOffset = 0;
+  updateHash();
+
+  var container = document.getElementById('ks-results');
+  container.innerHTML = '<div class="search-empty"><div class="spinner"></div><span class="text-muted">Searching…</span></div>';
+  document.getElementById('ks-meta').classList.add('hidden');
+  document.getElementById('ks-load-more').classList.add('hidden');
+
+  var source = document.getElementById('ks-source').value;
+
+  try {
+    var d = await api('/api/search/all?q=' + encodeURIComponent(q) + '&source=' + source + '&limit=50');
+    allResults = d.results || [];
+    searchTotal = d.total || allResults.length;
+
+    filteredResults = allResults.slice();
+    ksApplyFilters();
+  } catch (e) {
+    container.innerHTML = '<div class="search-empty"><span class="icon">⚠</span><span class="text-red">' + escHtml(e.message) + '</span></div>';
+  }
+}
+
+function updateHash() {
+  var q = document.getElementById('ks-input').value.trim();
+  var source = document.getElementById('ks-source').value;
+  var hash = '#search';
+  if (q) {
+    hash += '?q=' + encodeURIComponent(q);
+    if (source !== 'all') hash += '&source=' + source;
+  }
+  if (location.hash !== hash) {
+    history.replaceState(null, '', hash);
+  }
+}
+
+function parseHash() {
+  var hash = location.hash.replace(/^#\/?search\??/, '');
+  var params = {};
+  hash.split('&').forEach(function(p) {
+    var kv = p.split('=');
+    if (kv[0]) params[kv[0]] = decodeURIComponent(kv[1] || '');
+  });
+  return params;
+}
+
+window.ksDoSearch = doSearch;
+
+window.ksExample = function(q) {
+  document.getElementById('ks-input').value = q;
+  doSearch();
+};
+
+window.ksClickResult = function(path) {
+  if (path && path.startsWith('http')) {
+    window.open(path, '_blank');
+  }
+};
+
+window.ksLoadMore = function() {
+  searchOffset += PAGE_SIZE;
+  var next = filteredResults.slice(searchOffset, searchOffset + PAGE_SIZE);
+  renderResults(next, true);
+  document.getElementById('ks-load-more').classList.toggle('hidden', filteredResults.length <= (searchOffset + PAGE_SIZE));
+};
+
+window.ksToggleSidebar = function() {
+  sidebarVisible = !sidebarVisible;
+  document.getElementById('ks-sidebar').classList.toggle('collapsed', !sidebarVisible);
+};
+
+var debouncedSearch = debounce(doSearch, 300);
+
+function init() {
+  var input = document.getElementById('ks-input');
+  input.addEventListener('input', debouncedSearch);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+  });
+
+  var params = parseHash();
+  if (params.q) {
+    input.value = params.q;
+    if (params.source) document.getElementById('ks-source').value = params.source;
+    doSearch();
+  } else {
+    input.focus();
+  }
+}
+
+window.pageInit = init;
+init();
+})();
+</script>
+</div>

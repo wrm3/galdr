@@ -2,7 +2,7 @@
 
 REM === Shared template root ===
 REM Set this to the path where you cloned galdr
-set SHARED=%~dp0
+set SHARED=G:\galdr\templates
 
 REM === Current project folder (folder this script is in) ===
 set PROJECT=%~dp0
