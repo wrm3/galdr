@@ -63,6 +63,7 @@ platformdirs>=4.0.0
 # Server-Side Documentation Crawling
 # ==============================================================
 crawl4ai>=0.4.0
+html2text>=2024.2.0
 
 # ==============================================================
 # Video Analyzer Tools

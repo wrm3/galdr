@@ -52,9 +52,9 @@ COPY docker/requirements.txt docker/pyproject.toml ./
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install crawl4ai for server-side documentation crawling
+# Install crawl4ai + Playwright browser for server-side crawling
 RUN pip install --no-cache-dir crawl4ai && \
-    python -m crawl4ai.install || true
+    playwright install --with-deps chromium
 
 # Copy DB init scripts (run at startup if schema is missing)
 COPY docker/init_db/*.sql ./init_db/
