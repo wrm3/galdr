@@ -178,12 +178,20 @@ async def execute(
 
                 embedding = _embed(f"{title}\n\n{abstract}")
 
+                import json as _json
+                fm_dict = {
+                    "title": title, "date": published or now,
+                    "type": "paper", "source": "arxiv", "url": abs_url,
+                    "ingestion_type": "paper_ingest", "arxiv_id": arxiv_id,
+                    "topics": all_tags, "authors": authors[:5],
+                }
                 cur.execute(
                     """
                     INSERT INTO vault_notes
                         (path, title, content, body, content_hash, embedding,
-                         note_type, source, source_type, url, tags, note_date, updated_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                         note_type, source, source_type, url, tags, note_date,
+                         frontmatter, links, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
                     ON CONFLICT (path) DO UPDATE SET
                         title        = EXCLUDED.title,
                         content      = EXCLUDED.content,
@@ -191,10 +199,12 @@ async def execute(
                         content_hash = EXCLUDED.content_hash,
                         embedding    = EXCLUDED.embedding,
                         tags         = EXCLUDED.tags,
+                        frontmatter  = EXCLUDED.frontmatter,
                         updated_at   = NOW()
                     """,
                     (vault_path, title, content, body, ch, embedding,
-                     "paper", "arxiv", "arxiv_api", abs_url, all_tags, published),
+                     "paper", "arxiv", "arxiv_api", abs_url, all_tags, published,
+                     _json.dumps(fm_dict), []),
                 )
                 conn.commit()
 

@@ -214,12 +214,22 @@ async def execute(
 
                 embedding = _embed(f"{name}\n{description}\n\n{readme_truncated[:3000]}")
 
+                import json as _json
+                fm_dict = {
+                    "title": name, "date": now, "type": "github_repo",
+                    "source": "github", "url": url,
+                    "ingestion_type": "github_ingest",
+                    "refresh_policy": refresh_policy, "topics": all_tags,
+                    "language": language, "stars": stars,
+                    "license": license_name, "last_push": last_push,
+                }
                 cur.execute(
                     """
                     INSERT INTO vault_notes
                         (path, title, content, body, content_hash, embedding,
-                         note_type, source, source_type, url, tags, updated_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                         note_type, source, source_type, url, tags,
+                         frontmatter, links, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
                     ON CONFLICT (path) DO UPDATE SET
                         title        = EXCLUDED.title,
                         content      = EXCLUDED.content,
@@ -227,10 +237,12 @@ async def execute(
                         content_hash = EXCLUDED.content_hash,
                         embedding    = EXCLUDED.embedding,
                         tags         = EXCLUDED.tags,
+                        frontmatter  = EXCLUDED.frontmatter,
                         updated_at   = NOW()
                     """,
                     (vault_path, name, content, body, ch, embedding,
-                     "github_repo", "github", "github_api", url, all_tags),
+                     "github_repo", "github", "github_api", url, all_tags,
+                     _json.dumps(fm_dict), []),
                 )
                 conn.commit()
 

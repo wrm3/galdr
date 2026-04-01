@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS vault_notes (
     links           TEXT[] DEFAULT '{}',
     content_hash    TEXT DEFAULT '',
     embedding       vector(1536),
+    exported_at     TIMESTAMP,
     created_at      TIMESTAMP DEFAULT NOW(),
     updated_at      TIMESTAMP DEFAULT NOW()
 );

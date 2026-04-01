@@ -216,7 +216,7 @@ async def execute(
     if youtube_mode in ("metadata", "audio", "full"):
         from galdr.tools.plugins import video_analyze
         if hasattr(video_analyze, "setup"):
-            video_analyze.setup({"config": _config or {}})
+            video_analyze.setup({"db": _db, "embedding_generator": _embedding_gen, "config": _config or {}})
         for item in classified.get("youtube_video", []) + classified.get("youtube_short", []):
             vid = item["video_id"]
             if item["url"] in existing_urls:
@@ -312,7 +312,19 @@ async def execute(
         await asyncio.sleep(1)
 
     for item in classified.get("docs", []):
-        results["skipped"].append(item["url"])
+        if item["url"] in existing_urls:
+            results["processed"]["skipped"] += 1
+            continue
+        try:
+            extra_tags = [item.get("platform", "docs")]
+            r = await url_ingest.execute(url=item["url"], tags=extra_tags)
+            if r.get("success"):
+                results["processed"][r.get("status", "created")] += 1
+            else:
+                results["errors"].append({"url": item["url"], "error": r.get("error")})
+        except Exception as e:
+            results["errors"].append({"url": item["url"], "error": str(e)})
+        await asyncio.sleep(1)
 
     return {
         "success": True,

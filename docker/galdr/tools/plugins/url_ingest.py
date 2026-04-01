@@ -187,12 +187,20 @@ async def execute(
 
                 embedding = _embed(f"{title}\n\n{markdown[:6000]}")
 
+                import json as _json
+                fm_dict = {
+                    "title": title, "date": now, "type": note_type,
+                    "source": url, "url": url,
+                    "ingestion_type": "url_ingest",
+                    "refresh_policy": refresh_policy, "topics": tags,
+                }
                 cur.execute(
                     """
                     INSERT INTO vault_notes
                         (path, title, content, body, content_hash, embedding,
-                         note_type, source, source_type, url, tags, updated_at)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                         note_type, source, source_type, url, tags,
+                         frontmatter, links, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
                     ON CONFLICT (path) DO UPDATE SET
                         title        = EXCLUDED.title,
                         content      = EXCLUDED.content,
@@ -200,20 +208,13 @@ async def execute(
                         content_hash = EXCLUDED.content_hash,
                         embedding    = EXCLUDED.embedding,
                         tags         = EXCLUDED.tags,
+                        frontmatter  = EXCLUDED.frontmatter,
                         updated_at   = NOW()
                     """,
                     (
-                        vault_path,
-                        title,
-                        content,
-                        markdown,
-                        ch,
-                        embedding,
-                        note_type,
-                        url,
-                        "crawl4ai",
-                        url,
-                        tags,
+                        vault_path, title, content, markdown, ch, embedding,
+                        note_type, url, "crawl4ai", url, tags,
+                        _json.dumps(fm_dict), [],
                     ),
                 )
                 conn.commit()
