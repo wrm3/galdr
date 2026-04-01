@@ -14,3 +14,7 @@ logs/
 
 # Temp/scratch files
 *.tmp
+
+# v2 subfolder structure (all are working files, not source code)
+# config/, docs/, tracking/, subsystems/ are created by galdr_install
+# and contain project-specific data that should not be committed in the source repo

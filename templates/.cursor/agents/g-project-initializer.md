@@ -55,17 +55,29 @@ Create the following structure:
 
 ```
 .galdr/
+├── TASKS.md                  # Master task checklist
+├── PRD.md                    # Product Requirements Document
+├── SUBSYSTEMS.md             # Component registry + interconnection diagram
+├── .project_id               # Unique project identifier (UUID)
+├── config/                   # Operational configuration
+│   ├── HEARTBEAT.md          # Scheduled agent routines
+│   └── SPRINT.md             # Current sprint definition
+├── docs/                     # Project documentation
+│   ├── PROJECT_CONTEXT.md    # Project mission and goals
+│   ├── PROJECT_GOALS.md      # Strategic goals and metrics
+│   ├── ARCHITECTURE_CONSTRAINTS.md  # Rules agents must follow
+│   └── PROJECT_TOPOLOGY.md   # Cross-project relationships
+├── tracking/                 # Status tracking
+│   ├── BUGS.md               # Bug tracking
+│   ├── IDEA_BOARD.md         # Ideas and improvement suggestions
+│   └── INBOX.md              # Cross-project message queue
+├── subsystems/               # Per-subsystem spec files
 ├── tasks/                    # Individual task files
 ├── phases/                   # Phase documentation
 ├── templates/                # Task/phase templates
 │   ├── task_template.md
 │   └── phase_template.md
-├── PLAN.md                   # Product Requirements Document
-├── TASKS.md                  # Master task checklist
-├── PROJECT_CONTEXT.md        # Project mission and goals
-├── BUGS.md                   # Bug tracking
-├── SUBSYSTEMS.md             # Component registry
-└── FILE_REGISTRY.md          # File documentation
+└── contracts/                # Shared contract specs
 
 docs/                         # Project documentation (if not exists)
 temp_scripts/                 # Test scripts (if not exists)
@@ -434,18 +446,28 @@ Location: [Path]
 
 CREATED STRUCTURE:
 ✅ .galdr/
+   ├── TASKS.md
+   ├── PRD.md
+   ├── SUBSYSTEMS.md
+   ├── .project_id
+   ├── config/
+   │   ├── HEARTBEAT.md
+   │   └── SPRINT.md
+   ├── docs/
+   │   ├── PROJECT_CONTEXT.md
+   │   ├── PROJECT_GOALS.md
+   │   └── ARCHITECTURE_CONSTRAINTS.md
+   ├── tracking/
+   │   ├── BUGS.md
+   │   ├── IDEA_BOARD.md
+   │   └── INBOX.md
+   ├── subsystems/
    ├── tasks/
    │   └── task001_project_setup.md
    ├── phases/
-   ├── templates/
-   │   ├── task_template.md
-   │   └── phase_template.md
-   ├── PLAN.md
-   ├── TASKS.md
-   ├── PROJECT_CONTEXT.md
-   ├── BUGS.md
-   ├── SUBSYSTEMS.md
-   └── FILE_REGISTRY.md
+   └── templates/
+       ├── task_template.md
+       └── phase_template.md
 ✅ docs/ (created/verified)
 ✅ temp_scripts/ (created/verified)
 

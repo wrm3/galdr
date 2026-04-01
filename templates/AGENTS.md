@@ -26,11 +26,13 @@
 
 ```
 .galdr/                        # Core task management (READ THIS FIRST)
-├── PLAN.md                    # Product Requirements Document
 ├── TASKS.md                   # Master task checklist with status
-├── BUGS.md                    # Bug tracking
-├── PROJECT_CONTEXT.md         # Project mission and goals
-├── SUBSYSTEMS.md              # Component registry
+├── PRD.md                     # Product Requirements Document
+├── SUBSYSTEMS.md              # Component registry + interconnection diagram
+├── config/                    # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md
+├── docs/                      # PROJECT_CONTEXT.md, ARCHITECTURE_CONSTRAINTS.md, PROJECT_GOALS.md
+├── tracking/                  # BUGS.md, IDEA_BOARD.md, INBOX.md
+├── subsystems/                # Per-subsystem spec files
 ├── tasks/                     # Individual task files (task{id}_name.md)
 └── phases/                    # Phase documentation
 

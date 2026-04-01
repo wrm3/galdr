@@ -11,13 +11,11 @@ Safety features:
   3. confirm=True required:   explicit opt-in to actually execute the reset.
 
 USE WITH CAUTION: This permanently deletes all local .galdr/ content including:
-  - TASKS.md        (your entire task list)
-  - PLAN.md         (your PRD / project plan)
-  - BUGS.md         (your bug tracking)
-  - PROJECT_CONTEXT.md
-  - SUBSYSTEMS.md
-  - IDEA_BOARD.md
-  - PROJECT_GOALS.md
+  - TASKS.md, PRD.md, SUBSYSTEMS.md  (root files)
+  - config/HEARTBEAT.md, config/SPRINT.md  (operational config)
+  - docs/PROJECT_CONTEXT.md, docs/ARCHITECTURE_CONSTRAINTS.md  (project docs)
+  - tracking/BUGS.md, tracking/IDEA_BOARD.md  (status tracking)
+  - subsystems/  (subsystem spec files)
   - All files in .galdr/tasks/   (every task file)
   - All files in .galdr/phases/  (every phase file)
 

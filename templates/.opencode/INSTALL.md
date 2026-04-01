@@ -21,7 +21,7 @@ If you prefer manual setup, tell OpenCode:
 
 ```
 I want to use the galdr task management system. Please:
-1. Create a .galdr/ folder with: TASKS.md, PLAN.md, BUGS.md, PROJECT_CONTEXT.md, SUBSYSTEMS.md, tasks/, phases/
+1. Create a .galdr/ folder with: TASKS.md, PRD.md, SUBSYSTEMS.md, config/ (HEARTBEAT.md, SPRINT.md), docs/ (PROJECT_CONTEXT.md, PROJECT_GOALS.md, ARCHITECTURE_CONSTRAINTS.md), tracking/ (BUGS.md, IDEA_BOARD.md, INBOX.md), subsystems/, tasks/, phases/
 2. Read the agent definitions from: https://github.com/galdr/galdr/tree/main/.claude/agents/
 3. Read the skill definitions from: https://github.com/galdr/galdr/tree/main/.claude/skills/
 4. Apply the rules from: https://github.com/galdr/galdr/tree/main/.claude/rules/

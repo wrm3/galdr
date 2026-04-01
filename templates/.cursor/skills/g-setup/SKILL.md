@@ -24,7 +24,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`, `docs/`, `temp_scripts/`
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`, `.galdr/config/`, `.galdr/docs/`, `.galdr/tracking/`, `.galdr/subsystems/`, `docs/`, `temp_scripts/`
    - Files: Use galdr-project-manager INITIALIZE mode for all file generation
 
 4. **Generate .project_id**:
@@ -35,19 +35,26 @@ First-time setup of galdr in a project. @g-setup command.
 5. **Verify structure**:
    ```
    .galdr/ ✅
-   ├── PLAN.md ✅
    ├── TASKS.md ✅
-   ├── PROJECT_CONTEXT.md ✅
-   ├── BUGS.md ✅
+   ├── PRD.md ✅
    ├── SUBSYSTEMS.md ✅
-   ├── ARCHITECTURE_CONSTRAINTS.md ✅
-   ├── PROJECT_GOALS.md ✅
-   ├── IDEA_BOARD.md ✅
-   ├── PROJECT_TOPOLOGY.md ✅  ← cross-project coordination
-   ├── INBOX.md ✅             ← cross-project message queue
-   ├── contracts/ ✅           ← shared contract specs
-   │   └── README.md ✅
    ├── .project_id ✅
+   ├── config/ ✅
+   │   ├── HEARTBEAT.md ✅
+   │   └── SPRINT.md ✅
+   ├── docs/ ✅
+   │   ├── PROJECT_CONTEXT.md ✅
+   │   ├── PROJECT_GOALS.md ✅
+   │   ├── ARCHITECTURE_CONSTRAINTS.md ✅
+   │   ├── PROJECT_TOPOLOGY.md ✅  ← cross-project coordination
+   │   └── SYSTEM_EXPERIMENTS.md ✅
+   ├── tracking/ ✅
+   │   ├── BUGS.md ✅
+   │   ├── IDEA_BOARD.md ✅
+   │   └── INBOX.md ✅             ← cross-project message queue
+   ├── subsystems/ ✅              ← per-subsystem spec files
+   ├── contracts/ ✅               ← shared contract specs
+   │   └── README.md ✅
    ├── tasks/ ✅
    └── phases/ ✅
    docs/ ✅

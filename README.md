@@ -47,9 +47,12 @@ It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneousl
 Your Project/
 ├── .galdr/                  # Task management (per-project, gitignored)
 │   ├── TASKS.md             # Master task checklist
-│   ├── BUGS.md              # Bug tracker
-│   ├── PROJECT_CONTEXT.md   # Mission, goals, current state
-│   ├── ARCHITECTURE_CONSTRAINTS.md  # Rules agents must follow
+│   ├── PRD.md               # Product Requirements Document
+│   ├── SUBSYSTEMS.md        # Component registry + interconnection diagram
+│   ├── config/              # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md
+│   ├── docs/                # PROJECT_CONTEXT.md, ARCHITECTURE_CONSTRAINTS.md, PROJECT_GOALS.md
+│   ├── tracking/            # BUGS.md, IDEA_BOARD.md, INBOX.md
+│   ├── subsystems/          # Per-subsystem spec files
 │   ├── tasks/               # Individual task specs (YAML + markdown)
 │   └── phases/              # Phase documentation and archives
 │

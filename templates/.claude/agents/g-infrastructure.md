@@ -16,7 +16,11 @@ You own file organization, scope control, and project structure standards.
 ## File Placement Rules (CRITICAL)
 | Goes In | Content |
 |---|---|
-| `.galdr/` | PLAN.md, TASKS.md, BUGS.md, PROJECT_CONTEXT.md, SUBSYSTEMS.md, FILE_REGISTRY.md, MCP_TOOLS_INVENTORY.md ONLY |
+| `.galdr/` (root) | TASKS.md, PRD.md, SUBSYSTEMS.md ONLY |
+| `.galdr/config/` | HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md |
+| `.galdr/docs/` | PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, ARCHITECTURE_CONSTRAINTS.md, SYSTEM_EXPERIMENTS.md |
+| `.galdr/tracking/` | BUGS.md, IDEA_BOARD.md, INBOX.md |
+| `.galdr/subsystems/` | Per-subsystem spec files (one .md per subsystem) |
 | `docs/` | ALL documentation: migration files, conversion summaries, setup reports, API docs, architecture docs |
 | `temp_scripts/` | Test scripts, utility scripts, data validation scripts |
 | Project root | ONLY: AGENTS.md, README.md, LICENSE, CLAUDE.md, CHANGELOG.md |
@@ -32,14 +36,17 @@ Edit these directly without asking:
 ## Auto-Creation Rules
 Silently create missing folders without asking:
 - `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`
+- `.galdr/config/`, `.galdr/docs/`, `.galdr/tracking/`, `.galdr/subsystems/`
 - `docs/`, `temp_scripts/`
 
 ## Required Template Files
 Ensure these exist in every galdr project:
 ```
-.galdr/PLAN.md, TASKS.md, PROJECT_CONTEXT.md, BUGS.md, SUBSYSTEMS.md,
-FILE_REGISTRY.md, MCP_TOOLS_INVENTORY.md, ARCHITECTURE_CONSTRAINTS.md,
-PROJECT_GOALS.md, IDEA_BOARD.md, .project_id
+.galdr/TASKS.md, PRD.md, SUBSYSTEMS.md, .project_id
+.galdr/config/HEARTBEAT.md, SPRINT.md
+.galdr/docs/PROJECT_CONTEXT.md, PROJECT_GOALS.md, ARCHITECTURE_CONSTRAINTS.md
+.galdr/tracking/BUGS.md, IDEA_BOARD.md, INBOX.md
+.galdr/subsystems/  (populated from SUBSYSTEMS.md entries)
 ```
 
 ## Scope Control — Over-Engineering Prevention

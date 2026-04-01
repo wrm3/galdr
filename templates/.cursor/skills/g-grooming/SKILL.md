@@ -16,7 +16,7 @@ Use when: fixing broken `.galdr/` files, filling placeholders, healing sync, hea
 ```
 
 ## Step 2: Template Placeholder Audit
-Scan all `.galdr/*.md` for these patterns (auto-fill or flag for user):
+Scan all `.galdr/**/*.md` (root, config/, docs/, tracking/) for these patterns (auto-fill or flag for user):
 ```
 {project_name}  {Project Name}  {PROJECT_NAME}
 {Goal name}     {Measurable outcome}  {Target}

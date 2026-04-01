@@ -28,7 +28,7 @@ TOOL_PARAMS = {
     "properties": {
         "project_path": {
             "type": "string",
-            "description": "Absolute path to the project root (where ARCHITECTURE_CONSTRAINTS.md lives).",
+            "description": "Absolute path to the project root (looks for .galdr/docs/ARCHITECTURE_CONSTRAINTS.md).",
         },
         "task_id": {
             "type": "string",
@@ -206,7 +206,11 @@ async def execute(
     files_to_modify = files_to_modify or []
 
     project = Path(project_path)
-    constraints_path = project / "ARCHITECTURE_CONSTRAINTS.md"
+    constraints_path = project / ".galdr" / "docs" / "ARCHITECTURE_CONSTRAINTS.md"
+    if not constraints_path.exists():
+        constraints_path = project / ".galdr" / "ARCHITECTURE_CONSTRAINTS.md"
+    if not constraints_path.exists():
+        constraints_path = project / "ARCHITECTURE_CONSTRAINTS.md"
 
     # No constraints file = pass with zero checks
     if not constraints_path.exists():
