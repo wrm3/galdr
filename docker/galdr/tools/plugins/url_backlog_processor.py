@@ -281,7 +281,7 @@ async def execute(
                 results["errors"].append({"url": canonical, "error": r.get("error")})
         except Exception as e:
             results["errors"].append({"url": canonical, "error": str(e)})
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
 
     for item in classified.get("paper", []):
         if item["url"] in existing_urls:

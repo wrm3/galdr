@@ -12,6 +12,32 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class _PoolConnection:
+    """Wraps a psycopg2 connection so `with db.get_connection() as conn:` returns it to the pool."""
+
+    def __init__(self, pool: SimpleConnectionPool):
+        self._pool = pool
+        self._conn = pool.getconn()
+
+    def __enter__(self):
+        return self._conn
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type:
+            self._conn.rollback()
+        self._pool.putconn(self._conn)
+        return False
+
+    def cursor(self, *args, **kwargs):
+        return self._conn.cursor(*args, **kwargs)
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+
 class RAGDatabase:
     """
     Database client with connection pooling for PostgreSQL.
@@ -66,15 +92,16 @@ class RAGDatabase:
             raise
 
     def get_connection(self):
-        """Get a connection from the pool."""
+        """Get a pool-aware connection context manager. Always use with `with`."""
         if not self.pool:
             raise RuntimeError("Connection pool not initialized")
-        return self.pool.getconn()
+        return _PoolConnection(self.pool)
 
     def release_connection(self, conn):
         """Return a connection to the pool."""
         if self.pool:
-            self.pool.putconn(conn)
+            raw = conn._conn if isinstance(conn, _PoolConnection) else conn
+            self.pool.putconn(raw)
 
     @contextmanager
     def get_cursor(self, cursor_factory=RealDictCursor) -> Generator:

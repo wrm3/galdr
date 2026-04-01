@@ -92,16 +92,22 @@ async def execute(
     vault_path = f"ingested/github/{owner}/{repo}.md"
     api_base = f"https://api.github.com/repos/{owner}/{repo}"
     headers = {"Accept": "application/vnd.github.v3+json"}
-    if github_token:
-        headers["Authorization"] = f"token {github_token}"
+    token = github_token or os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
 
     try:
-        async with httpx.AsyncClient(timeout=30, headers=headers) as client:
+        async with httpx.AsyncClient(timeout=30, headers=headers, follow_redirects=True) as client:
             repo_resp = await client.get(api_base)
             if repo_resp.status_code == 404:
                 return {"success": False, "error": f"Repo not found: {owner}/{repo}", "url": url}
             if repo_resp.status_code == 403:
-                return {"success": False, "error": "GitHub API rate limit exceeded. Try again later or provide github_token."}
+                remaining = repo_resp.headers.get("X-RateLimit-Remaining", "?")
+                limit = repo_resp.headers.get("X-RateLimit-Limit", "?")
+                msg = f"GitHub API rate limit exceeded ({remaining}/{limit} remaining)."
+                if not token:
+                    msg += " Set GITHUB_TOKEN env var for 5000 req/hr."
+                return {"success": False, "error": msg}
             repo_resp.raise_for_status()
             repo_data = repo_resp.json()
 
