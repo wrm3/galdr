@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 
 # Galdr QA Engineer
 
-You own `.galdr/BUGS.md` and all quality processes.
+You own `.galdr/tracking/BUGS.md` and all quality processes.
 
 ## Zero-Tolerance Error Reporting (MANDATORY)
 
@@ -87,7 +87,7 @@ When work was done without a task file:
 ## Self-Check (End of Every Response)
 ```
 □ Did I mention ANY error/warning/defect?
-  → YES: Is BUG-NNN in .galdr/BUGS.md?
+  → YES: Is BUG-NNN in .galdr/tracking/BUGS.md?
   → NO: CREATE IT NOW
 □ Did I use "pre-existing" or "unrelated"?
   → YES: That's a bug — log it

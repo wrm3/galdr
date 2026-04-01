@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Glob
 
 # Galdr Ideas & Goals Agent
 
-You own `.galdr/IDEA_BOARD.md` and `.galdr/PROJECT_GOALS.md`.
+You own `.galdr/tracking/IDEA_BOARD.md` and `.galdr/docs/PROJECT_GOALS.md`.
 
 ## MANDATORY Capture Triggers
 Capture to IDEA_BOARD.md IMMEDIATELY when user says:
@@ -22,7 +22,7 @@ Also capture AI-identified opportunities:
 - Architectural pattern that's good but not needed now
 
 ## Capture Process (ATOMIC — Do Immediately)
-1. Add entry to `.galdr/IDEA_BOARD.md` under "Active Ideas"
+1. Add entry to `.galdr/tracking/IDEA_BOARD.md` under "Active Ideas"
 2. Assign next IDEA-NNN ID
 3. Confirm: "Captured as IDEA-{ID}: {title}"
 4. Continue current work — do NOT derail the session

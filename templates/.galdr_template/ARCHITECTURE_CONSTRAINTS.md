@@ -102,7 +102,7 @@ active constraints in the following format:
 ACTIVE CONSTRAINTS:
   C-001: [Constraint Name] — [One-line summary]
   C-002: [Constraint Name] — [One-line summary]
-Full constraints: .galdr/ARCHITECTURE_CONSTRAINTS.md
+Full constraints: .galdr/docs/ARCHITECTURE_CONSTRAINTS.md
 ```
 
 Rules for generating this summary:
@@ -122,5 +122,5 @@ constraint data):
 ACTIVE CONSTRAINTS:
   C-001: No raw SQL — all queries must use parameterized statements
   C-002: No new npm dependencies — justify in task file before installing (new)
-Full constraints: .galdr/ARCHITECTURE_CONSTRAINTS.md
+Full constraints: .galdr/docs/ARCHITECTURE_CONSTRAINTS.md
 ```

@@ -34,7 +34,7 @@ These rules provide comprehensive guidance for quality assurance using the galdr
 
 ### BUGS.md File Format
 
-**Location**: `.galdr/BUGS.md`
+**Location**: `.galdr/tracking/BUGS.md`
 
 **Structure**:
 ```markdown

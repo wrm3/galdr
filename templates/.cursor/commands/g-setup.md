@@ -46,20 +46,20 @@ Create these folders if they don't exist:
 Create these template files:
 - `.galdr/PRD.md` - Product Requirements Document
 - `.galdr/TASKS.md` - Master task checklist (with subsystem headers)
-- `.galdr/BUGS.md` - Bug tracking
-- `.galdr/PROJECT_CONTEXT.md` - Mission + health score + autonomous agent config
-- `.galdr/ARCHITECTURE_CONSTRAINTS.md` - Non-negotiable constraints (populate with user input)
+- `.galdr/tracking/BUGS.md` - Bug tracking
+- `.galdr/docs/PROJECT_CONTEXT.md` - Mission + health score + autonomous agent config
+- `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` - Non-negotiable constraints (populate with user input)
 - `.galdr/SUBSYSTEMS.md` - Component registry
-- `.galdr/SPRINT.md` - Active sprint queue (cleanup-agent-generated placeholder)
-- `.galdr/CLEANUP_REPORT.md` - Nightly report placeholder
-- `.galdr/SYSTEM_EXPERIMENTS.md` - System evolution log
-- `.galdr/IDEA_BOARD.md` - Ideas parking lot (human + AI sections)
-- `.galdr/PROJECT_GOALS.md` - Strategic goals
+- `.galdr/config/SPRINT.md` - Active sprint queue (cleanup-agent-generated placeholder)
+- `.galdr/docs/CLEANUP_REPORT.md` - Nightly report placeholder
+- `.galdr/docs/SYSTEM_EXPERIMENTS.md` - System evolution log
+- `.galdr/tracking/IDEA_BOARD.md` - Ideas parking lot (human + AI sections)
+- `.galdr/docs/PROJECT_GOALS.md` - Strategic goals
 - `.galdr/templates/task_template.md` - Full vNext task YAML schema
 - `.galdr/templates/phase_template.md` - Phase schema
 
 **Research projects also get:**
-- `.galdr/HYPOTHESIS.md` - Hypothesis tracker
+- `.galdr/docs/HYPOTHESIS.md` - Hypothesis tracker
 
 ---
 

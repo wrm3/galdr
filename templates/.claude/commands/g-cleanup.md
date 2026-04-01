@@ -14,8 +14,8 @@ git pull   # Always work from latest state
 ```
 
 Read:
-1. `.galdr/PROJECT_CONTEXT.md` — load project identity and constraints reference
-2. `.galdr/ARCHITECTURE_CONSTRAINTS.md` — load active constraints
+1. `.galdr/docs/PROJECT_CONTEXT.md` — load project identity and constraints reference
+2. `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` — load active constraints
 3. `.galdr/TASKS.md` — master task list
 4. All files in `.galdr/tasks/` — individual task states
 
@@ -126,7 +126,7 @@ Build the next sprint queue (see task 045 rules for full algorithm). Summary:
 **Solo task handling**: If `requires_solo_agent: true` tasks appear, add them to SPRINT.md
 but mark them as `solo` — sprint agent must verify no other agent is active before claiming.
 
-**Write SPRINT.md** using the template at `.galdr/SPRINT.md`.
+**Write SPRINT.md** using the template at `.galdr/config/SPRINT.md`.
 
 ---
 
@@ -161,7 +161,7 @@ For all tasks with `execution_cost.total_cost_usd` set:
 
 ## Step 10: CLEANUP_REPORT.md Generation
 
-Write the complete report to `.galdr/CLEANUP_REPORT.md` using the template.
+Write the complete report to `.galdr/docs/CLEANUP_REPORT.md` using the template.
 
 ---
 

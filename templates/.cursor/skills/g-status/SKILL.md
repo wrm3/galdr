@@ -43,9 +43,9 @@ Session start, checking project health, @g-status command.
    - Any `[🔍]` tasks needing verification by different agent
    - Any overdue heartbeats
 
-6. **Cross-project advisories** (if `.galdr/PROJECT_TOPOLOGY.md` exists):
+6. **Cross-project advisories** (if `.galdr/docs/PROJECT_TOPOLOGY.md` exists):
 
-   Read `.galdr/INBOX.md` and categorize:
+   Read `.galdr/tracking/INBOX.md` and categorize:
 
    a. **CONFLICTS** → Surface as `⚠️ WARNING` before anything else (not advisory — these gate planning):
    ```

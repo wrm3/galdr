@@ -2,7 +2,7 @@ Capture an idea to IDEA_BOARD.md: $ARGUMENTS
 
 ## What This Command Does
 
-Captures an idea to `.galdr/IDEA_BOARD.md` so it isn't lost.
+Captures an idea to `.galdr/tracking/IDEA_BOARD.md` so it isn't lost.
 Ideas are NOT tasks — they sit in a parking lot until consciously promoted.
 
 ## Capture Workflow
@@ -16,7 +16,7 @@ Extract from `$ARGUMENTS` (or ask if unclear):
 - **When Ready**: What needs to happen before this could be developed
 
 ### 2. Check IDEA_BOARD.md
-- If `.galdr/IDEA_BOARD.md` doesn't exist: create it from the template
+- If `.galdr/tracking/IDEA_BOARD.md` doesn't exist: create it from the template
 - Read to determine next IDEA-NNN ID
 
 ### 3. Add the Entry

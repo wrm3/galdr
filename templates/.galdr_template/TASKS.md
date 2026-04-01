@@ -4,7 +4,7 @@
 **Type**: delivery | research  *(set during @g-setup)*
 **PRD**: `.galdr/PRD.md`
 **Subsystems**: `.galdr/SUBSYSTEMS.md`
-**Architecture Constraints**: `.galdr/ARCHITECTURE_CONSTRAINTS.md`
+**Architecture Constraints**: `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md`
 
 ---
 
@@ -42,7 +42,7 @@
 ---
 
 ## Bugs
-*(See `.galdr/BUGS.md` for full bug list)*
+*(See `.galdr/tracking/BUGS.md` for full bug list)*
 
 ---
 

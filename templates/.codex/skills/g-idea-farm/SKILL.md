@@ -66,7 +66,7 @@ Cross-reference with project knowledge:
 
 ## Output Format
 
-Add new entries to `.galdr/IDEA_BOARD.md`:
+Add new entries to `.galdr/tracking/IDEA_BOARD.md`:
 
 ```markdown
 ### IDEA-NNN: {Title}

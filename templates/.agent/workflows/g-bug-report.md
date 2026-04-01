@@ -20,7 +20,7 @@ I'll ask for:
 - **Phase Impact**: Which project phases are affected
 
 ### 2. Create BUGS.md Entry
-I'll add to `.galdr/BUGS.md`:
+I'll add to `.galdr/tracking/BUGS.md`:
 ```markdown
 ### Bug ID: BUG-XXX
 - **Title**: [Brief description]

@@ -2,7 +2,7 @@ View or edit this project's cross-project topology: $ARGUMENTS
 
 ## What This Command Does
 
-Reads `.galdr/PROJECT_TOPOLOGY.md` and displays the current project's declared relationships — parents, children, and siblings. Use this to add new relationships or verify existing ones.
+Reads `.galdr/docs/PROJECT_TOPOLOGY.md` and displays the current project's declared relationships — parents, children, and siblings. Use this to add new relationships or verify existing ones.
 
 ## When to Use
 

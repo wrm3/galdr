@@ -391,7 +391,7 @@ description = "Manages galdr task lifecycle — creates, updates, completes task
 description = "Creates and manages PRDs, phase definitions, scope validation, and project planning in .galdr/PLAN.md."
 
 [agents.qa-engineer]
-description = "Tracks bugs in .galdr/BUGS.md, classifies severity, documents fixes, and manages quality processes."
+description = "Tracks bugs in .galdr/tracking/BUGS.md, classifies severity, documents fixes, and manages quality processes."
 
 [agents.code-reviewer]
 description = "Performs comprehensive code reviews covering security, performance, maintainability, and best practices."

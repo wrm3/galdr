@@ -19,7 +19,7 @@ Manage the galdr heartbeat scheduler that wakes AI agents on configurable cron s
 
 ## Configuration
 
-Edit `.galdr/HEARTBEAT.md` to configure routines. YAML frontmatter controls global settings:
+Edit `.galdr/config/HEARTBEAT.md` to configure routines. YAML frontmatter controls global settings:
 
 ```yaml
 ---
@@ -86,7 +86,7 @@ Daily spend tracked in `.galdr/logs/heartbeat/budget_tracker.json`. Resets daily
 
 ## Wakeup Queue
 
-`.galdr/WAKEUP_QUEUE.md` holds event-driven triggers. Add rows to wake agents outside their cron schedule (e.g., when a bug is reported or a dependency unblocks).
+`.galdr/config/WAKEUP_QUEUE.md` holds event-driven triggers. Add rows to wake agents outside their cron schedule (e.g., when a bug is reported or a dependency unblocks).
 
 ## Cron Expression Reference
 

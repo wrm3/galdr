@@ -37,7 +37,7 @@ After every heartbeat run, append a JSONL entry to `.galdr/logs/kpi/{date}_{rout
 }
 ```
 
-The `metrics` object contains routine-specific KPIs as defined in `.galdr/KPI_DEFINITIONS.md`.
+The `metrics` object contains routine-specific KPIs as defined in `.galdr/config/KPI_DEFINITIONS.md`.
 
 ## Baseline Calculation
 
@@ -119,7 +119,7 @@ Run routine -> Capture KPIs -> Compare to baseline
 
 | File | Purpose |
 |------|---------|
-| `.galdr/KPI_DEFINITIONS.md` | Metric definitions with thresholds |
+| `.galdr/config/KPI_DEFINITIONS.md` | Metric definitions with thresholds |
 | `.galdr/logs/kpi/{date}_{routine}.jsonl` | Per-run KPI entries (append-only) |
 | `.galdr/logs/kpi/baselines.json` | Rolling baseline calculations |
 | `.galdr/logs/kpi/observations.jsonl` | Human feedback entries |

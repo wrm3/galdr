@@ -14,14 +14,14 @@ description: Initiate or respond to sibling contract sync; advisory only, non-bl
 
 ### Initiating a Sync (I changed a contract)
 
-1. **Read `.galdr/PROJECT_TOPOLOGY.md`** — get siblings + their contracts
+1. **Read `.galdr/docs/PROJECT_TOPOLOGY.md`** — get siblings + their contracts
 2. **Select target sibling and contract**
 3. **Update local contract file** at `.galdr/contracts/<name>.md`:
    - Bump version number
    - Update content (the spec that changed)
    - Update `last_synced` date
    - Set `sync_status: current` on your copy
-4. **Write to `sibling/.galdr/INBOX.md`** (if path accessible):
+4. **Write to `sibling/.galdr/tracking/INBOX.md`** (if path accessible):
    ```markdown
    ## [OPEN] SYNC-XXX — from: [this project] — YYYY-MM-DD
    **Type:** peer_sync

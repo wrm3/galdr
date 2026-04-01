@@ -11,7 +11,7 @@ Any time a defect, error, or warning is identified — even "pre-existing" or "u
 
 ## Steps
 
-1. **Determine next bug ID**: read `.galdr/BUGS.md`, find highest BUG-NNN, increment
+1. **Determine next bug ID**: read `.galdr/tracking/BUGS.md`, find highest BUG-NNN, increment
 
 2. **Classify severity**:
    - **Critical**: crash, data loss, security vulnerability

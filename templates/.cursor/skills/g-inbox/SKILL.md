@@ -9,7 +9,7 @@ description: Review and action all incoming cross-project coordination items —
 
 ## Steps
 
-1. **Read `.galdr/INBOX.md`**
+1. **Read `.galdr/tracking/INBOX.md`**
    - If empty or not exists → "INBOX clear — no cross-project items pending"
    - Categorize items: CONFLICT | request | broadcast | peer_sync
 

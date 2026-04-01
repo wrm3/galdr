@@ -9,7 +9,7 @@ description: Assemble the project graph from topology files. Three hops of detai
 
 ## Steps
 
-1. **Read current project's `.galdr/PROJECT_TOPOLOGY.md`**
+1. **Read current project's `.galdr/docs/PROJECT_TOPOLOGY.md`**
    - This project is the center of the graph (marked ★)
    - If no topology file → "No topology declared. Run @g-topology first."
 

@@ -6,7 +6,7 @@ description: Capture a new idea to IDEA_BOARD.md immediately. Triggered by user 
 
 ## Steps
 
-1. **Determine next IDEA ID**: read `.galdr/IDEA_BOARD.md`, find highest IDEA-NNN, increment
+1. **Determine next IDEA ID**: read `.galdr/tracking/IDEA_BOARD.md`, find highest IDEA-NNN, increment
 
 2. **Classify the idea**:
    - `feature` — new user-facing capability

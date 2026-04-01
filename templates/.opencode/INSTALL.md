@@ -42,7 +42,7 @@ When working on tasks:
 - Create the task file BEFORE writing any code
 - Update TASKS.md and task file atomically (both in same response)
 - Offer a git commit after every task completion
-- Any error or warning mentioned → log it in `.galdr/BUGS.md`
+- Any error or warning mentioned → log it in `.galdr/tracking/BUGS.md`
 
 ## Full Documentation
 

@@ -10,7 +10,7 @@ tools: Read, Write, Edit, Glob, Grep
 You identify, report, and resolve issues within the galdr system itself.
 
 ## Before Proposing Any Change (MANDATORY)
-1. Read `.galdr/SYSTEM_EXPERIMENTS.md` — check Rejected Ideas
+1. Read `.galdr/docs/SYSTEM_EXPERIMENTS.md` — check Rejected Ideas
 2. Search memory: `memory_search(query="experiment: {description}")`
 3. If previous attempt found — surface it before proposing again
 

@@ -108,7 +108,7 @@ trigger: scheduled|manual
 ### Step 5: Update Tracking
 
 1. Write current HEAD hash to `.galdr/logs/reviews/last_review_commit.txt`
-2. If critical findings exist, add entry to `.galdr/WAKEUP_QUEUE.md`
+2. If critical findings exist, add entry to `.galdr/config/WAKEUP_QUEUE.md`
 
 ## KPI Metrics
 

@@ -237,8 +237,8 @@ completed_date: ''
 
 - `.galdr/PLAN.md` - Product Requirements
 - `.galdr/TASKS.md` - Task checklist
-- `.galdr/BUGS.md` - Bug tracking
-- `.galdr/PROJECT_CONTEXT.md` - Project mission
+- `.galdr/tracking/BUGS.md` - Bug tracking
+- `.galdr/docs/PROJECT_CONTEXT.md` - Project mission
 - All files in `.galdr/tasks/`
 - All files in `.galdr/phases/`
 
@@ -304,7 +304,7 @@ Commands use the `g-` prefix.
 ## Quick Reference
 
 ### When Starting Work
-1. Read `.galdr/PROJECT_CONTEXT.md`
+1. Read `.galdr/docs/PROJECT_CONTEXT.md`
 2. Check `.galdr/TASKS.md` for current tasks
 3. Create task file before starting work
 

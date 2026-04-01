@@ -8,8 +8,8 @@ decide what to promote, shelve, or keep for later.
 ## Review Workflow
 
 ### 1. Load Context
-- Read `.galdr/IDEA_BOARD.md`
-- Read `.galdr/PROJECT_GOALS.md` (if exists)
+- Read `.galdr/tracking/IDEA_BOARD.md`
+- Read `.galdr/docs/PROJECT_GOALS.md` (if exists)
 - Read `.galdr/TASKS.md` to understand current phase/progress
 
 ### 2. Display Summary

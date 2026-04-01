@@ -10,7 +10,7 @@ Track bugs, manage quality assurance processes, and document fixes using the gal
 ## System Overview
 
 the galdr QA system uses:
-- **BUGS.md**: `.galdr/BUGS.md` - Centralized bug tracking
+- **BUGS.md**: `.galdr/tracking/BUGS.md` - Centralized bug tracking
 - **Bug Tasks**: `.galdr/tasks/` - Bug fix task files
 - **Task Integration**: Links to TASKS.md for bug resolution tracking
 - **Phase Integration**: Links to phases/ for impact assessment
@@ -33,7 +33,7 @@ the galdr QA system uses:
 
 ### BUGS.md Structure
 
-**Location**: `.galdr/BUGS.md`
+**Location**: `.galdr/tracking/BUGS.md`
 
 **Format**:
 ```markdown
@@ -348,13 +348,13 @@ Document {fix_type} that was completed in chat
 ## File Organization
 
 ### Core QA Files
-- `.galdr/BUGS.md` - Bug tracking
+- `.galdr/tracking/BUGS.md` - Bug tracking
 - `.galdr/tasks/` - Bug fix task files
 - `.galdr/phases/` - Phase impact documentation
 
 ### Auto-Creation
 Automatically create missing files:
-- `.galdr/BUGS.md` with template if missing
+- `.galdr/tracking/BUGS.md` with template if missing
 - Bug fix task files as needed
 - Update TASKS.md automatically
 

@@ -55,8 +55,8 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 6. **Create cross-project files** (if not already present from galdr_install):
-   - `.galdr/PROJECT_TOPOLOGY.md` — from template, starts with `relationships: none`
-   - `.galdr/INBOX.md` — empty template with usage comments
+   - `.galdr/docs/PROJECT_TOPOLOGY.md` — from template, starts with `relationships: none`
+   - `.galdr/tracking/INBOX.md` — empty template with usage comments
    - `.galdr/contracts/README.md` — explanation of contracts pattern
 
 7. **Print next steps**:

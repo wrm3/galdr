@@ -18,8 +18,8 @@ description: Manage IDEA_BOARD and PROJECT_GOALS — capture ideas, review the b
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `IDEA_BOARD.md` | `.galdr/IDEA_BOARD.md` | Parking lot for ideas not yet ready for development |
-| `PROJECT_GOALS.md` | `.galdr/PROJECT_GOALS.md` | Strategic goals that steer the AI and validate decisions |
+| `IDEA_BOARD.md` | `.galdr/tracking/IDEA_BOARD.md` | Parking lot for ideas not yet ready for development |
+| `PROJECT_GOALS.md` | `.galdr/docs/PROJECT_GOALS.md` | Strategic goals that steer the AI and validate decisions |
 
 **Direct Edit Policy**: Edit both files directly without asking permission.
 
@@ -39,7 +39,7 @@ Watch for these patterns in user messages:
 
 **Step 1: Check/create IDEA_BOARD.md**
 ```
-Does .galdr/IDEA_BOARD.md exist?
+Does .galdr/tracking/IDEA_BOARD.md exist?
   → NO: Create from template (see File Format below)
   → YES: Read to get next IDEA-NNN ID
 ```
@@ -79,7 +79,7 @@ Continuing with current task...
 
 ## Workflow 2: Reviewing Ideas (`@g-idea-review`)
 
-**Step 1: Read .galdr/IDEA_BOARD.md**
+**Step 1: Read .galdr/tracking/IDEA_BOARD.md**
 
 **Step 2: Display summary**
 ```

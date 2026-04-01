@@ -82,7 +82,7 @@ source: production
 ## Best Practices
 
 ### 1. Shared Bug Tracking
-- Keep `.galdr/BUGS.md` in version control
+- Keep `.galdr/tracking/BUGS.md` in version control
 - Bug tasks in `.galdr/tasks/`
 
 ### 2. Use Commands for Quick Access

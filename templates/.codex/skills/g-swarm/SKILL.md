@@ -24,7 +24,7 @@ Coordinate multiple AI agents working in parallel on independent tasks.
 
 ## Swarm Configuration
 
-In `.galdr/HEARTBEAT.md` YAML frontmatter, add swarm settings:
+In `.galdr/config/HEARTBEAT.md` YAML frontmatter, add swarm settings:
 
 ```yaml
 swarm:
@@ -69,7 +69,7 @@ swarm:
 
 ## Swarm Status File
 
-Updated every 60 seconds at `.galdr/SWARM_STATUS.md`:
+Updated every 60 seconds at `.galdr/config/SWARM_STATUS.md`:
 
 ```markdown
 # Swarm Status

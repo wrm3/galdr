@@ -36,13 +36,13 @@ Ideas: [N] active (from IDEA_BOARD.md)
 **Step 5: ACTIVE_BACKLOG.md**
 - Older than 26 hours → flag as stale, offer regeneration
 
-**Step 6: Cross-Project INBOX Check** (if `.galdr/INBOX.md` exists)
-- Read `.galdr/INBOX.md`
+**Step 6: Cross-Project INBOX Check** (if `.galdr/tracking/INBOX.md` exists)
+- Read `.galdr/tracking/INBOX.md`
 - If any `[CONFLICT]` items exist → surface immediately as `⚠️ WARNING` before any other work
 - Otherwise: count open items by type (requests/broadcasts/syncs) and note in session context
 - Format: `INBOX: N open (N requests, N broadcasts, N syncs)` or `INBOX: clear`
 
-**Step 7: Cascade Forward Check** (if `.galdr/PROJECT_TOPOLOGY.md` has children declared)
+**Step 7: Cascade Forward Check** (if `.galdr/docs/PROJECT_TOPOLOGY.md` has children declared)
 - Scan `.galdr/tasks/` for any task with `cascade_depth_remaining > 0` AND `cascade_forwarded: false`
 - If found: forward cascades to children listed in topology (follow `g-broadcast` skill pattern but using the cascade chain metadata from the task)
 - Mark forwarded tasks as `cascade_forwarded: true`

@@ -9,9 +9,9 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 ### 1. Load Context (Before Touching Anything)
 
 Read the following files to understand the project state:
-- `.galdr/PROJECT_CONTEXT.md` — mission and goals
+- `.galdr/docs/PROJECT_CONTEXT.md` — mission and goals
 - `.galdr/TASKS.md` — master task list
-- `.galdr/ARCHITECTURE_CONSTRAINTS.md` — guardrails (if exists)
+- `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` — guardrails (if exists)
 - `git log --oneline -10` — recent changes
 
 ### 2. Build the Work Queue

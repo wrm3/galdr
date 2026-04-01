@@ -8,7 +8,7 @@ Works on and resolves a bug that was previously reported in the galdr QA system.
 
 ### 1. Identify the Bug
 I'll:
-- Look up the bug in `.galdr/BUGS.md`
+- Look up the bug in `.galdr/tracking/BUGS.md`
 - Find the associated task file in `.galdr/tasks/`
 - Review bug details: reproduction steps, expected vs actual behavior
 - Check severity and priority
