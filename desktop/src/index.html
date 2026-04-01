@@ -88,21 +88,6 @@
       color: #8b949e;
       line-height: 1.5;
     }
-
-    .retry-btn {
-      display: none;
-      margin-top: 1rem;
-      padding: 0.5rem 1.25rem;
-      background: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.15s;
-    }
-
-    .retry-btn:hover { background: #30363d; }
   </style>
 </head>
 <body>
@@ -117,55 +102,17 @@
       <code>cd docker &amp;&amp; docker compose up -d</code>
       <p>Then wait a few seconds for the server to initialize.</p>
     </div>
-
-    <button class="retry-btn" id="retryBtn" onclick="startPolling()">Retry Connection</button>
   </div>
 
   <script>
-    const SERVER_URL = 'http://localhost:8092';
-    const STATUS_ENDPOINT = SERVER_URL + '/api/status';
-    const REDIRECT_URL = SERVER_URL + '/static/index.html';
-    const POLL_INTERVAL_MS = 3000;
-    const TIMEOUT_MS = 30000;
-
-    let pollTimer = null;
-    let startTime = 0;
-
-    async function checkServer() {
-      try {
-        const resp = await fetch(STATUS_ENDPOINT, {
-          method: 'GET',
-          signal: AbortSignal.timeout(4000),
-        });
-        if (resp.ok) {
-          clearInterval(pollTimer);
-          document.getElementById('status').textContent = 'Connected — loading galdr\u2026';
-          window.location.href = REDIRECT_URL;
-          return;
-        }
-      } catch (_) { /* server not ready */ }
-
-      if (Date.now() - startTime > TIMEOUT_MS) {
-        clearInterval(pollTimer);
-        document.getElementById('spinner').style.display = 'none';
-        document.getElementById('status').textContent = '';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('retryBtn').style.display = 'inline-block';
-      }
-    }
-
-    function startPolling() {
-      document.getElementById('spinner').style.display = 'block';
-      document.getElementById('status').textContent = 'Connecting to galdr server\u2026';
-      document.getElementById('error').style.display = 'none';
-      document.getElementById('retryBtn').style.display = 'none';
-      startTime = Date.now();
-      clearInterval(pollTimer);
-      checkServer();
-      pollTimer = setInterval(checkServer, POLL_INTERVAL_MS);
-    }
-
-    startPolling();
+    // Navigation is handled by the Rust backend (spawn_server_poller).
+    // This page just shows a loading state. After ~40 seconds with no
+    // navigation, show the "server not running" message.
+    setTimeout(() => {
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('status').textContent = '';
+      document.getElementById('error').style.display = 'block';
+    }, 40000);
   </script>
 </body>
 </html>

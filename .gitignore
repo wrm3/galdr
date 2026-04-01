@@ -69,6 +69,10 @@ dist/
 build/
 uv.lock
 
+# Rust / Tauri
+target/
+Cargo.lock
+
 # Node
 node_modules/
 package-lock.json

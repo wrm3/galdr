@@ -2,13 +2,18 @@ use tauri::{
     Manager,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    Url,
 };
+
+const SERVER_URL: &str = "http://localhost:8092";
+const UI_URL: &str = "http://localhost:8092/static/index.html";
+const STATUS_URL: &str = "http://localhost:8092/api/status";
 
 #[tauri::command]
 async fn check_server_health() -> Result<serde_json::Value, String> {
     let client = reqwest::Client::new();
     match client
-        .get("http://localhost:8092/api/status")
+        .get(STATUS_URL)
         .timeout(std::time::Duration::from_secs(5))
         .send()
         .await
@@ -31,7 +36,7 @@ async fn trigger_heartbeat(routine: String) -> Result<serde_json::Value, String>
     let client = reqwest::Client::new();
     let body = serde_json::json!({ "routine": routine });
     match client
-        .post("http://localhost:8092/api/heartbeat/trigger")
+        .post(format!("{}/api/heartbeat/trigger", SERVER_URL))
         .json(&body)
         .timeout(std::time::Duration::from_secs(10))
         .send()
@@ -43,6 +48,31 @@ async fn trigger_heartbeat(routine: String) -> Result<serde_json::Value, String>
             .map_err(|e| e.to_string()),
         Err(e) => Err(e.to_string()),
     }
+}
+
+/// Spawn a background task that polls the server and navigates the
+/// WebView to the Docker-served UI once it responds.
+fn spawn_server_poller(app_handle: tauri::AppHandle) {
+    tauri::async_runtime::spawn(async move {
+        let client = reqwest::Client::new();
+        for _ in 0..20 {
+            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+            if let Ok(resp) = client
+                .get(STATUS_URL)
+                .timeout(std::time::Duration::from_secs(3))
+                .send()
+                .await
+            {
+                if resp.status().is_success() {
+                    if let Some(w) = app_handle.get_webview_window("main") {
+                        let url = UI_URL.parse::<Url>().unwrap();
+                        let _ = w.navigate(url);
+                    }
+                    return;
+                }
+            }
+        }
+    });
 }
 
 pub fn run() {
@@ -94,6 +124,9 @@ pub fn run() {
                     }
                 })
                 .build(app)?;
+
+            // Poll the Docker server from Rust and navigate when ready
+            spawn_server_poller(app.handle().clone());
 
             Ok(())
         })

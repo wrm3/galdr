@@ -23,7 +23,8 @@ async def analyze_video(
     frame_interval: int = 30,
     max_frames: int = 10,
     cache_results: bool = True,
-    config: Optional[Dict[str, Any]] = None
+    config: Optional[Dict[str, Any]] = None,
+    transcript_mode: str = "auto",
 ) -> Dict[str, Any]:
     """
     Full video analysis pipeline.
@@ -32,7 +33,7 @@ async def analyze_video(
     1. Resolve video_id from URL if needed
     2. Check cache (if enabled)
     3. Extract metadata
-    4. Extract transcript
+    4. Extract transcript (captions or audio-based)
     5. Extract frames (if enabled)
     6. Run vision analysis on frames (if enabled)
     7. Compile and return results
@@ -46,12 +47,16 @@ async def analyze_video(
         max_frames: Maximum frames to extract
         cache_results: Cache results for future use
         config: Configuration dictionary
+        transcript_mode: 'captions' = YouTube captions only,
+                         'audio' = always use Whisper STT,
+                         'auto' = try captions first, fall back to audio (default)
         
     Returns:
         Comprehensive analysis dict
     """
     from .metadata import extract_metadata
     from .transcript import extract_transcript
+    from .audio import extract_and_transcribe
     from .frames import extract_frames as do_extract_frames
     from .vision import analyze_frames
     
@@ -115,23 +120,45 @@ async def analyze_video(
             logger.warning(f"[{video_id}] Metadata extraction failed: {metadata_result.get('error')}")
         
         # Step 2: Transcript
-        logger.info(f"[{video_id}] Extracting transcript...")
-        transcript_result = await extract_transcript(video_id)
-        
-        if transcript_result['success']:
+        transcript_result = None
+
+        if transcript_mode in ("captions", "auto"):
+            logger.info(f"[{video_id}] Extracting YouTube captions...")
+            transcript_result = await extract_transcript(video_id)
+            if transcript_result['success']:
+                logger.info(f"[{video_id}] Captions found ({transcript_result.get('source')})")
+            else:
+                logger.info(f"[{video_id}] No captions available: {transcript_result.get('error')}")
+                transcript_result = None
+
+        if transcript_result is None and transcript_mode in ("audio", "auto"):
+            logger.info(f"[{video_id}] Downloading audio for Whisper transcription...")
+            whisper_model = config.get("whisper_model", "base")
+            transcript_result = await extract_and_transcribe(
+                video_id=video_id,
+                video_url=video_url,
+                model_size=whisper_model,
+                language="en",
+                cleanup=True,
+            )
+
+        if transcript_result and transcript_result.get('success'):
             result['transcript'] = transcript_result['transcript']
             result['transcript_segments'] = transcript_result.get('segments', [])
             result['transcript_stats'] = {
                 'word_count': transcript_result.get('word_count', 0),
                 'segment_count': transcript_result.get('segment_count', 0),
                 'source': transcript_result.get('source', 'unknown'),
-                'language': transcript_result.get('language', 'unknown')
+                'language': transcript_result.get('language', 'unknown'),
             }
+            if transcript_result.get('whisper_model'):
+                result['transcript_stats']['whisper_model'] = transcript_result['whisper_model']
             result['components']['transcript'] = True
-            logger.info(f"[{video_id}] Transcript: {result['transcript_stats']['word_count']} words")
+            logger.info(f"[{video_id}] Transcript: {result['transcript_stats']['word_count']} words via {result['transcript_stats']['source']}")
         else:
-            result['transcript_error'] = transcript_result.get('error')
-            logger.warning(f"[{video_id}] Transcript extraction failed: {transcript_result.get('error')}")
+            error_msg = transcript_result.get('error', 'All transcript methods failed') if transcript_result else 'All transcript methods failed'
+            result['transcript_error'] = error_msg
+            logger.warning(f"[{video_id}] Transcript extraction failed: {error_msg}")
         
         # Step 3 & 4: Frames + Vision (if enabled)
         if extract_frames:

@@ -26,7 +26,13 @@ TOOL_PARAMS = {
     "extract_frames": "Extract and analyze frames with vision (default: True)",
     "frame_interval": "Seconds between frame captures (default: 30)",
     "max_frames": "Maximum frames to extract (default: 10)",
-    "cache_results": "Cache results for reuse (default: True)"
+    "cache_results": "Cache results for reuse (default: True)",
+    "transcript_mode": (
+        "How to get transcript: "
+        "'captions' = YouTube captions only, "
+        "'audio' = download audio + Whisper STT, "
+        "'auto' = try captions first, fall back to audio (default)"
+    ),
 }
 
 # ============================================================
@@ -50,7 +56,8 @@ async def execute(
     extract_frames: bool = True,
     frame_interval: Optional[int] = None,
     max_frames: Optional[int] = None,
-    cache_results: bool = True
+    cache_results: bool = True,
+    transcript_mode: str = "auto",
 ) -> dict:
     """
     Full video analysis pipeline.
@@ -60,9 +67,9 @@ async def execute(
     """
     from galdr_video_analyzer.core.analyzer import analyze_video
     
-    # Use config defaults
-    frame_interval = frame_interval or _config.get('default_frame_interval', 30)
-    max_frames = max_frames or _config.get('max_frames', 10)
+    cfg = _config or {}
+    frame_interval = frame_interval or cfg.get('default_frame_interval', 30)
+    max_frames = max_frames or cfg.get('max_frames', 10)
     
     return await analyze_video(
         video_id=video_id,
@@ -71,5 +78,6 @@ async def execute(
         frame_interval=frame_interval,
         max_frames=max_frames,
         cache_results=cache_results,
-        config=_config
+        config=_config,
+        transcript_mode=transcript_mode,
     )

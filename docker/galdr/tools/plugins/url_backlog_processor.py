@@ -24,6 +24,13 @@ TOOL_PARAMS = {
     "urls": "List of URL strings to process (max 200)",
     "dry_run": "If true, classify only — don't ingest (default: false)",
     "skip_existing": "Skip URLs already in vault_notes (default: true)",
+    "youtube_mode": (
+        "How to handle YouTube videos: "
+        "'return' = return video IDs for agent to process (default), "
+        "'metadata' = auto-ingest metadata + captions only (fast, no download), "
+        "'audio' = download audio + Whisper STT + metadata (handles fresh uploads without captions), "
+        "'full' = full video_analyze with frame extraction + Claude vision (slow, expensive)"
+    ),
 }
 
 _db = None
@@ -35,6 +42,13 @@ YOUTUBE_DOMAINS = {"youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be"
 GITHUB_DOMAIN = "github.com"
 GIST_DOMAIN = "gist.github.com"
 HF_DOMAIN = "huggingface.co"
+
+_GITHUB_NON_REPO_PATHS = {
+    "orgs", "settings", "notifications", "explore", "topics",
+    "trending", "collections", "sponsors", "marketplace", "pulls",
+    "issues", "codespaces", "features", "security", "pricing",
+    "login", "signup", "join", "about", "enterprise", "team",
+}
 
 SKIP_DOMAINS = {
     "google.com", "www.google.com",
@@ -58,7 +72,7 @@ YOUTUBE_SHORT_RE = re.compile(r"/shorts/([a-zA-Z0-9_-]{11})")
 YOUTUBE_PLAYLIST_RE = re.compile(r"[?&]list=([a-zA-Z0-9_-]+)")
 HF_PAPER_RE = re.compile(r"huggingface\.co/papers/(\d{4}\.\d{4,5})")
 ARXIV_RE = re.compile(r"arxiv\.org/(abs|pdf)/(\d{4}\.\d{4,5})")
-GITHUB_REPO_RE = re.compile(r"github\.com/([^/]+)/([^/?#]+)/?$")
+GITHUB_REPO_RE = re.compile(r"github\.com/([^/]+)/([^/?#]+)")
 
 
 def setup(context: dict):
@@ -100,9 +114,16 @@ def _classify(url: str) -> dict:
         return {"type": "github_gist"}
 
     if domain == GITHUB_DOMAIN:
-        repo_m = GITHUB_REPO_RE.match(f"https://{domain}{parsed.path}")
+        repo_m = GITHUB_REPO_RE.search(f"https://{domain}{parsed.path}")
         if repo_m:
-            return {"type": "github_repo", "owner": repo_m.group(1), "repo": repo_m.group(2)}
+            owner, repo = repo_m.group(1), repo_m.group(2)
+            if owner not in _GITHUB_NON_REPO_PATHS:
+                return {
+                    "type": "github_repo",
+                    "owner": owner,
+                    "repo": repo,
+                    "canonical_url": f"https://github.com/{owner}/{repo}",
+                }
         return {"type": "article"}
 
     hf_m = HF_PAPER_RE.search(url)
@@ -143,6 +164,7 @@ async def execute(
     urls: list,
     dry_run: bool = False,
     skip_existing: bool = True,
+    youtube_mode: str = "return",
 ) -> dict:
     if not urls:
         return {"success": False, "error": "urls list is required"}
@@ -174,7 +196,13 @@ async def execute(
     existing_urls = set()
     if skip_existing:
         all_urls = [item["url"] for items in classified.values() for item in items]
-        existing_urls = await _check_existing(all_urls)
+        canonical_urls = [
+            item.get("canonical_url")
+            for items in classified.values()
+            for item in items
+            if item.get("canonical_url")
+        ]
+        existing_urls = await _check_existing(all_urls + canonical_urls)
 
     results = {
         "youtube_videos": [],
@@ -185,10 +213,41 @@ async def execute(
         "skipped": [],
     }
 
-    for item in classified.get("youtube_video", []):
-        results["youtube_videos"].append(item["video_id"])
-    for item in classified.get("youtube_short", []):
-        results["youtube_shorts"].append(item["video_id"])
+    if youtube_mode in ("metadata", "audio", "full"):
+        from galdr.tools.plugins import video_analyze
+        if hasattr(video_analyze, "setup"):
+            video_analyze.setup({"config": _config or {}})
+        for item in classified.get("youtube_video", []) + classified.get("youtube_short", []):
+            vid = item["video_id"]
+            if item["url"] in existing_urls:
+                results["processed"]["skipped"] += 1
+                continue
+            try:
+                if youtube_mode == "full":
+                    r = await video_analyze.execute(
+                        video_id=vid, extract_frames=True, transcript_mode="auto",
+                    )
+                elif youtube_mode == "audio":
+                    r = await video_analyze.execute(
+                        video_id=vid, extract_frames=False, transcript_mode="auto",
+                    )
+                else:
+                    r = await video_analyze.execute(
+                        video_id=vid, extract_frames=False, transcript_mode="captions",
+                    )
+                if r.get("success"):
+                    results["processed"]["created"] += 1
+                else:
+                    results["errors"].append({"url": item["url"], "error": r.get("error")})
+            except Exception as e:
+                results["errors"].append({"url": item["url"], "error": str(e)})
+            await asyncio.sleep(2)
+    else:
+        for item in classified.get("youtube_video", []):
+            results["youtube_videos"].append(item["video_id"])
+        for item in classified.get("youtube_short", []):
+            results["youtube_shorts"].append(item["video_id"])
+
     for item in classified.get("youtube_playlist", []):
         results["youtube_playlists"].append(item["playlist_id"])
 
@@ -199,18 +258,29 @@ async def execute(
 
     from galdr.tools.plugins import github_ingest, paper_ingest, url_ingest
 
+    _ctx = {"db": _db, "embedding_generator": _embedding_gen, "config": _config or {}}
+    for _plug in (github_ingest, paper_ingest, url_ingest):
+        if hasattr(_plug, "setup"):
+            _plug.setup(_ctx)
+
+    seen_repos = set()
     for item in classified.get("github_repo", []):
-        if item["url"] in existing_urls:
+        canonical = item.get("canonical_url", item["url"])
+        if canonical in seen_repos:
+            results["processed"]["skipped"] += 1
+            continue
+        seen_repos.add(canonical)
+        if canonical in existing_urls or item["url"] in existing_urls:
             results["processed"]["skipped"] += 1
             continue
         try:
-            r = await github_ingest.execute(url=item["url"])
+            r = await github_ingest.execute(url=canonical)
             if r.get("success"):
                 results["processed"][r.get("status", "created")] += 1
             else:
-                results["errors"].append({"url": item["url"], "error": r.get("error")})
+                results["errors"].append({"url": canonical, "error": r.get("error")})
         except Exception as e:
-            results["errors"].append({"url": item["url"], "error": str(e)})
+            results["errors"].append({"url": canonical, "error": str(e)})
         await asyncio.sleep(1)
 
     for item in classified.get("paper", []):

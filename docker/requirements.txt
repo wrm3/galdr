@@ -72,3 +72,4 @@ yt-dlp>=2024.1.0
 opencv-python-headless>=4.8.0
 Pillow>=10.0.0
 aiofiles>=23.0.0
+faster-whisper>=1.1.0

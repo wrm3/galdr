@@ -1,7 +1,7 @@
 {
     "mcpServers": {
       "galdr_docker": {
-        "url": "http://localhost:8082/mcp",
+        "url": "http://localhost:8092/mcp",
         "transport": "streamable-http"
       },
       "chrome-devtools": {
