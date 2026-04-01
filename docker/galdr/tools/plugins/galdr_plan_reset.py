@@ -113,11 +113,10 @@ def _inventory_galdr(GALDR_dir: Path) -> dict:
 
     # Highlight the critical data files
     critical_files = []
-    for name in [
-        'TASKS.md', 'PLAN.md', 'BUGS.md', 'PROJECT_CONTEXT.md',
-        'SUBSYSTEMS.md', 'FILE_REGISTRY.md', 'MCP_TOOLS_INVENTORY.md',
-        'IDEA_BOARD.md', 'PROJECT_GOALS.md',
-    ]:
+    root_files = ['TASKS.md', 'PRD.md', 'SUBSYSTEMS.md']
+    tracking_files = ['tracking/BUGS.md', 'tracking/IDEA_BOARD.md', 'tracking/INBOX.md']
+    docs_files = ['docs/PROJECT_CONTEXT.md', 'docs/PROJECT_GOALS.md']
+    for name in root_files + tracking_files + docs_files:
         fp = GALDR_dir / name
         if fp.exists():
             critical_files.append(name)

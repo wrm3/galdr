@@ -130,7 +130,7 @@ def _parse_tasks_md() -> dict:
 
 
 def _parse_bugs_md() -> dict:
-    bugs_md = _galdr_path() / "BUGS.md"
+    bugs_md = _galdr_path() / "tracking" / "BUGS.md"
     content = _read_file(bugs_md)
     if content is None:
         return {"total": 0, "open": 0}
@@ -147,7 +147,7 @@ def _parse_bugs_md() -> dict:
 
 
 def _parse_heartbeat_md() -> dict:
-    hb_path = _galdr_path() / "HEARTBEAT.md"
+    hb_path = _galdr_path() / "config" / "HEARTBEAT.md"
     content = _read_file(hb_path)
     if content is None:
         return {"enabled": False, "config": {}, "routines": []}
