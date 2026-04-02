@@ -348,6 +348,69 @@ foreach ($p in $Platforms) {
     }
 }
 
+# --- .GALDR_TEMPLATE PARITY ---
+
+Write-Host "`n--- .galdr_template Parity ---" -ForegroundColor Yellow
+
+$rootGaldrTemplate = Join-Path $RepoRoot ".galdr_template"
+$templatesGaldrTemplate = Join-Path $RepoRoot "templates\.galdr_template"
+
+if ((Test-Path $rootGaldrTemplate) -and (Test-Path $templatesGaldrTemplate)) {
+    $rootGTFiles = Get-ChildItem $rootGaldrTemplate -Recurse -File | ForEach-Object { $_.FullName.Substring($rootGaldrTemplate.Length) }
+    $templateGTFiles = Get-ChildItem $templatesGaldrTemplate -Recurse -File | ForEach-Object { $_.FullName.Substring($templatesGaldrTemplate.Length) }
+
+    # Files only in templates (canonical source) → must copy to root
+    $onlyInTemplate = $templateGTFiles | Where-Object { $_ -notin $rootGTFiles }
+    foreach ($f in $onlyInTemplate) {
+        $totalGaps++
+        Write-Host "  GAP  template->root  .galdr_template$f" -ForegroundColor Red
+        if ($Fix) {
+            $destDir = Split-Path (Join-Path $rootGaldrTemplate $f) -Parent
+            if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
+            Copy-Item (Join-Path $templatesGaldrTemplate $f) (Join-Path $rootGaldrTemplate $f) -Force
+            Write-Host "       FIXED -> .galdr_template$f" -ForegroundColor Green
+            $fixedGaps++
+        }
+    }
+
+    # Files only in root → must copy to templates
+    $onlyInRoot = $rootGTFiles | Where-Object { $_ -notin $templateGTFiles }
+    foreach ($f in $onlyInRoot) {
+        $totalGaps++
+        Write-Host "  GAP  root->template  .galdr_template$f (missing from templates/)" -ForegroundColor Red
+        if ($Fix) {
+            $destDir = Split-Path (Join-Path $templatesGaldrTemplate $f) -Parent
+            if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
+            Copy-Item (Join-Path $rootGaldrTemplate $f) (Join-Path $templatesGaldrTemplate $f) -Force
+            Write-Host "       FIXED -> templates/.galdr_template$f" -ForegroundColor Green
+            $fixedGaps++
+        }
+    }
+
+    # Content differences in shared files (templates/ is canonical → copy to root)
+    $common = $templateGTFiles | Where-Object { $_ -in $rootGTFiles }
+    foreach ($f in $common) {
+        $h1 = (Get-FileHash (Join-Path $templatesGaldrTemplate $f)).Hash
+        $h2 = (Get-FileHash (Join-Path $rootGaldrTemplate $f)).Hash
+        if ($h1 -ne $h2) {
+            $totalGaps++
+            Write-Host "  GAP  content-diff    .galdr_template$f" -ForegroundColor Red
+            if ($Fix) {
+                Copy-Item (Join-Path $templatesGaldrTemplate $f) (Join-Path $rootGaldrTemplate $f) -Force
+                Write-Host "       FIXED -> .galdr_template$f (from templates/)" -ForegroundColor Green
+                $fixedGaps++
+            }
+        }
+    }
+} else {
+    if (-not (Test-Path $rootGaldrTemplate)) {
+        Write-Host "  WARN  .galdr_template/ missing in root" -ForegroundColor DarkYellow
+    }
+    if (-not (Test-Path $templatesGaldrTemplate)) {
+        Write-Host "  WARN  templates/.galdr_template/ missing" -ForegroundColor DarkYellow
+    }
+}
+
 # --- Summary ---
 
 Write-Host "`n========================================" -ForegroundColor Cyan
