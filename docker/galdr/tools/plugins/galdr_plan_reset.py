@@ -13,7 +13,7 @@ Safety features:
 USE WITH CAUTION: This permanently deletes all local .galdr/ content including:
   - TASKS.md, PRD.md, SUBSYSTEMS.md  (root files)
   - config/HEARTBEAT.md, config/SPRINT.md  (operational config)
-  - docs/PROJECT_CONTEXT.md, docs/ARCHITECTURE_CONSTRAINTS.md  (project docs)
+  - project/PROJECT_CONTEXT.md, project/PROJECT_CONSTRAINTS.md  (project docs)
   - tracking/BUGS.md, tracking/IDEA_BOARD.md  (status tracking)
   - subsystems/  (subsystem spec files)
   - All files in .galdr/tasks/   (every task file)
@@ -113,8 +113,8 @@ def _inventory_galdr(GALDR_dir: Path) -> dict:
     critical_files = []
     root_files = ['TASKS.md', 'PRD.md', 'SUBSYSTEMS.md']
     tracking_files = ['tracking/BUGS.md', 'tracking/IDEA_BOARD.md', 'tracking/INBOX.md']
-    docs_files = ['docs/PROJECT_CONTEXT.md', 'docs/PROJECT_GOALS.md']
-    for name in root_files + tracking_files + docs_files:
+    project_files = ['project/PROJECT_CONTEXT.md', 'project/PROJECT_GOALS.md', 'project/PROJECT_CONSTRAINTS.md']
+    for name in root_files + tracking_files + project_files:
         fp = GALDR_dir / name
         if fp.exists():
             critical_files.append(name)

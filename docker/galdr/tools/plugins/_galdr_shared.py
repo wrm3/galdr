@@ -166,7 +166,7 @@ FULL_MANIFEST_V2: List[str] = [
     'templates/LICENSE',
     'templates/NOTICE',
 
-    # .galdr/ blank template — vNext version with ARCHITECTURE_CONSTRAINTS.md,
+    # .galdr/ blank template — vNext version with PROJECT_CONSTRAINTS.md,
     # SPRINT.md, CLEANUP_REPORT.md, SYSTEM_EXPERIMENTS.md, etc.
     'templates/.galdr',
 ]

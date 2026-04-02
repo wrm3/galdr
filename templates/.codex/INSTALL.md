@@ -38,7 +38,7 @@ Create a .galdr/ folder with these files:
 - PROJECT_CONTEXT.md (project mission and goals)
 - PROJECT_GOALS.md (strategic goals with metrics)
 - SUBSYSTEMS.md (component registry)
-- ARCHITECTURE_CONSTRAINTS.md (non-negotiable constraints)
+- PROJECT_CONSTRAINTS.md (non-negotiable constraints)
 - PROJECT_TOPOLOGY.md (cross-project relationships)
 - INBOX.md (cross-project coordination queue)
 - tasks/ (individual task files)

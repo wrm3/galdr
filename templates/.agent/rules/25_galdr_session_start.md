@@ -42,7 +42,7 @@ Ideas: [N] active (from IDEA_BOARD.md)
 - Otherwise: count open items by type (requests/broadcasts/syncs) and note in session context
 - Format: `INBOX: N open (N requests, N broadcasts, N syncs)` or `INBOX: clear`
 
-**Step 7: Cascade Forward Check** (if `.galdr/docs/PROJECT_TOPOLOGY.md` has children declared)
+**Step 7: Cascade Forward Check** (if `.galdr/project/PROJECT_TOPOLOGY.md` has children declared)
 - Scan `.galdr/tasks/` for any task with `cascade_depth_remaining > 0` AND `cascade_forwarded: false`
 - If found: forward cascades to children listed in topology (follow `g-broadcast` skill pattern but using the cascade chain metadata from the task)
 - Mark forwarded tasks as `cascade_forwarded: true`

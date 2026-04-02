@@ -1,6 +1,6 @@
 """
 galdr_validate_task — MCP tool
-Hard gate for ARCHITECTURE_CONSTRAINTS.md enforcement.
+Hard gate for PROJECT_CONSTRAINTS.md enforcement.
 
 Reads the constraints file from a project and validates a task against active constraints.
 Returns structured pass/fail with specific violations listed.
@@ -17,7 +17,7 @@ from typing import Any, Optional
 
 TOOL_NAME = "galdr_validate_task"
 TOOL_DESCRIPTION = (
-    "Validate a task against the project's ARCHITECTURE_CONSTRAINTS.md before claiming or starting it. "
+    "Validate a task against the project's PROJECT_CONSTRAINTS.md before claiming or starting it. "
     "Returns pass/fail with specific violations listed. "
     "Call before any autonomous task claim. "
     "If no constraints file exists, returns valid=true with constraints_checked=0. "
@@ -28,7 +28,7 @@ TOOL_PARAMS = {
     "properties": {
         "project_path": {
             "type": "string",
-            "description": "Absolute path to the project root (looks for .galdr/docs/ARCHITECTURE_CONSTRAINTS.md).",
+            "description": "Absolute path to the project root (looks for .galdr/project/PROJECT_CONSTRAINTS.md).",
         },
         "task_id": {
             "type": "string",
@@ -63,7 +63,7 @@ TOOL_PARAMS = {
 
 # ── Constraint parsing ────────────────────────────────────────────────────────
 
-# Patterns that indicate constraint categories in ARCHITECTURE_CONSTRAINTS.md
+# Patterns that indicate constraint categories in PROJECT_CONSTRAINTS.md
 # We look for lines with `- [x]` (active) or `- [ ]` (inactive) prefixes.
 _ACTIVE_RE = re.compile(r"^\s*-\s*\[x\]\s*(.+)", re.IGNORECASE)
 _INACTIVE_RE = re.compile(r"^\s*-\s*\[\s*\]\s*(.+)", re.IGNORECASE)
@@ -80,7 +80,7 @@ _PROD_SAFETY_KEYWORDS = ["no direct deploy", "no prod", "staging only", "manual 
 
 
 def _parse_constraints(constraints_path: Path) -> list[dict[str, Any]]:
-    """Parse ARCHITECTURE_CONSTRAINTS.md into a list of active constraint dicts."""
+    """Parse PROJECT_CONSTRAINTS.md into a list of active constraint dicts."""
     constraints = []
     current_section = "general"
 
@@ -206,11 +206,11 @@ async def execute(
     files_to_modify = files_to_modify or []
 
     project = Path(project_path)
-    constraints_path = project / ".galdr" / "docs" / "ARCHITECTURE_CONSTRAINTS.md"
+    constraints_path = project / ".galdr" / "project" / "PROJECT_CONSTRAINTS.md"
     if not constraints_path.exists():
-        constraints_path = project / ".galdr" / "ARCHITECTURE_CONSTRAINTS.md"
+        constraints_path = project / ".galdr" / "PROJECT_CONSTRAINTS.md"
     if not constraints_path.exists():
-        constraints_path = project / "ARCHITECTURE_CONSTRAINTS.md"
+        constraints_path = project / "PROJECT_CONSTRAINTS.md"
 
     # No constraints file = pass with zero checks
     if not constraints_path.exists():
@@ -220,7 +220,7 @@ async def execute(
             "warnings": [],
             "violations": [],
             "constraints_checked": 0,
-            "note": "No ARCHITECTURE_CONSTRAINTS.md found — proceeding without constraint validation.",
+            "note": "No PROJECT_CONSTRAINTS.md found — proceeding without constraint validation.",
         }
 
     try:
@@ -230,7 +230,7 @@ async def execute(
             "valid": False,
             "task_id": task_id,
             "warnings": [],
-            "violations": [f"Could not parse ARCHITECTURE_CONSTRAINTS.md: {e}"],
+            "violations": [f"Could not parse PROJECT_CONSTRAINTS.md: {e}"],
             "constraints_checked": 0,
         }
 

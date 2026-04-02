@@ -18,7 +18,9 @@ You own file organization, scope control, and project structure standards.
 |---|---|
 | `.galdr/` (root) | TASKS.md, PRD.md, SUBSYSTEMS.md ONLY |
 | `.galdr/config/` | HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md |
-| `.galdr/docs/` | PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, ARCHITECTURE_CONSTRAINTS.md, SYSTEM_EXPERIMENTS.md |
+| `.galdr/project/` | PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, PROJECT_CONSTRAINTS.md |
+| `.galdr/experiments/` | HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md, EXPERIMENT_TEMPLATE.md |
+| `.galdr/reports/` | CLEANUP_REPORT.md |
 | `.galdr/tracking/` | BUGS.md, IDEA_BOARD.md, INBOX.md |
 | `.galdr/subsystems/` | Per-subsystem spec files (one .md per subsystem) |
 | `docs/` | ALL documentation: migration files, conversion summaries, setup reports, API docs, architecture docs |
@@ -36,7 +38,7 @@ Edit these directly without asking:
 ## Auto-Creation Rules
 Silently create missing folders without asking:
 - `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`
-- `.galdr/config/`, `.galdr/docs/`, `.galdr/tracking/`, `.galdr/subsystems/`
+- `.galdr/config/`, `.galdr/project/`, `.galdr/tracking/`, `.galdr/subsystems/`
 - `docs/`, `temp_scripts/`
 
 ## Required Template Files
@@ -44,7 +46,7 @@ Ensure these exist in every galdr project:
 ```
 .galdr/TASKS.md, PRD.md, SUBSYSTEMS.md, .project_id
 .galdr/config/HEARTBEAT.md, SPRINT.md
-.galdr/docs/PROJECT_CONTEXT.md, PROJECT_GOALS.md, ARCHITECTURE_CONSTRAINTS.md
+.galdr/project/PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_CONSTRAINTS.md
 .galdr/tracking/BUGS.md, IDEA_BOARD.md, INBOX.md
 .galdr/subsystems/  (populated from SUBSYSTEMS.md entries)
 ```
@@ -71,7 +73,7 @@ Before `galdr_install`, detect if existing:
 → NO to all: FRESH install
 ```
 
-**NEVER overwrite**: TASKS.md, tasks/, phases/, BUGS.md, logs/, IDEA_BOARD.md, ARCHITECTURE_CONSTRAINTS.md
+**NEVER overwrite**: TASKS.md, tasks/, phases/, BUGS.md, logs/, IDEA_BOARD.md, PROJECT_CONSTRAINTS.md
 
 ## Backup Detection After Install
 Scan for `.GALDR_YYYYMMDD/` folders in project root after any install.  

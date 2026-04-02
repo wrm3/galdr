@@ -9,7 +9,7 @@ description: Child project requests parent action — writes parent INBOX.md and
 
 ## Steps
 
-1. **Read `.galdr/docs/PROJECT_TOPOLOGY.md`** — get parents list
+1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`** — get parents list
    - If no parents declared → "No parents in topology. Run @g-topology to declare a parent first."
 
 2. **Select target parent** (if multiple parents):

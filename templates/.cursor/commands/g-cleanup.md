@@ -14,8 +14,8 @@ git pull   # Always work from latest state
 ```
 
 Read:
-1. `.galdr/docs/PROJECT_CONTEXT.md` — load project identity and constraints reference
-2. `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` — load active constraints
+1. `.galdr/project/PROJECT_CONTEXT.md` — load project identity and constraints reference
+2. `.galdr/project/PROJECT_CONSTRAINTS.md` — load active constraints
 3. `.galdr/TASKS.md` — master task list
 4. All files in `.galdr/tasks/` — individual task states
 
@@ -161,7 +161,7 @@ For all tasks with `execution_cost.total_cost_usd` set:
 
 ## Step 10: CLEANUP_REPORT.md Generation
 
-Write the complete report to `.galdr/docs/CLEANUP_REPORT.md` using the template.
+Write the complete report to `.galdr/reports/CLEANUP_REPORT.md` using the template.
 
 ---
 

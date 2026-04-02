@@ -139,7 +139,7 @@ This server provides multiple tool categories:
 
 **Project Health:**
 - galdr_health_report - Compute health score (0-100) for a galdr-managed project; returns per-subsystem breakdown, stale claims, blocked tasks, and Firecrawl crawl status
-- galdr_validate_task - Validate a task against ARCHITECTURE_CONSTRAINTS.md before claiming it; returns pass/fail with violations listed; call before any autonomous task claim
+- galdr_validate_task - Validate a task against PROJECT_CONSTRAINTS.md before claiming it; returns pass/fail with violations listed; call before any autonomous task claim
 
 **Service URLs:**
 - get_service_url - Returns the correct URL for mediawiki, pgadmin, galdr, or postgres — environment-aware (works across home, work, OKE/Kubernetes)

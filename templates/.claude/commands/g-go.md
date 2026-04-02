@@ -9,9 +9,9 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 ### 1. Load Context (Before Touching Anything)
 
 Read the following files to understand the project state:
-- `.galdr/docs/PROJECT_CONTEXT.md` — mission and goals
+- `.galdr/project/PROJECT_CONTEXT.md` — mission and goals
 - `.galdr/TASKS.md` — master task list
-- `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` — guardrails (if exists)
+- `.galdr/project/PROJECT_CONSTRAINTS.md` — guardrails (if exists)
 - `git log --oneline -10` — recent changes
 
 ### 2. Build the Work Queue
@@ -97,7 +97,7 @@ After completing as many tasks as possible, present:
 | Log every decision you make autonomously | User needs to review what you decided |
 | Skip tasks you can't complete, don't fail the whole run | Maximize total output |
 | Commit after each completed task (if user allows) | Preserve progress incrementally |
-| Respect ARCHITECTURE_CONSTRAINTS.md | Don't violate project guardrails |
+| Respect PROJECT_CONSTRAINTS.md | Don't violate project guardrails |
 | Stop if a task would be destructive (schema drops, data loss) | Safety first — log it as a blocker |
 
 ## Usage Examples

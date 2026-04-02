@@ -30,7 +30,9 @@
 ├── PRD.md                     # Product Requirements Document
 ├── SUBSYSTEMS.md              # Component registry + interconnection diagram
 ├── config/                    # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md
-├── docs/                      # PROJECT_CONTEXT.md, ARCHITECTURE_CONSTRAINTS.md, PROJECT_GOALS.md
+├── project/                   # PROJECT_CONTEXT.md, PROJECT_CONSTRAINTS.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md
+├── experiments/               # HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md
+├── reports/                   # CLEANUP_REPORT.md
 ├── tracking/                  # BUGS.md, IDEA_BOARD.md, INBOX.md
 ├── subsystems/                # Per-subsystem spec files
 ├── tasks/                     # Individual task files (task{id}_name.md)
@@ -240,7 +242,7 @@ completed_date: ''
 - `.galdr/PLAN.md` - Product Requirements
 - `.galdr/TASKS.md` - Task checklist
 - `.galdr/tracking/BUGS.md` - Bug tracking
-- `.galdr/docs/PROJECT_CONTEXT.md` - Project mission
+- `.galdr/project/PROJECT_CONTEXT.md` - Project mission
 - All files in `.galdr/tasks/`
 - All files in `.galdr/phases/`
 
@@ -306,7 +308,7 @@ Commands use the `g-` prefix.
 ## Quick Reference
 
 ### When Starting Work
-1. Read `.galdr/docs/PROJECT_CONTEXT.md`
+1. Read `.galdr/project/PROJECT_CONTEXT.md`
 2. Check `.galdr/TASKS.md` for current tasks
 3. Create task file before starting work
 

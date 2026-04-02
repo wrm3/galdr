@@ -13,7 +13,7 @@ The galdr system uses a file-based approach where:
 - **Master checklist**: `.galdr/TASKS.md` - Central task list with phase headers and status indicators
 - **Individual tasks**: `.galdr/tasks/task{id}_descriptive_name.md` - Detailed task files
 - **Phase files**: `.galdr/phases/phase{N}_{name}.md` - Phase details with subsystems and objectives
-- **Project context**: `.galdr/docs/PROJECT_CONTEXT.md` - Project goals and scope
+- **Project context**: `.galdr/project/PROJECT_CONTEXT.md` - Project goals and scope
 - **Subsystems**: `.galdr/SUBSYSTEMS.md` - Architectural component registry
 
 ### Key Synchronization Rules
@@ -234,7 +234,7 @@ Parse TASKS.md and filter by status indicators
 Read TASKS.md sections organized by phase
 
 **To view project context:**
-Read `.galdr/docs/PROJECT_CONTEXT.md` for goals and scope
+Read `.galdr/project/PROJECT_CONTEXT.md` for goals and scope
 
 ### Listing Tasks
 

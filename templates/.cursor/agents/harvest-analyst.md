@@ -62,7 +62,7 @@ Follow the 5-step harvest process defined in the skill exactly.
 - Read `.galdr/SUBSYSTEMS.md` for current architecture
 - Read `.galdr/TASKS.md` for planned/in-progress work
 - Read `.galdr/PLAN.md` for product vision
-- Read `.galdr/docs/PROJECT_CONTEXT.md` for mission
+- Read `.galdr/project/PROJECT_CONTEXT.md` for mission
 
 ### 3. Analyze the Source
 Adapt method to source type (repo, article, video, research).

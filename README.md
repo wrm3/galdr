@@ -50,7 +50,9 @@ Your Project/
 │   ├── PRD.md               # Product Requirements Document
 │   ├── SUBSYSTEMS.md        # Component registry + interconnection diagram
 │   ├── config/              # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md
-│   ├── docs/                # PROJECT_CONTEXT.md, ARCHITECTURE_CONSTRAINTS.md, PROJECT_GOALS.md
+│   ├── project/             # PROJECT_CONTEXT.md, PROJECT_CONSTRAINTS.md, PROJECT_GOALS.md
+│   ├── experiments/         # HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md
+│   ├── reports/             # CLEANUP_REPORT.md
 │   ├── tracking/            # BUGS.md, IDEA_BOARD.md, INBOX.md
 │   ├── subsystems/          # Per-subsystem spec files
 │   ├── tasks/               # Individual task specs (YAML + markdown)

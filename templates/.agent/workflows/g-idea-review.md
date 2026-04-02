@@ -13,7 +13,7 @@ decide what to promote, shelve, or keep for later.
 
 ### 1. Load Context
 - Read `.galdr/tracking/IDEA_BOARD.md`
-- Read `.galdr/docs/PROJECT_GOALS.md` (if exists)
+- Read `.galdr/project/PROJECT_GOALS.md` (if exists)
 - Read `.galdr/TASKS.md` to understand current phase/progress
 
 ### 2. Display Summary

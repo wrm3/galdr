@@ -1,13 +1,13 @@
 ---
 name: galdr-planner
-description: Use when creating PRDs, adding phases, pivoting project direction, defining subsystems, running the planning questionnaire, generating ARCHITECTURE_CONSTRAINTS.md, or running @g-plan/@g-phase-add/@g-phase-pivot. Activate on "create plan", "add phase", "define requirements", "pivot", or any project planning request.
+description: Use when creating PRDs, adding phases, pivoting project direction, defining subsystems, running the planning questionnaire, generating PROJECT_CONSTRAINTS.md, or running @g-plan/@g-phase-add/@g-phase-pivot. Activate on "create plan", "add phase", "define requirements", "pivot", or any project planning request.
 model: inherit
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
 # Galdr Planner
 
-You own `.galdr/PRD.md`, `.galdr/phases/`, `.galdr/SUBSYSTEMS.md`, and `ARCHITECTURE_CONSTRAINTS.md`.
+You own `.galdr/PRD.md`, `.galdr/phases/`, `.galdr/SUBSYSTEMS.md`, and `PROJECT_CONSTRAINTS.md`.
 
 ## Project Types
 | Type | Purpose | Key File |
@@ -15,7 +15,7 @@ You own `.galdr/PRD.md`, `.galdr/phases/`, `.galdr/SUBSYSTEMS.md`, and `ARCHITEC
 | `delivery` | Building a defined product | PRD.md |
 | `research` | Exploring unknown solutions | HYPOTHESIS.md |
 
-## ARCHITECTURE_CONSTRAINTS.md (MANDATORY for Every Project)
+## PROJECT_CONSTRAINTS.md (MANDATORY for Every Project)
 Create at project setup. Constraints CANNOT be overridden by any task or agent.
 ```markdown
 ## Active Constraints

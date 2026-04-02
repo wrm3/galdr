@@ -47,19 +47,19 @@ Create these template files:
 - `.galdr/PRD.md` - Product Requirements Document
 - `.galdr/TASKS.md` - Master task checklist (with subsystem headers)
 - `.galdr/tracking/BUGS.md` - Bug tracking
-- `.galdr/docs/PROJECT_CONTEXT.md` - Mission + health score + autonomous agent config
-- `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` - Non-negotiable constraints (populate with user input)
+- `.galdr/project/PROJECT_CONTEXT.md` - Mission + health score + autonomous agent config
+- `.galdr/project/PROJECT_CONSTRAINTS.md` - Non-negotiable constraints (populate with user input)
 - `.galdr/SUBSYSTEMS.md` - Component registry
 - `.galdr/config/SPRINT.md` - Active sprint queue (cleanup-agent-generated placeholder)
-- `.galdr/docs/CLEANUP_REPORT.md` - Nightly report placeholder
-- `.galdr/docs/SYSTEM_EXPERIMENTS.md` - System evolution log
+- `.galdr/reports/CLEANUP_REPORT.md` - Nightly report placeholder
+- `.galdr/experiments/SYSTEM_EXPERIMENTS.md` - System evolution log
 - `.galdr/tracking/IDEA_BOARD.md` - Ideas parking lot (human + AI sections)
-- `.galdr/docs/PROJECT_GOALS.md` - Strategic goals
+- `.galdr/project/PROJECT_GOALS.md` - Strategic goals
 - `.galdr/templates/task_template.md` - Full vNext task YAML schema
 - `.galdr/templates/phase_template.md` - Phase schema
 
 **Research projects also get:**
-- `.galdr/docs/HYPOTHESIS.md` - Hypothesis tracker
+- `.galdr/experiments/HYPOTHESIS.md` - Hypothesis tracker
 
 ---
 
@@ -67,7 +67,7 @@ Create these template files:
 
 Ask the user:
 > "Are there any non-negotiable technical constraints? (e.g., database technology, deployment target, public API stability, cost limits)
-> I'll document these in ARCHITECTURE_CONSTRAINTS.md so every agent session loads them automatically."
+> I'll document these in PROJECT_CONSTRAINTS.md so every agent session loads them automatically."
 
 Add each constraint as a `C-NNN` entry.
 

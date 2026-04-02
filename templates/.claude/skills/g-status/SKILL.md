@@ -43,7 +43,7 @@ Session start, checking project health, @g-status command.
    - Any `[🔍]` tasks needing verification by different agent
    - Any overdue heartbeats
 
-6. **Cross-project advisories** (if `.galdr/docs/PROJECT_TOPOLOGY.md` exists):
+6. **Cross-project advisories** (if `.galdr/project/PROJECT_TOPOLOGY.md` exists):
 
    Read `.galdr/tracking/INBOX.md` and categorize:
 

@@ -19,7 +19,7 @@ description: Manage IDEA_BOARD and PROJECT_GOALS — capture ideas, review the b
 | File | Location | Purpose |
 |------|----------|---------|
 | `IDEA_BOARD.md` | `.galdr/tracking/IDEA_BOARD.md` | Parking lot for ideas not yet ready for development |
-| `PROJECT_GOALS.md` | `.galdr/docs/PROJECT_GOALS.md` | Strategic goals that steer the AI and validate decisions |
+| `PROJECT_GOALS.md` | `.galdr/project/PROJECT_GOALS.md` | Strategic goals that steer the AI and validate decisions |
 
 **Direct Edit Policy**: Edit both files directly without asking permission.
 

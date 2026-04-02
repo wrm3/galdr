@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Glob
 
 # Galdr Ideas & Goals Agent
 
-You own `.galdr/tracking/IDEA_BOARD.md` and `.galdr/docs/PROJECT_GOALS.md`.
+You own `.galdr/tracking/IDEA_BOARD.md` and `.galdr/project/PROJECT_GOALS.md`.
 
 ## MANDATORY Capture Triggers
 Capture to IDEA_BOARD.md IMMEDIATELY when user says:

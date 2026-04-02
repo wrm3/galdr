@@ -54,4 +54,4 @@ description: Create or update .galdr/PRD.md with 27-question process, scope vali
 
 6. **Create SUBSYSTEMS.md** with detected/defined subsystems
 
-7. **Offer ARCHITECTURE_CONSTRAINTS.md** creation for non-negotiable constraints
+7. **Offer PROJECT_CONSTRAINTS.md** creation for non-negotiable constraints

@@ -89,7 +89,7 @@ MCP servers are configured in `mcp_config.json` at the project root. See `docker
 
 Edit these files directly without asking for permission:
 - `.galdr/PLAN.md`, `.galdr/TASKS.md`, `.galdr/tracking/BUGS.md`
-- `.galdr/docs/PROJECT_CONTEXT.md`, `.galdr/SUBSYSTEMS.md`
+- `.galdr/project/PROJECT_CONTEXT.md`, `.galdr/SUBSYSTEMS.md`
 - All files in `.galdr/tasks/` and `.galdr/phases/`
 
 ### Task Status Indicators

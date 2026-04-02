@@ -4,7 +4,7 @@
 **Type**: delivery | research  *(set during @g-setup)*
 **PRD**: `.galdr/PRD.md`
 **Subsystems**: `.galdr/SUBSYSTEMS.md`
-**Architecture Constraints**: `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md`
+**Architecture Constraints**: `.galdr/project/PROJECT_CONSTRAINTS.md`
 
 ---
 

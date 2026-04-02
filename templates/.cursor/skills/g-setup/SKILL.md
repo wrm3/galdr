@@ -24,7 +24,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`, `.galdr/config/`, `.galdr/docs/`, `.galdr/tracking/`, `.galdr/subsystems/`, `docs/`, `temp_scripts/`
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`, `.galdr/config/`, `.galdr/project/`, `.galdr/experiments/`, `.galdr/reports/`, `.galdr/tracking/`, `.galdr/subsystems/`, `docs/`, `temp_scripts/`
    - Files: Use galdr-project-manager INITIALIZE mode for all file generation
 
 4. **Generate .project_id**:
@@ -42,12 +42,16 @@ First-time setup of galdr in a project. @g-setup command.
    ├── config/ ✅
    │   ├── HEARTBEAT.md ✅
    │   └── SPRINT.md ✅
-   ├── docs/ ✅
+   ├── project/ ✅
    │   ├── PROJECT_CONTEXT.md ✅
    │   ├── PROJECT_GOALS.md ✅
-   │   ├── ARCHITECTURE_CONSTRAINTS.md ✅
-   │   ├── PROJECT_TOPOLOGY.md ✅  ← cross-project coordination
+   │   ├── PROJECT_CONSTRAINTS.md ✅
+   │   └── PROJECT_TOPOLOGY.md ✅  ← cross-project coordination
+   ├── experiments/ ✅
+   │   ├── HYPOTHESIS.md ✅
    │   └── SYSTEM_EXPERIMENTS.md ✅
+   ├── reports/ ✅
+   │   └── CLEANUP_REPORT.md ✅
    ├── tracking/ ✅
    │   ├── BUGS.md ✅
    │   ├── IDEA_BOARD.md ✅
@@ -62,7 +66,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 6. **Create cross-project files** (if not already present from galdr_install):
-   - `.galdr/docs/PROJECT_TOPOLOGY.md` — from template, starts with `relationships: none`
+   - `.galdr/project/PROJECT_TOPOLOGY.md` — from template, starts with `relationships: none`
    - `.galdr/tracking/INBOX.md` — empty template with usage comments
    - `.galdr/contracts/README.md` — explanation of contracts pattern
 

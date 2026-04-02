@@ -9,7 +9,7 @@ description: View or edit cross-project topology — parents, children, siblings
 
 ## Steps
 
-1. **Read `.galdr/docs/PROJECT_TOPOLOGY.md`**
+1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`**
    - If file does not exist → create it from template (relationships: none)
    - If `relationships: none` → display "No relationships declared" + offer to add
 

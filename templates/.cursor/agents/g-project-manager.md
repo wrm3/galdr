@@ -46,7 +46,7 @@ Generate with REAL content from project analysis — never output `{project_name
 - `BUGS.md` — initialized header
 - `SUBSYSTEMS.md` — auto-detected subsystems
 - `FILE_REGISTRY.md` — discovered key files
-- `ARCHITECTURE_CONSTRAINTS.md` — blank constraints table
+- `PROJECT_CONSTRAINTS.md` — blank constraints table
 - `PROJECT_GOALS.md` — G-01/G-02 from project analysis
 - `IDEA_BOARD.md` — blank template
 - `.project_id` — UUID generated fresh: `python -c "import uuid; print(uuid.uuid4())"`

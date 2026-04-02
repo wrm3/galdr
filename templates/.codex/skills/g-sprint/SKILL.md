@@ -11,7 +11,7 @@ description: Autonomous 2-hour sprint — read SPRINT.md, claim tasks, implement
 ```
 □ git pull — work on current state
 □ Read PROJECT_CONTEXT.md — autonomous config allows this?
-□ Read ARCHITECTURE_CONSTRAINTS.md — no violations?
+□ Read PROJECT_CONSTRAINTS.md — no violations?
 □ Read SPRINT.md — generated within last 2 hours? (else stale)
 □ can_agents_commit_directly flag? → false = STOP
 ```

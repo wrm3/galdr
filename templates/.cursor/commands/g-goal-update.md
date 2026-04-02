@@ -2,7 +2,7 @@ Update project goals: $ARGUMENTS
 
 ## What This Command Does
 
-Creates or updates `.galdr/docs/PROJECT_GOALS.md` to reflect the project's
+Creates or updates `.galdr/project/PROJECT_GOALS.md` to reflect the project's
 current strategic direction. Goals are loaded into every session to
 steer AI decisions and validate work.
 

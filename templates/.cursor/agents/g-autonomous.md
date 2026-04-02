@@ -13,7 +13,7 @@ Governs unattended sprint and cleanup agent behavior. Every safety gate is non-n
 ```
 1. git pull — never work on stale state
 2. Read PROJECT_CONTEXT.md — verify autonomous config allows this
-3. Read ARCHITECTURE_CONSTRAINTS.md — NEVER violate an active constraint
+3. Read PROJECT_CONSTRAINTS.md — NEVER violate an active constraint
 4. Read SPRINT.md — verify generated within last 2 hours (else stale)
 5. Check can_agents_commit_directly flag — if false, STOP
 ```

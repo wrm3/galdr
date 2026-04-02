@@ -10,7 +10,7 @@ No human needed at the keyboard — tasks MUST be ai_safe: true.
 
 1. **Pull latest**: `git pull` — never work on stale state
 2. **Read SPRINT.md** — confirm it is < 2h old. If stale, stop and run `@g-cleanup` first
-3. **Read ARCHITECTURE_CONSTRAINTS.md** — load all active constraints into context
+3. **Read PROJECT_CONSTRAINTS.md** — load all active constraints into context
 4. **Check your agent identity**: set `AGENT_ID = "{ide}-sprint-{session-hash-6chars}"`
 5. **Read git log** — `git log --oneline -20` to understand recent changes
 
@@ -188,6 +188,6 @@ Handoff note: {anything the next agent should know}
 - Modify tasks not in SPRINT.md without explicit user instruction
 - Work on tasks with `ai_safe: false`
 - Run destructive operations (schema changes, file deletes) without `requires_solo_agent: true` confirmed
-- Modify ARCHITECTURE_CONSTRAINTS.md
+- Modify PROJECT_CONSTRAINTS.md
 - Push directly to main/master without going through the standard commit workflow
 - Continue past 3 failures on the same task (Ralph Wiggum Rule)

@@ -12,7 +12,7 @@ Create and manage comprehensive project plans, Product Requirements Documents (P
 the galdr planning system uses:
 - **PLAN.md**: `.galdr/PLAN.md` - Main Product Requirements Document
 - **Phases**: `.galdr/phases/` - Individual phase specifications
-- **Project Context**: `.galdr/docs/PROJECT_CONTEXT.md` - Project goals and scope
+- **Project Context**: `.galdr/project/PROJECT_CONTEXT.md` - Project goals and scope
 - **Tasks**: Links to `.galdr/TASKS.md` for implementation tracking
 
 ## PRD Structure
@@ -373,7 +373,7 @@ When initializing galdr in existing projects with code
 ### Core Planning Files
 - `.galdr/PLAN.md` - Main PRD
 - `.galdr/phases/` - Phase documents
-- `.galdr/docs/PROJECT_CONTEXT.md` - Project goals
+- `.galdr/project/PROJECT_CONTEXT.md` - Project goals
 
 ### Auto-Creation
 Automatically create missing folders and files:

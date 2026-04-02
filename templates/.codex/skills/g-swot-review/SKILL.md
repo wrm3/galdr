@@ -31,7 +31,7 @@ Execute all 5 passes in order, collecting metrics for the report.
 
 ### Pass 2: Architectural Constraint Compliance
 
-1. Read `.galdr/docs/ARCHITECTURE_CONSTRAINTS.md` (if exists)
+1. Read `.galdr/project/PROJECT_CONSTRAINTS.md` (if exists)
 2. Run `git log --since="7 days ago" --oneline` to get recent commits
 3. Check `.galdr/SUBSYSTEMS.md` for undeclared subsystem interactions
 4. Flag any new file patterns not matching declared subsystems
@@ -46,7 +46,7 @@ Execute all 5 passes in order, collecting metrics for the report.
 
 ### Pass 4: Goal Alignment
 
-1. Read `.galdr/docs/PROJECT_GOALS.md` (if exists)
+1. Read `.galdr/project/PROJECT_GOALS.md` (if exists)
 2. For each active goal, check if recent tasks reference it
 3. Identify goals with no task activity in 14+ days
 4. Flag orphan tasks (tasks not aligned to any goal)

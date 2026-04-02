@@ -62,11 +62,16 @@ Create the following structure:
 ├── config/                   # Operational configuration
 │   ├── HEARTBEAT.md          # Scheduled agent routines
 │   └── SPRINT.md             # Current sprint definition
-├── docs/                     # Project documentation
+├── project/                  # Project documentation
 │   ├── PROJECT_CONTEXT.md    # Project mission and goals
 │   ├── PROJECT_GOALS.md      # Strategic goals and metrics
-│   ├── ARCHITECTURE_CONSTRAINTS.md  # Rules agents must follow
+│   ├── PROJECT_CONSTRAINTS.md  # Rules agents must follow
 │   └── PROJECT_TOPOLOGY.md   # Cross-project relationships
+├── experiments/              # Experiments and hypotheses
+│   ├── HYPOTHESIS.md         # Active hypotheses
+│   └── SYSTEM_EXPERIMENTS.md # Experiment tracking
+├── reports/                  # Generated reports
+│   └── CLEANUP_REPORT.md    # Cleanup/grooming reports
 ├── tracking/                 # Status tracking
 │   ├── BUGS.md               # Bug tracking
 │   ├── IDEA_BOARD.md         # Ideas and improvement suggestions
@@ -453,10 +458,14 @@ CREATED STRUCTURE:
    ├── config/
    │   ├── HEARTBEAT.md
    │   └── SPRINT.md
-   ├── docs/
+   ├── project/
    │   ├── PROJECT_CONTEXT.md
    │   ├── PROJECT_GOALS.md
-   │   └── ARCHITECTURE_CONSTRAINTS.md
+   │   └── PROJECT_CONSTRAINTS.md
+   ├── experiments/
+   │   └── SYSTEM_EXPERIMENTS.md
+   ├── reports/
+   │   └── CLEANUP_REPORT.md
    ├── tracking/
    │   ├── BUGS.md
    │   ├── IDEA_BOARD.md

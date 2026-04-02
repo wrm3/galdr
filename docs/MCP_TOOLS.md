@@ -10,7 +10,7 @@ The galdr Docker server exposes these MCP tools via streamable-http on port 8082
 | `galdr_plan_reset` | Reset .galdr/ to blank template (requires confirm=True) |
 | `galdr_server_status` | Health check |
 | `galdr_health_report` | Compute health score (0-100) for a galdr-managed project |
-| `galdr_validate_task` | Validate a task against ARCHITECTURE_CONSTRAINTS.md |
+| `galdr_validate_task` | Validate a task against PROJECT_CONSTRAINTS.md |
 
 ## RAG (Retrieval-Augmented Generation)
 

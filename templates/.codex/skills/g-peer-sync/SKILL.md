@@ -14,7 +14,7 @@ description: Initiate or respond to sibling contract sync; advisory only, non-bl
 
 ### Initiating a Sync (I changed a contract)
 
-1. **Read `.galdr/docs/PROJECT_TOPOLOGY.md`** — get siblings + their contracts
+1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`** — get siblings + their contracts
 2. **Select target sibling and contract**
 3. **Update local contract file** at `.galdr/contracts/<name>.md`:
    - Bump version number
