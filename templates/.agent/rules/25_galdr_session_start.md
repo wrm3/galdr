@@ -6,19 +6,41 @@ alwaysApply: true
 
 # Session Start Protocol
 
+## .galdr/ Folder Layout (v2)
+```
+.galdr/
+├── .project_id, .user_id, .vault_location   # Identity (root)
+├── TASKS.md, PRD.md, SUBSYSTEMS.md           # Core files (root)
+├── config/     # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md
+├── project/    # PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, PROJECT_CONSTRAINTS.md
+├── experiments/ # HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md, EXPERIMENT_TEMPLATE.md
+├── reports/    # CLEANUP_REPORT.md
+├── tracking/   # BUGS.md, IDEA_BOARD.md, INBOX.md
+├── subsystems/ # Per-subsystem spec files (subsystem_name.md)
+├── tasks/      # Individual task files
+├── phases/     # Phase definition files
+├── contracts/, examples/, experiments/, reference/, templates/, vault/, logs/
+```
+
 ## Display at Session Start (when .galdr/ exists)
 ```
 📌 SESSION CONTEXT
-Mission: [from PROJECT_CONTEXT.md, 1 line]
+Mission: [from project/PROJECT_CONTEXT.md, 1 line]
 Goals: G-01: [name] | G-02: [name]
 Phase: [current phase]
-Ideas: [N] active (from IDEA_BOARD.md)
+Ideas: [N] active (from tracking/IDEA_BOARD.md)
+Subsystems: [N] registered (from SUBSYSTEMS.md + subsystems/)
 ```
+
+## Subsystem Awareness (MANDATORY)
+At session start, read `.galdr/SUBSYSTEMS.md` for the registry and interconnection graph.
+For any subsystem you're about to modify, read its spec file at `.galdr/subsystems/{name}.md`.
+This prevents architectural drift and ensures changes respect subsystem boundaries.
 
 ## Sync Validation (Run When User Mentions Tasks/Phases/Status)
 
 **Step 1: Goals Check**
-- No PROJECT_GOALS.md or has `{Goal name}` placeholders → auto-generate from PROJECT_CONTEXT.md
+- No `project/PROJECT_GOALS.md` or has `{Goal name}` placeholders → auto-generate from `project/PROJECT_CONTEXT.md`
 
 **Step 2: Task Sync**
 - Compare TASKS.md entries to `.galdr/tasks/` AND `.galdr/phases/phase*/` files
@@ -31,7 +53,9 @@ Ideas: [N] active (from IDEA_BOARD.md)
 
 **Step 4: SUBSYSTEMS.md Staleness**
 - Collect `subsystems:` values from task files → compare to SUBSYSTEMS.md
-- Missing entries → flag and offer to add stubs
+- Missing entries → flag and offer to add stubs in `subsystems/`
+- For each subsystem in SUBSYSTEMS.md, verify a spec file exists in `subsystems/`
+- Spec files missing `locations:` in frontmatter → flag as incomplete
 
 **Step 5: ACTIVE_BACKLOG.md**
 - Older than 26 hours → flag as stale, offer regeneration
@@ -52,6 +76,5 @@ Ideas: [N] active (from IDEA_BOARD.md)
 **Fix issues BEFORE proceeding with user request.**
 
 ## Idea Capture Triggers (IMMEDIATE, any time)
-Capture to IDEA_BOARD.md when user says:
+Capture to `tracking/IDEA_BOARD.md` when user says:
 `"make a note"` | `"remember this"` | `"idea:"` | `"what if we"` | `"someday"` | `"for later"` | `"eventually"`
-

@@ -70,9 +70,40 @@ First-time setup of galdr in a project. @g-setup command.
    - `.galdr/tracking/INBOX.md` — empty template with usage comments
    - `.galdr/contracts/README.md` — explanation of contracts pattern
 
-7. **Print next steps**:
+7. **Subsystem Discovery** (run after folder creation):
+   Scan the project to identify subsystems. For each, create a spec file in `.galdr/subsystems/`:
+   
+   **What to scan:**
+   - Top-level directories and `src/` subdirectories → candidate subsystems
+   - Database schema files → table groups suggest subsystems
+   - Config files → each config suggests a consuming subsystem
+   - API route files → each route group suggests a subsystem
+   - Docker services → each container is likely its own subsystem
+   - External service integrations → integration entries in host subsystem
+   
+   **For each identified subsystem, create spec with:**
+   ```yaml
+   locations:
+     code: [source file paths]
+     skills: [relevant galdr skills]
+     agents: [relevant galdr agents]
+     commands: [relevant galdr commands]
+     config: [config files]
+     db_tables: [owned tables]
+   ```
+   Plus: Responsibility, Data Flow, Architecture Rules, When to Modify sections.
+   
+   **Classify as:**
+   - **Subsystem** (own code + state + lifecycle) → top-level entry + spec file
+   - **Sub-feature** (shares parent's code/state) → documented in parent spec
+   - **Integration** (external adapter) → listed in host subsystem spec
+   
+   Update SUBSYSTEMS.md with the index table, sub-features table, integrations table, and mermaid interconnection graph.
+
+8. **Print next steps**:
    - Review PROJECT_CONTEXT.md and confirm mission
    - Review SUBSYSTEMS.md and adjust detected components
+   - Review subsystem spec files in `.galdr/subsystems/` for accuracy
    - Create first task with @g-task-new
    - Start Phase 0 planning
    - Declare cross-project relationships with @g-topology (when ready)
