@@ -24,7 +24,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`, `.galdr/config/`, `.galdr/project/`, `.galdr/experiments/`, `.galdr/reports/`, `.galdr/tracking/`, `.galdr/subsystems/`, `docs/`, `temp_scripts/`
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/config/`, `.galdr/project/`, `.galdr/experiments/`, `.galdr/reports/`, `.galdr/tracking/`, `.galdr/subsystems/`, `.galdr/contracts/`, `docs/`, `temp_scripts/`
    - Files: Use galdr-project-manager INITIALIZE mode for all file generation
 
 4. **Generate .project_id**:

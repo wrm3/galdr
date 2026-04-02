@@ -21,9 +21,10 @@ USE WITH CAUTION: This permanently deletes all local .galdr/ content including:
 
 After reset, .galdr/ contains the blank galdr template from the GitHub repo:
   - Blank root files (ready to fill in for a new project)
-  - .galdr/examples/   (example files for reference)
-  - .galdr/reference/  (reference documentation)
-  - Empty tasks/ and phases/ directories
+  - .galdr/config/     (heartbeat, sprint, KPI config)
+  - .galdr/project/    (context, goals, topology, constraints)
+  - .galdr/tracking/   (bugs, ideas, inbox)
+  - Empty tasks/, phases/, and subsystems/ directories
 
 Typical safe workflow:
   1. galdr_plan_reset(target_path, confirm=False)         ← preview + backup info

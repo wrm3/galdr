@@ -100,7 +100,7 @@ Edit these directly without asking:
 
 ## Auto-Creation Rules
 Silently create missing folders without asking:
-- `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/templates/`
+- `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/contracts/`
 - `.galdr/config/`, `.galdr/project/`, `.galdr/tracking/`, `.galdr/subsystems/`
 - `docs/`, `temp_scripts/`
 
