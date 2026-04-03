@@ -20,10 +20,8 @@ Session start, checking project health, @g-status command.
 
 2. **Run sync validation** (brief):
    - TASKS.md ↔ task files: X synced, Y issues
-   - Phase headers ↔ phase files: X synced, Y issues
-   - SUBSYSTEMS.md: fresh / stale
-   - ACTIVE_BACKLOG.md: fresh (< 26h) / stale
-
+   -    - SUBSYSTEMS.md: fresh / stale
+   - 
 3. **Phase progress summary**:
    ```
    Phase 1: Foundation [🔄] — 3/8 tasks complete (37%)

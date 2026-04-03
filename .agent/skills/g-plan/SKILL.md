@@ -1,57 +1,134 @@
 ---
 name: g-plan
-description: Create or update PRD files under `.galdr/prds/` with 27-question process, scope validation, subsystems, and planning (align with `.galdr/PLAN.md`).
+description: Own and manage PLAN.md (master strategy) and prds/ (individual PRD files) — create plans, write PRDs, validate scope, and keep the deliverable index current.
 ---
-# galdr-plan
+# g-plan
 
-## When to Use
-@g-plan, "create plan", "define requirements", "write PRD". New projects or major feature planning.
+**Files Owned**: `.galdr/PLAN.md`, `.galdr/PRDS.md`, `.galdr/prds/prdNNN_*.md`
 
-## Steps
+**Activate for**: "create plan", "write PRD", "define requirements", "what's the plan", "update PLAN.md", "new PRD".
 
-1. **Scope validation questions** (ask first, before writing anything):
-   1. Personal use / small team (2-10) / broader deployment (10+)?
-   2. Security level: minimal / standard / enhanced / enterprise?
+**Hierarchy**: `PLAN.md` is the master strategy above individual PRDs. `PRDS.md` is the index. Each `prds/prdNNN_*.md` is a focused requirements document.
+
+---
+
+## Operation: CREATE / UPDATE PLAN.md
+
+`PLAN.md` is the one-page strategy doc — deliverable index, build order, milestone history. Kept short; details live in PRDs.
+
+```markdown
+# PLAN.md — {project_name} Master Plan
+
+## Current Focus
+{Describe current development focus — 1-2 sentences}
+
+## Deliverable Index
+
+| ID | Title | Status | Subsystems | Notes |
+|----|-------|--------|------------|-------|
+| PRD-001 | Foundation | active | task-mgmt, setup | Started 2026-01-01 |
+
+## Build Order
+
+### Active Work
+{List active PRDs with priority}
+
+### Completed
+{List completed PRDs}
+
+## Milestone History
+{Record major direction changes with dates}
+```
+
+---
+
+## Operation: CREATE PRD
+
+1. **Scope validation** (ask before writing anything):
+   1. Personal / small team (2-10) / broader deployment (10+)?
+   2. Security: minimal / standard / enhanced / enterprise?
    3. Scalability: basic / moderate / high / enterprise?
    4. Feature complexity: minimal / standard / feature-rich?
-   5. Integrations: standalone / basic / standard / enterprise?
+   5. Integrations: standalone / basic / standard?
 
-2. **Gather requirements** (ask 27-question framework if needed):
+2. **Determine next PRD ID**: read `PRDS.md`, find highest PRD-NNN → increment
+
+3. **Gather requirements** (27-question framework if needed):
    - Project context (Q1-7): problem, success, users, scale, frequency
-   - Technical (Q8-16): deployment, maintenance, security, performance, data
+   - Technical (Q8-16): deployment, security, performance, data
    - Features (Q17-22): MVP, nice-to-have, avoid, priorities
    - Timeline (Q23-27): drivers, delivery, constraints
 
-3. **Identify shared modules** (BEFORE writing feature sections):
-   "What logic will be needed by 2+ features/subsystems?"
-   → Plan extraction to `lib/` before implementation begins
+4. **Identify shared modules** BEFORE writing feature sections:
+   "What logic will be needed by 2+ features/subsystems?" → plan extraction to `lib/` first
 
-4. **Write PRD file(s)** under `.galdr/prds/` (e.g. `.galdr/prds/PRD.md` for a single doc, or `.galdr/prds/<topic>.md` for multiple). Ensure `.galdr/PLAN.md` stays the master strategy doc above individual PRDs.
-   ```markdown
-   # PRD: [Project Name]
-   
-   ## 1. Product Overview
-   ### 1.1 Document Title and Version
-   ### 1.2 Product Summary
-   
-   ## 2. Goals
-   ### 2.1 Business Goals
-   ### 2.2 User Goals
-   ### 2.3 Non-Goals
-   
-   ## 3. User Personas
-   ## 4. Milestones / sequencing (reference TASKS.md; v3 uses sequential task IDs)
-   ## 5. User Experience
-   ## 6. Narrative
-   ## 7. Success Metrics
-   ## 8. Technical Considerations
-   ### 8.6 Shared Modules and Reusability
-   ## 9. Milestones & Sequencing
-   ## 10. User Stories
+5. **Create PRD file** at `.galdr/prds/prdNNN_descriptive_name.md`:
+```markdown
+---
+id: NNN
+title: 'PRD Title'
+status: draft | active | completed | cancelled
+subsystems: [affected-subsystems]
+created_date: 'YYYY-MM-DD'
+---
+
+# PRD-NNN: [Title]
+
+## 1. Product Overview
+### 1.1 Summary
+### 1.2 Goals
+- **Business**: [outcome]
+- **User**: [outcome]
+- **Non-Goals**: [what we're NOT building]
+
+## 2. User Personas
+[Who uses this feature]
+
+## 3. Acceptance Criteria
+- [ ] [Measurable outcome 1]
+- [ ] [Measurable outcome 2]
+
+## 4. Milestones
+| Milestone | Tasks | Target |
+|---|---|---|
+| M1: [name] | Task NNN, NNN | YYYY-MM-DD |
+
+## 5. Technical Considerations
+### Shared Modules
+[Logic needed by 2+ subsystems — extract before implementing]
+
+## 6. Success Metrics
+[How we know this PRD is done]
+```
+
+6. **Add to PRDS.md** index (atomic):
+   ```
+   | PRD-NNN | Title | draft | subsystem1, subsystem2 | |
    ```
 
-5. **Generate TASKS.md skeleton** with initial tasks (sequential IDs; optional milestone section headers)
+7. **Add to PLAN.md** Deliverable Index
 
-6. **Create SUBSYSTEMS.md** with detected/defined subsystems
+8. **Offer initial tasks** — activate g-tasks CREATE for first milestone tasks
 
-7. **Offer `.galdr/CONSTRAINTS.md`** creation for non-negotiable constraints
+---
+
+## Operation: UPDATE PRD STATUS
+
+Update status in the PRD file YAML and sync to `PRDS.md` index row.
+
+Status flow: `draft → active → completed | cancelled`
+
+---
+
+## PRDS.md Structure
+
+```markdown
+# PRDS.md — {project_name}
+
+## PRD Index
+
+| ID | Title | Status | Subsystems | Notes |
+|----|-------|--------|------------|-------|
+
+<!-- Status: draft | active | completed | cancelled -->
+```

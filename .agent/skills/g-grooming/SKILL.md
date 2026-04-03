@@ -12,7 +12,7 @@ Use when: fixing broken `.galdr/` files, filling placeholders, healing sync, hea
 ```
 □ Does .galdr/ exist with 5+ real (non-template) files?
   → YES: proceed with GROOM steps below
-  → NO: invoke galdr-project-manager INITIALIZE mode
+  → NO: invoke g-setup
 ```
 
 ## Step 2: Template Placeholder Audit
@@ -38,8 +38,7 @@ Fill from `.galdr/PROJECT.md` where possible. Collect unknowns, ask user once at
 ## Step 4: TASKS.md ↔ Task File Sync
 Search paths (in order):
 1. `.galdr/tasks/task{id}_*.md` — active tasks
-2. `.galdr/phases/phase*/task{id}_*.md` — archived tasks
-
+2. `.galdr/
 Status:
 - ✅ ACTIVE = found in tasks/
 - 📦 ARCHIVED = found in phases/phase*/
@@ -49,31 +48,26 @@ Status:
 Auto-fix mismatches: file is source of truth — fix TASKS.md.
 Phantoms/orphans: report and offer fix.
 
-## Step 5: Phase File Sync
-- Every `## Phase N:` header in TASKS.md → check `phases/phaseN_*.md` exists
-- Every `phases/phaseN_*.md` → check header in TASKS.md exists
-- Missing phase file → create stub with YAML frontmatter
-
-## Step 6: YAML Frontmatter Validation
+## Step 5: YAML Frontmatter Validation
 Required fields: `id, title, status, priority, phase`
 vNext fields: `blast_radius, requires_verification, ai_safe`
 
 Missing required → add with sensible defaults
 Missing vNext → add: `blast_radius: "low"`, `requires_verification: false`, `ai_safe: true`, `tags: [legacy-upgraded]`
 
-## Step 7: PROJECT.md Goals health
+## Step 6: PROJECT.md Goals health
 ```
 □ `.galdr/PROJECT.md` exists with a Goals section? → NO: generate from mission vision + success criteria
 □ Contains {Goal name} or {Measurable outcome}? → treat as missing, regenerate
 □ Has at least G-01 and G-02? → if not, flag for user
 ```
 
-## Step 8: SUBSYSTEMS.md Staleness
+## Step 7: SUBSYSTEMS.md Staleness
 Collect all unique values from `subsystems:` fields across all task files.
 Compare to SUBSYSTEMS.md entries.
 Missing entries → add stub rows with `status: active`.
 
-## Step 9: Grooming Report
+## Step 8: Grooming Report
 ```
 ═══════════════════════════════════
 GALDR GROOMING REPORT — {date}

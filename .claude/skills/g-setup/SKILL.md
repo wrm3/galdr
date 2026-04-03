@@ -24,9 +24,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/config/`, `.galdr/experiments/`, `.galdr/reports/`, `.galdr/tracking/`, `.galdr/subsystems/`, `.galdr/linking/`, `docs/`, `temp_scripts/`
-   - **Research-type projects:** when creating `.galdr/experiments/`, add **real starter content** to `EXPERIMENTS.md` and `HYPOTHESIS.md` (not empty placeholders only) so the experiment runner and index stay usable from day one.
-   - Files: Use galdr-project-manager INITIALIZE mode for all file generation
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/prds/`, `.galdr/bugs/`, `   - **Research-type projects:** when creating `   - Files: Use g-project (CREATE PROJECT.MD) and g-plan (CREATE PLAN.MD) for all file generation
 
 4. **Generate .identity**:
    ```bash
@@ -55,7 +53,7 @@ First-time setup of galdr in a project. @g-setup command.
    │   └── SELF_EVOLUTION.md ✅   ← galdr meta-evolution (not SYSTEM_EXPERIMENTS.md)
    ├── reports/ ✅
    │   └── CLEANUP_REPORT.md ✅
-   ├── tracking/ ✅
+   ├──  ✅
    │   ├── IDEA_BOARD.md ✅
    │   └── INBOX.md ✅           ← cross-project message queue
    ├── subsystems/ ✅            ← per-subsystem spec files
@@ -69,9 +67,7 @@ First-time setup of galdr in a project. @g-setup command.
 
 6. **Create cross-project scaffolding** (if not already present from galdr_install):
    - `.galdr/PROJECT.md` — include a **Project Linking** section (parents, children, siblings); starts with `relationships: none` or equivalent
-   - `.galdr/linking/INBOX.md` — empty template with usage comments
-   - `.galdr/linking/README.md` — explanation of contracts pattern
-
+   - `   - `
 7. **Subsystem Discovery** (run after folder creation):
    Scan the project to identify subsystems. For each, create a spec file in `.galdr/subsystems/`:
    
@@ -106,6 +102,6 @@ First-time setup of galdr in a project. @g-setup command.
    - Review `.galdr/PROJECT.md` and confirm mission and goals
    - Review SUBSYSTEMS.md and adjust detected components
    - Review subsystem spec files in `.galdr/subsystems/` for accuracy
-   - Create first task with @g-task-new (sequential task IDs)
+   - Create first task with @g-tasks (CREATE) (sequential task IDs)
    - Draft or refine `.galdr/PLAN.md` and PRDs under `prds/` as needed
-   - Declare cross-project relationships in **Project Linking** (`@g-project-linking`) when ready
+   - Declare cross-project relationships in **Project Linking** (`@g-project (Project Linking section)`) when ready

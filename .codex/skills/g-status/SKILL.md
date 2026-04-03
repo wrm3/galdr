@@ -12,7 +12,7 @@ Session start, checking project health, @g-status command.
 1. **Load session context** (if files exist):
    ```
    📌 SESSION CONTEXT
-   Mission: [1 line from PROJECT_CONTEXT.md]
+   Mission: [1 line from PROJECT.md]
    Goals: G-01: [name] | G-02: [name]
    Phase: [current phase name and status]
    Ideas: [N] active on IDEA_BOARD
@@ -20,10 +20,8 @@ Session start, checking project health, @g-status command.
 
 2. **Run sync validation** (brief):
    - TASKS.md ↔ task files: X synced, Y issues
-   - Phase headers ↔ phase files: X synced, Y issues
-   - SUBSYSTEMS.md: fresh / stale
-   - ACTIVE_BACKLOG.md: fresh (< 26h) / stale
-
+   -    - SUBSYSTEMS.md: fresh / stale
+   - 
 3. **Phase progress summary**:
    ```
    Phase 1: Foundation [🔄] — 3/8 tasks complete (37%)
@@ -38,12 +36,22 @@ Session start, checking project health, @g-status command.
    - Phase completion: any phase where all tasks are `[✅]` but not archived
    - Active bugs: count from BUGS.md
 
-5. **Next recommended actions** (top 3):
+5. **Experiment status** (if `.galdr/experiments/EXPERIMENTS.md` exists):
+   ```
+   🧪 EXPERIMENTS
+   Active: EXP-001 — {title} (Stage 3/6 ✅✅🔄[ ][ ][ ])
+     Hypothesis: HYP-001 ({status})
+     Next gate: Stage 3 — {name}
+   Planned: EXP-002 — {title}
+   ```
+   - Flag stale experiments: any stage `[🔄]` for >48h
+
+6. **Next recommended actions** (top 3):
    - Highest priority unblocked `[📋]` tasks
    - Any `[🔍]` tasks needing verification by different agent
    - Any overdue heartbeats
 
-6. **Cross-project advisories** (if `.galdr/project/PROJECT_TOPOLOGY.md` exists):
+7. **Cross-project advisories** (if `.galdr/PROJECT.md` has a **Project Linking** section):
 
    Read `.galdr/linking/INBOX.md` and categorize:
 

@@ -1,15 +1,5 @@
----
-description: "Scan codebase for improvement ideas — refactoring, dead code, simplification"
----
+Scan codebase for improvement ideas. Activates **g-ideas** → FARM operation.
 
-# g-idea-farm
+Activate the **g-ideas** skill, FARM operation.
 
-Proactively scan the codebase for improvement opportunities.
-
-## Behavior
-
-1. Read the `g-idea-farm` skill at `.cursor/skills/g-idea-farm/SKILL.md`
-2. Execute all 5 scan passes
-3. Add new ideas to `.galdr/IDEA_BOARD.md` (deduplicated)
-4. Write summary to `.galdr/logs/idea-farm/YYYY-MM-DD_idea_farm.md`
-5. Display summary to user
+Runs 5 scan passes. Adds up to 10 new ideas to IDEA_BOARD.md. Skips duplicates.
