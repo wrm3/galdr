@@ -1,35 +1,10 @@
 # galdr - Public Repository .gitignore
+# Managed by galdr v1.0.0 — https://github.com/wrm3/galdr
 #
 # IMPORTANT: These files are gitignored but NOT cursorignored.
 # The AI agents read them from the filesystem and must obey the rules within.
 # Git just doesn't track them because they contain personal/machine-specific content.
 
-# ============================================================
-# Personal IDE configurations (contain user-specific paths, keys, preferences)
-# The templates/ folder IS tracked — it has clean {placeholder} versions.
-# ============================================================
-/.agent/
-/.claude/
-/.codex/
-/.cursor/
-/.opencode/
-
-# ============================================================
-# Project-local personality & fandom (NOT synced, NOT propagated)
-# These are opt-in per-project. galdr ships norse_personality by default.
-# Projects can swap in their own personality rule + fandom skill.
-# Listed here so they exist in the working tree but never hit git.
-# ============================================================
-# Personality rules (only one active at a time; norse is the default)
-.cursor/rules/silicon_valley_personality.mdc
-.claude/rules/silicon_valley_personality.md
-.agent/rules/silicon_valley_personality.md
-.codex/rules/silicon_valley_personality.md
-# Fandom skills
-.cursor/skills/silicon-valley-superfan/
-.claude/skills/silicon-valley-superfan/
-.agent/skills/silicon-valley-superfan/
-.codex/skills/silicon-valley-superfan/
 
 # galdr project data (live project state, not template)
 /.galdr/
