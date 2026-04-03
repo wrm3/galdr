@@ -9,7 +9,7 @@ alwaysApply: true
 ## .galdr/ Folder Layout (v3)
 ```
 .galdr/
-├── .project_id, .user_id, .vault_location   # Identity (root)
+├── .identity             # project_id, project_name, user_id, user_name, galdr_version, vault_location
 ├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md
 ├── prds/       # One or more PRD markdown files
 ├── bugs/       # Individual bug detail files (optional; index in BUGS.md)

@@ -4,71 +4,53 @@
 
 $inputJson = $input | Out-String
 
-# ── User identity resolution ──────────────────────────────────────────────────
-$projectUserIdFile = Join-Path (Get-Location).Path ".galdr\.user_id"
-$userId      = $null
+# ── Read .identity file ───────────────────────────────────────────────────────
+$identityFile = ".galdr\.identity"
+$identity = @{ project_id=""; project_name=""; user_id=""; user_name=""; galdr_version=""; vault_location="" }
 $setupNeeded = $false
 
-if ($env:APPDATA) {
-    $appDataConfig = Join-Path $env:APPDATA "galdr\user_config.json"
-} else {
-    $appDataConfig = Join-Path $env:HOME ".config/galdr/user_config.json"
-}
-
-# Step 1: Try .galdr/.user_id
-if (Test-Path $projectUserIdFile) {
-    $candidate = (Get-Content $projectUserIdFile -Raw).Trim()
-    if ($candidate -and $candidate -ne '' -and $candidate -ne '{SETUP_NEEDED}') {
-        $userId = $candidate
+if (Test-Path $identityFile) {
+    Get-Content $identityFile | ForEach-Object {
+        if ($_ -match "^(\w+)=(.*)$") { $identity[$Matches[1]] = $Matches[2].Trim() }
     }
 }
 
-# Step 2: Fallback to appdata config
-if (-not $userId -and (Test-Path $appDataConfig)) {
-    try {
-        $appCfg = Get-Content $appDataConfig -Raw | ConvertFrom-Json
-        if ($appCfg.user_id -and $appCfg.user_id -ne 'SETUP_NEEDED') {
-            $userId = $appCfg.user_id
-            try { Set-Content -Path $projectUserIdFile -Value $userId -Encoding UTF8 } catch {}
-        }
-    } catch {}
-}
-
-# Step 3: No user_id found — flag setup needed
-if (-not $userId) {
-    $setupNeeded = $true
-    try {
-        $appDataDir = Split-Path $appDataConfig -Parent
-        if (-not (Test-Path $appDataDir)) { New-Item -ItemType Directory -Path $appDataDir -Force | Out-Null }
-        if (-not (Test-Path $appDataConfig)) {
-            $machineId = ""
-            try {
-                $machineId = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Cryptography" `
-                              -Name "MachineGuid" -ErrorAction Stop).MachineGuid
-            } catch {}
-            if (-not $machineId) { $machineId = [System.Guid]::NewGuid().ToString() }
-            $cfg = [ordered]@{
-                user_id         = "SETUP_NEEDED"
-                display_name    = ""
-                machine_id      = $machineId
-                platform        = "windows"
-                created_at      = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-                setup_completed = $false
+# ── User identity resolution ──────────────────────────────────────────────────
+$userId = $identity.user_id
+if (-not $userId -or $userId -eq "{SETUP_NEEDED}" -or $userId -eq "") {
+    # Fallback to appdata config
+    $appDataConfig = if ($env:APPDATA) {
+        Join-Path $env:APPDATA "galdr\user_config.json"
+    } else {
+        Join-Path $env:HOME ".config/galdr/user_config.json"
+    }
+    if (Test-Path $appDataConfig) {
+        try {
+            $appCfg = Get-Content $appDataConfig -Raw | ConvertFrom-Json
+            if ($appCfg.user_id -and $appCfg.user_id -ne "SETUP_NEEDED") {
+                $userId = $appCfg.user_id
+                # Write back to .identity
+                try {
+                    $content = Get-Content $identityFile -Raw
+                    $content = $content -replace "user_id=.*", "user_id=$userId"
+                    Set-Content $identityFile $content -NoNewline
+                } catch {}
             }
-            $cfg | ConvertTo-Json | Set-Content -Path $appDataConfig -Encoding UTF8
-        }
-    } catch {}
+        } catch {}
+    }
+    if (-not $userId -or $userId -eq "SETUP_NEEDED") { $setupNeeded = $true }
 }
 
 # ── .project_id auto-heal ─────────────────────────────────────────────────────
-$projectIdFile = ".galdr/.project_id"
-if (Test-Path $projectIdFile) {
-    $projectId   = (Get-Content $projectIdFile -Raw).Trim()
-    $uuidPattern = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
-    if (-not ($projectId -match $uuidPattern)) {
-        $projectId = [guid]::NewGuid().ToString()
-        try { Set-Content -Path $projectIdFile -Value $projectId -Encoding UTF8 } catch {}
-    }
+$projectId = $identity.project_id
+$uuidPattern = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+if (-not ($projectId -match $uuidPattern)) {
+    $projectId = [guid]::NewGuid().ToString()
+    try {
+        $content = Get-Content $identityFile -Raw
+        $content = $content -replace "project_id=.*", "project_id=$projectId"
+        Set-Content $identityFile $content -NoNewline
+    } catch {}
 }
 
 # ── Build context message ─────────────────────────────────────────────────────
@@ -78,7 +60,7 @@ if ($setupNeeded) {
 ## GALDR FIRST-TIME SETUP NEEDED
 Your galdr user ID has not been configured yet.
 
-**Quick setup:** Edit `.galdr/.user_id` and replace `{SETUP_NEEDED}` with your user ID (e.g. `usr_alice`).
+**Quick setup:** Edit `.galdr/.identity` and set `user_id` and `user_name` to your values.
 
 ---
 "@

@@ -28,10 +28,10 @@ YYYY-MM-DD   (as literal unfilled date)
 ```
 Fill from `.galdr/PROJECT.md` where possible. Collect unknowns, ask user once at end.
 
-## Step 3: .project_id Check
+## Step 3: .identity Check
 ```
-□ Does .galdr/.project_id exist with valid UUID?
-  → NO: python -c "import uuid; print(uuid.uuid4())" → write to .galdr/.project_id
+□ Does .galdr/.identity exist with valid UUID?
+  → NO: python -c "import uuid; print(uuid.uuid4())" → write to .galdr/.identity
   → Note: Required for memory hooks — missing = silent capture failure
 ```
 
@@ -78,7 +78,7 @@ Missing entries → add stub rows with `status: active`.
 ═══════════════════════════════════
 GALDR GROOMING REPORT — {date}
 ═══════════════════════════════════
-✅ .project_id: valid UUID present
+✅ .identity: valid UUID present
 ✅ TASKS.md ↔ files: 12/12 synced
 ⚠️  Placeholders filled: 3 (PROJECT.md Goals)
 ⚠️  Legacy YAML upgraded: 2 task files

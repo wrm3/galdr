@@ -28,9 +28,9 @@ First-time setup of galdr in a project. @g-setup command.
    - **Research-type projects:** when creating `.galdr/experiments/`, add **real starter content** to `EXPERIMENTS.md` and `HYPOTHESIS.md` (not empty placeholders only) so the experiment runner and index stay usable from day one.
    - Files: Use galdr-project-manager INITIALIZE mode for all file generation
 
-4. **Generate .project_id**:
+4. **Generate .identity**:
    ```bash
-   python -c "import uuid; print(uuid.uuid4())" > .galdr/.project_id
+   python -c "import uuid; print(uuid.uuid4())" > .galdr/.identity
    ```
 
 5. **Verify structure** (v3 layout):
@@ -42,7 +42,7 @@ First-time setup of galdr in a project. @g-setup command.
    ├── CONSTRAINTS.md ✅         ← non-negotiable constraints
    ├── BUGS.md ✅                ← bug index (root)
    ├── SUBSYSTEMS.md ✅
-   ├── .project_id ✅
+   ├── .identity ✅
    ├── prds/ ✅                  ← one or more PRD files
    ├── bugs/ ✅                  ← optional per-bug detail files
    ├── config/ ✅
