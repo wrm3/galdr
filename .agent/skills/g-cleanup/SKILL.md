@@ -52,7 +52,7 @@ Select tasks for next sprint:
 
 ### 8. Dependency Graph Regeneration
 Regenerate `.galdr/DEPENDENCY_GRAPH.md` using the `g-dependency-graph` skill:
-1. Read all task files, extract id/title/status/phase/subsystem/priority/dependencies
+1. Read all task files, extract id/title/status/subsystem/priority/dependencies
 2. Build adjacency list from dependencies
 3. Compute critical path (longest dependency chain)
 4. Identify top blockers, blocked tasks, and orphans

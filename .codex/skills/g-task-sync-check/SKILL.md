@@ -7,26 +7,26 @@ description: Validate TASKS.md entries match .galdr/tasks/ files. For session st
 ## When to Use
 Session start, after any bulk task operations, or when "phantom" / "orphan" issues are suspected.
 
+**v3 note:** Task IDs are **sequential** (globally increasing integers), grouped by subsystem in TASKS.md — no phase-based numbering or archive folders.
+
 ## Steps
 
 1. **Read TASKS.md** — extract all task entries with their current indicators
 
 2. **List task files**:
-   - Active: `.galdr/tasks/task*.md`
-   - Archived: `.galdr/phases/phase*/task*.md`
+   - All tasks: `.galdr/tasks/task*.md`
 
 3. **For each TASKS.md entry**:
 ```
-[✅] entry → look in tasks/ AND phases/phase*/
+[✅] entry → look in tasks/
 [📋][🔄][🔍] entry → look in tasks/ only
 [ ] entry → no file expected (OK)
 
-✅ ACTIVE   = found in tasks/
-📦 ARCHIVED = found in phases/phase*/
-⚠️ PHANTOM  = not found in either location
+✅ FOUND   = found in tasks/
+⚠️ PHANTOM = not found in tasks/
 ```
 
-4. **For each task file** (tasks/ and phases/phase*/):
+4. **For each task file** in `tasks/`:
 ```
 → Has matching TASKS.md entry? 
   YES: check status match
@@ -48,15 +48,13 @@ Session start, after any bulk task operations, or when "phantom" / "orphan" issu
 ```
 📋 TASK SYNC VALIDATION
 
-Task 001: tasks/ ✅ ACTIVE — pending/[📋] match
-Task 002: phases/phase0/ 📦 ARCHIVED — completed/[✅] match
+Task 001: tasks/ ✅ FOUND — pending/[📋] match
 Task 003: PHANTOM ⚠️ — in TASKS.md [📋] but no file found
 Task 099: ORPHAN ⚠️ — task099_*.md exists but not in TASKS.md
 
-Synced: 12/15 | Fixed: 2 | Needs action: 1
+Synced: 12/13 | Fixed: 0 | Needs action: 1
 ```
 
 7. **Auto-fix where safe**:
    - Status mismatches → fix TASKS.md
-   - Archived [✅] tasks → no action (archived is correct state)
    - Phantoms and orphans → report and offer fix options

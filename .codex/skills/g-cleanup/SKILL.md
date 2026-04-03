@@ -26,7 +26,8 @@ For each `awaiting-verification` task:
 
 ### 4. Platform Parity Audit
 Compare file lists between `.cursor/rules/`, `.claude/rules/`, `.agent/rules/`:
-- Files in one but not others → report as parity violation
+- **First**: read `PARITY_EXCLUDES.md` (in this skill folder) for files to skip
+- Files in one but not others (and NOT in the exclusion list) → report as parity violation
 
 ### 5. Project Health Score
 ```
@@ -51,7 +52,7 @@ Select tasks for next sprint:
 
 ### 8. Dependency Graph Regeneration
 Regenerate `.galdr/DEPENDENCY_GRAPH.md` using the `g-dependency-graph` skill:
-1. Read all task files, extract id/title/status/phase/subsystem/priority/dependencies
+1. Read all task files, extract id/title/status/subsystem/priority/dependencies
 2. Build adjacency list from dependencies
 3. Compute critical path (longest dependency chain)
 4. Identify top blockers, blocked tasks, and orphans
@@ -75,7 +76,13 @@ Run the freshness audit from the `g-knowledge-refresh` skill (Steps 1-2 only):
 2. If stale or due-for-refresh notes found, add to CLEANUP_REPORT.md under **Vault Freshness**
 3. Do NOT auto-refresh — only flag for human review in the report
 
-### 11. CLEANUP_REPORT.md
+### 11. Experiment Staleness Check
+For each active experiment in `.galdr/experiments/EXPERIMENTS.md`:
+- Read the EXP file
+- If any stage is `[🔄]` and last modified >48h ago → flag in CLEANUP_REPORT.md
+- If experiment `status: running` but no stage has been updated in >72h → mark as stale
+
+### 12. CLEANUP_REPORT.md
 ```markdown
 # Cleanup Report — YYYY-MM-DD
 
@@ -92,6 +99,6 @@ Score: N/100 (Healthy | Degraded | Critical)
 - Task NNN: failure_history >= 3 — ralph_wiggum_loop
 - Task NNN: ai_safe: false — needs human checkpoint
 
-## AI Ideas (SYSTEM_EXPERIMENTS proposals)
+## AI Ideas (SELF_EVOLUTION proposals)
 - [If any experiments proposed by sprint agents]
 ```
