@@ -1,95 +1,42 @@
-# Cursor Hooks
+# galdr Hooks
 
-This folder contains PowerShell hooks for Cursor IDE that provide lifecycle management, auditing, and security validation.
+Hooks extend Cursor IDE behavior at key lifecycle events.
 
-## Configuration
+## Active Hooks (hooks.json)
 
-Hooks are configured in `.cursor/hooks.json`. The configuration defines which scripts run at each lifecycle event.
+| Hook | Event | Does |
+|------|-------|------|
+| `session-start.ps1` | Session start | Injects "galdr is active + check TASKS.md" into every session. Handles first-time user setup. Auto-heals `.galdr/.project_id`. |
+| `agent-complete.ps1` | Agent stop | Writes a session reminder for next session if 5+ turns occurred. |
+| `validate-shell.ps1` | Before shell | Blocks dangerous commands (`rm -rf /`, `format c:`, etc). |
+| `g-setup-user.ps1` | Called by session-start | Interactive first-time user identity setup. |
 
-## Available Hooks
+## Corporate / Security-Restricted Environments
 
-### session-start.ps1
-- **Event**: `sessionStart`
-- **Purpose**: Initializes session, logs session start, injects galdr context
-- **Logs to**: `.cursor/logs/{date}_session_lifecycle.log`
+Cursor hooks spawn PowerShell processes and can trigger endpoint security alerts
+(SentinelOne, CrowdStrike, etc.) due to base64 payloads and child process creation.
 
-### agent-complete.ps1
-- **Event**: `stop`
-- **Purpose**: Logs when the agent loop ends, records completion metrics
-- **Logs to**: `.cursor/logs/{date}_agent_lifecycle.log`, `.cursor/metrics/{date}_completions.csv`
+**To disable all hooks:**
 
-### audit.ps1
-- **Event**: Multiple (preToolUse, postToolUse, afterFileEdit, sessionEnd)
-- **Purpose**: Generic audit logging for all events
-- **Logs to**: `.cursor/logs/{date}_agent-audit.log`
+Replace `hooks.json` with an empty hooks object:
 
-### validate-shell.ps1
-- **Event**: `beforeShellExecution`
-- **Purpose**: Validates shell commands, blocks dangerous patterns
-- **Logs to**: `.cursor/logs/{date}_shell_commands.log`
-- **Security**: Exit code 2 blocks dangerous commands
-
-## Log File Naming Convention
-
-All log files are prefixed with the date in `yyyy-MM-dd` format for easy cleanup:
-
-```
-.cursor/
-├── logs/
-│   ├── 2026-01-26_agent-audit.log       # Today's audit events
-│   ├── 2026-01-26_agent_lifecycle.log   # Today's agent events
-│   ├── 2026-01-26_session_lifecycle.log # Today's session events
-│   ├── 2026-01-26_shell_commands.log    # Today's shell commands
-│   ├── 2026-01-25_agent-audit.log       # Yesterday's audit (can delete)
-│   └── ...
-└── metrics/
-    ├── 2026-01-26_completions.csv       # Today's completion metrics
-    └── ...
+```json
+{
+  "version": 1,
+  "hooks": {}
+}
 ```
 
-### Cleanup Old Logs
+galdr works without hooks — you just won't get the auto-injected context reminder
+at session start. Add `@g-setup` or check `.galdr/TASKS.md` manually instead.
 
-To delete logs older than 7 days:
+## What Was Removed (available in galdr_full)
 
-```powershell
-# Delete log files older than 7 days
-Get-ChildItem ".cursor/logs" -File | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-7) } | Remove-Item
+The following hooks require the Docker MCP backend and are not included in galdr lite:
 
-# Delete metrics files older than 30 days
-Get-ChildItem ".cursor/metrics" -File | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-30) } | Remove-Item
-```
-
-Or delete by date prefix:
-
-```powershell
-# Delete all logs from a specific date
-Remove-Item ".cursor/logs/2026-01-20_*"
-```
-
-## Customization
-
-### Adding Dangerous Command Patterns
-
-Edit `validate-shell.ps1` to add patterns to the `$dangerousPatterns` array:
-
-```powershell
-$dangerousPatterns = @(
-    "rm -rf /",
-    "your-dangerous-pattern-here"
-)
-```
-
-### Enabling Notifications
-
-Uncomment and configure the notification sections in the hook scripts to send Slack/email alerts.
-
-## Platform Compatibility
-
-These PowerShell hooks work on Windows with Cursor IDE.
-
-| Hook | Purpose |
-|------|---------|
-| session-start.ps1 | Session initialization |
-| agent-complete.ps1 | Agent completion logging |
-| audit.ps1 | Generic audit logging |
-| validate-shell.ps1 | Shell command validation |
+- `cursor_adapter.py` / `claude_adapter.py` — MCP memory ingestion
+- `heartbeat-scheduler.ps1` — Scheduled agent routines
+- `vault-*.ps1` — Vault sync and search
+- `sync-client.ps1` — WebSocket sync to MCP server
+- `file-index-rebuild.ps1` — PostgreSQL file index
+- `audit.ps1` — Tool call logging (also a SentinelOne trigger)
