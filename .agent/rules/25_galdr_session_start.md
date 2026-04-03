@@ -16,7 +16,7 @@ alwaysApply: true
 ├── config/     # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md, AGENT_CONFIG.md
 ├── experiments/ # EXPERIMENTS.md, SELF_EVOLUTION.md, HYPOTHESIS.md, EXPERIMENT_TEMPLATE.md, EXP-NNN.md
 ├── reports/    # CLEANUP_REPORT.md
-├── tracking/   # IDEA_BOARD.md, INBOX.md
+├── IDEA_BOARD.md     # idea capture
 ├── subsystems/ # Per-subsystem spec files (subsystem_name.md)
 ├── tasks/      # Individual task files (sequential task IDs)
 ├── phases/     # Legacy v2 only — phase defs / archives; omit on greenfield v3
@@ -29,7 +29,7 @@ alwaysApply: true
 Mission: [from PROJECT.md, 1 line]
 Goals: G-01: [name] | G-02: [name] (from PROJECT.md)
 Plan focus: [current milestone or theme from PLAN.md]
-Ideas: [N] active (from tracking/IDEA_BOARD.md)
+Ideas: [N] active (from IDEA_BOARD.md)
 Subsystems: [N] registered (from SUBSYSTEMS.md + subsystems/)
 Experiments: [summary from experiments/EXPERIMENTS.md if it has active entries]
 ```
@@ -84,5 +84,5 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 **Fix issues BEFORE proceeding with user request.**
 
 ## Idea Capture Triggers (IMMEDIATE, any time)
-Capture to `tracking/IDEA_BOARD.md` when user says:
+Capture to `IDEA_BOARD.md` when user says:
 `"make a note"` | `"remember this"` | `"idea:"` | `"what if we"` | `"someday"` | `"for later"` | `"eventually"`

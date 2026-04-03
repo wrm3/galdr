@@ -1,6 +1,6 @@
 ---
 name: g-ideas-goals
-description: Manage IDEA_BOARD and PROJECT_GOALS — capture ideas, review the board, and update goals when direction shifts.
+description: Manage IDEA_BOARD and the Goals section in PROJECT.md — capture ideas, review the board, and update goals when direction shifts.
 ---
 
 # Skill: galdr-ideas-goals
@@ -10,7 +10,7 @@ description: Manage IDEA_BOARD and PROJECT_GOALS — capture ideas, review the b
 - User mentions a business concept, feature, or improvement not ready for development
 - AI identifies something worth capturing that would cause scope creep right now
 - User runs `@g-idea-capture`, `@g-idea-review`, or `@g-goal-update`
-- Setting up a new project (create PROJECT_GOALS.md)
+- Setting up a new project (ensure `.galdr/PROJECT.md` has a Goals section)
 
 ---
 
@@ -18,8 +18,8 @@ description: Manage IDEA_BOARD and PROJECT_GOALS — capture ideas, review the b
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `IDEA_BOARD.md` | `.galdr/tracking/IDEA_BOARD.md` | Parking lot for ideas not yet ready for development |
-| `PROJECT_GOALS.md` | `.galdr/project/PROJECT_GOALS.md` | Strategic goals that steer the AI and validate decisions |
+| `IDEA_BOARD.md` | `.galdr/IDEA_BOARD.md` | Parking lot for ideas not yet ready for development |
+| Goals (in `PROJECT.md`) | `.galdr/PROJECT.md` | Mission, **Project Linking**, and strategic goals that steer the AI |
 
 **Direct Edit Policy**: Edit both files directly without asking permission.
 
@@ -39,7 +39,7 @@ Watch for these patterns in user messages:
 
 **Step 1: Check/create IDEA_BOARD.md**
 ```
-Does .galdr/tracking/IDEA_BOARD.md exist?
+Does .galdr/IDEA_BOARD.md exist?
   → NO: Create from template (see File Format below)
   → YES: Read to get next IDEA-NNN ID
 ```
@@ -79,7 +79,7 @@ Continuing with current task...
 
 ## Workflow 2: Reviewing Ideas (`@g-idea-review`)
 
-**Step 1: Read .galdr/tracking/IDEA_BOARD.md**
+**Step 1: Read .galdr/IDEA_BOARD.md**
 
 **Step 2: Display summary**
 ```
@@ -91,7 +91,7 @@ Recently Captured: {last 2-3 ideas}
 ```
 
 **Step 3: For each "evaluating" idea, ask:**
-- Does this align with PROJECT_GOALS?
+- Does this align with goals in `PROJECT.md`?
 - Are prerequisites now met?
 - Should we promote to task, shelve, or keep raw?
 
@@ -115,7 +115,7 @@ Recently Captured: {last 2-3 ideas}
 
 ## Workflow 4: Managing Project Goals
 
-### Creating PROJECT_GOALS.md (during setup/planning)
+### Creating / filling the Goals section in `PROJECT.md` (during setup/planning)
 
 **Step 1: Gather from context**
 Ask or infer:
@@ -124,8 +124,8 @@ Ask or infer:
 - What is explicitly out of scope? (Non-Goals)
 - How will you know when you've succeeded? (Success Metrics)
 
-**Step 2: Write PROJECT_GOALS.md**
-Use the format below. Be specific about metrics.
+**Step 2: Write or merge into `.galdr/PROJECT.md`**
+Use the Goals format below (as a section within `PROJECT.md`). Be specific about metrics.
 
 **Step 3: Display confirmation**
 ```
@@ -134,7 +134,7 @@ G-01: [name]
 G-02: [name]
 ```
 
-### Updating PROJECT_GOALS.md
+### Updating goals in `PROJECT.md`
 
 **Triggers:**
 - User mentions new revenue model, business direction, or constraints
@@ -142,7 +142,7 @@ G-02: [name]
 - User says "our goal is..." / "the point of this is..."
 
 **Process:**
-1. Read current PROJECT_GOALS.md
+1. Read current `.galdr/PROJECT.md` (Goals section)
 2. Identify which goal is changing (or if a new goal is being added)
 3. Update the Goals table
 4. Add an entry to the Goal Log
@@ -179,23 +179,31 @@ G-02: [name]
 ## Shelved Ideas
 ```
 
-### PROJECT_GOALS.md
+### Goals section inside `PROJECT.md`
 ```markdown
-# PROJECT_GOALS.md
+# PROJECT.md
 
-## Vision
+## Mission
+[one line — project purpose]
+
+## Project Linking
+[parents / children / siblings — see `g-project-linking`]
+
+## Goals
+
+### Vision
 [1-2 sentences of what success looks like]
 
-## Primary Goals
+### Primary Goals
 | ID   | Goal   | Target / Metric  | Status |
 |------|--------|------------------|--------|
 | G-01 | [name] | [metric]         | active |
 
-## Secondary Goals
-## Non-Goals
-## Success Metrics
+### Secondary Goals
+### Non-Goals
+### Success Metrics
 
-## Goal Log
+### Goal Log
 | Date       | Change          | Reason |
 |------------|-----------------|--------|
 | YYYY-MM-DD | [what changed]  | [why]  |
@@ -208,7 +216,7 @@ G-02: [name]
 When both files exist, show:
 ```
 📌 SESSION CONTEXT
-Mission: [from PROJECT_CONTEXT.md, 1 line]
+Mission: [from PROJECT.md, 1 line]
 Goals: G-01: [name] | G-02: [name]
 Phase: [current phase]
 Ideas: [N] active on IDEA_BOARD
