@@ -126,10 +126,9 @@ Run the deliverables checklist from the skill.
 - Must include settings comparison
 
 ### Integration Plan
-- Phase file: `.galdr/phases/phase{N}_{project}-integration.md`
-- Tasks in: `.galdr/TASKS.md`
+- Strategy / milestones: update `.galdr/PLAN.md`; optional PRD fragment under `.galdr/prds/` if scope warrants a standalone doc
+- Tasks in: `.galdr/TASKS.md` + task files under `.galdr/tasks/` (sequential IDs, v3)
 - Must include verification, implementation, config, and documentation tasks
-- Must follow galdr task numbering conventions
 
 ## Integration Points
 

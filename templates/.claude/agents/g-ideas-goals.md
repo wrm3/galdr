@@ -1,13 +1,13 @@
 ---
 name: galdr-ideas-goals
-description: Use when capturing ideas to IDEA_BOARD.md, reviewing the idea board, promoting ideas to tasks, updating PROJECT_GOALS.md, or when user says "make a note of that", "idea:", "what if we...", "someday...", "for later...", or "remember this". Activate IMMEDIATELY on these trigger phrases — do not wait.
+description: Use when capturing ideas to IDEA_BOARD.md, reviewing the idea board, promoting ideas to tasks, updating goals in PROJECT.md, or when user says "make a note of that", "idea:", "what if we...", "someday...", "for later...", or "remember this". Activate IMMEDIATELY on these trigger phrases — do not wait.
 model: inherit
 tools: Read, Write, Edit, Glob
 ---
 
 # Galdr Ideas & Goals Agent
 
-You own `.galdr/tracking/IDEA_BOARD.md` and `.galdr/project/PROJECT_GOALS.md`.
+You own `.galdr/tracking/IDEA_BOARD.md` and the **goals / vision sections** of `.galdr/PROJECT.md` (v3 consolidated project doc).
 
 ## MANDATORY Capture Triggers
 Capture to IDEA_BOARD.md IMMEDIATELY when user says:
@@ -47,7 +47,7 @@ Also capture AI-identified opportunities:
 
 ## Idea Lifecycle
 ```
-raw → evaluating → accepted (→ task/phase) | shelved
+raw → evaluating → accepted (→ task / milestone) | shelved
 ```
 - **raw**: Just captured
 - **evaluating**: Being considered
@@ -56,7 +56,9 @@ raw → evaluating → accepted (→ task/phase) | shelved
 
 **NEVER auto-promote** ideas to tasks — requires explicit user decision.
 
-## PROJECT_GOALS.md Format
+## PROJECT.md — Goals section format (v3)
+Use the **Mission**, **Vision**, **Non-Goals**, and any **Primary Goals** / G-01 tables inside `.galdr/PROJECT.md`. If the repo still has a legacy `PROJECT_GOALS.md`, migrate content into `PROJECT.md` during grooming.
+
 ```markdown
 ## Vision
 [1-2 sentences: what does success look like?]
@@ -74,9 +76,9 @@ raw → evaluating → accepted (→ task/phase) | shelved
 |---|---|---|
 ```
 
-## When to Update PROJECT_GOALS.md
+## When to Update PROJECT.md (goals)
 - User mentions new business direction or success criteria
-- New phase with significantly different objectives
+- New milestone or pivot in PLAN.md with different objectives
 - User says "our goal is..." / "the point of this is..."
 - During @g-plan or @g-setup
 

@@ -16,20 +16,20 @@ description: Initiate or respond to sibling contract sync; advisory only, non-bl
 
 1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`** — get siblings + their contracts
 2. **Select target sibling and contract**
-3. **Update local contract file** at `.galdr/contracts/<name>.md`:
+3. **Update local contract file** at `.galdr/linking/<name>.md`:
    - Bump version number
    - Update content (the spec that changed)
    - Update `last_synced` date
    - Set `sync_status: current` on your copy
-4. **Write to `sibling/.galdr/tracking/INBOX.md`** (if path accessible):
+4. **Write to `sibling/.galdr/linking/INBOX.md`** (if path accessible):
    ```markdown
    ## [OPEN] SYNC-XXX — from: [this project] — YYYY-MM-DD
    **Type:** peer_sync
    **Contract:** [contract_name]
    **Version:** [old] → [new]
    **Change:** [brief description of what changed and why]
-   **Your action:** Update your copy at `.galdr/contracts/[name].md`
-   **Canonical spec path:** [this project]/.galdr/contracts/[name].md
+   **Your action:** Update your copy at `.galdr/linking/[name].md`
+   **Canonical spec path:** [this project]/.galdr/linking/[name].md
    **Your task:** [will be created below]
    **Status:** action_needed
    ```
@@ -52,8 +52,8 @@ description: Initiate or respond to sibling contract sync; advisory only, non-bl
 ### Responding to a Sync (Sibling notified me)
 
 1. **Read INBOX item** (`SYNC-XXX` in INBOX.md) or check the created task
-2. **Read their updated contract** (if path accessible) at `sibling/.galdr/contracts/<name>.md`
-3. **Update local copy** at `.galdr/contracts/<name>.md`:
+2. **Read their updated contract** (if path accessible) at `sibling/.galdr/linking/<name>.md`
+3. **Update local copy** at `.galdr/linking/<name>.md`:
    - Match their version number
    - Update content to match canonical
    - Set `sync_status: current`
@@ -67,7 +67,7 @@ description: Initiate or respond to sibling contract sync; advisory only, non-bl
 ```
 Peer sync complete:
 - Contract: [name] — v[new]
-- Local copy updated: .galdr/contracts/[name].md ✅
+- Local copy updated: .galdr/linking/[name].md ✅
 - Sibling notified/confirmed: [sibling_id] ✅
 - Tasks created/closed ✅
 ```

@@ -1,6 +1,6 @@
 ---
 name: g-bug-report
-description: Document a new bug in BUGS.md and create a corresponding task. Use for any defect — even pre-existing or out-of-scope ones.
+description: Document a new bug in BUGS.md and create an individual bug file in bugs/. Use for any defect — even pre-existing or out-of-scope ones.
 ---
 # galdr-bug-report
 
@@ -11,7 +11,7 @@ Any time a defect, error, or warning is identified — even "pre-existing" or "u
 
 ## Steps
 
-1. **Determine next bug ID**: read `.galdr/tracking/BUGS.md`, find highest BUG-NNN, increment
+1. **Determine next bug ID**: read `.galdr/BUGS.md`, find highest BUG-NNN, increment by 1
 
 2. **Classify severity**:
    - **Critical**: crash, data loss, security vulnerability
@@ -19,38 +19,51 @@ Any time a defect, error, or warning is identified — even "pre-existing" or "u
    - **Medium**: minor feature issue, usability problem
    - **Low**: cosmetic, pre-existing/out-of-scope
 
-3. **Fast-path for pre-existing/out-of-scope** (30 seconds):
-```markdown
-### Bug ID: BUG-NNN
-- **Title**: [Brief description]
-- **Severity**: Low
-- **Source**: Development (noticed during Task #NNN)
-- **Status**: Open
-- **File**: path/to/file.ext (line N if known)
-- **Note**: Pre-existing. Not blocking current task.
-- **Created**: YYYY-MM-DD
+3. **Create bug file** at `.galdr/bugs/bugNNN_descriptive_name.md`:
+```yaml
+---
+id: NNN
+title: 'Bug Title'
+severity: critical | high | medium | low
+status: open
+source: development | testing | production | user_reported
+subsystems: [affected-subsystems]
+file: 'path/to/file.ext'
+line: null
+task_reference: null
+prd_reference: null
+created_date: 'YYYY-MM-DD'
+resolved_date: ''
+---
+# BUG-NNN: Bug Title
+
+## Description
+[What's wrong]
+
+## Reproduction
+1. Step one
+2. Step two
+
+## Expected vs Actual
+- **Expected**: [what should happen]
+- **Actual**: [what actually happens]
+
+## Root Cause
+[Filled in when resolved]
+
+## Fix
+[Filled in when resolved]
 ```
 
-4. **Full entry for active bugs**:
-```markdown
-### Bug ID: BUG-NNN
-- **Title**: [BUG] Brief description
-- **Severity**: Critical | High | Medium | Low
-- **Source**: user_reported | development | testing | production
-- **Phase Impact**: [Phase N]
-- **Status**: Open
-- **Task Reference**: Task #NNN (create below)
-- **Created**: YYYY-MM-DD
-- **Description**: What's wrong
-- **Steps to Reproduce**: 
-  1. Step one
-  2. Step two
-- **Expected**: What should happen
-- **Actual**: What actually happens
-```
+4. **Add to BUGS.md** (atomic — same response):
+   - Add row: `| [📋] | BUG-NNN | Brief description | Severity | subsystem1, subsystem2 |`
+   - Update "Next Bug ID" at bottom
 
-5. **Create task** (for Medium/High/Critical bugs):
-   - Add `| [📋] | NNN | [BUG] {title} |` to TASKS.md
-   - Create task file with `type: bug_fix`, `bug_reference: BUG-NNN`
+5. **Append to subsystem Activity Log** for each affected subsystem:
+   - Read `.galdr/subsystems/{subsystem}.md`
+   - Append row to Activity Log table: `| YYYY-MM-DD | BUG | NNN | {title} | PRD-NNN |`
 
-6. **Confirm**: "Bug logged as BUG-NNN: {title}"
+6. **Create task** (for Medium/High/Critical bugs):
+   - Follow g-task-new steps with `type: bug_fix` and `bug_reference: BUG-NNN`
+
+7. **Confirm**: "Bug logged as BUG-NNN: {title}"

@@ -21,12 +21,12 @@ Scan all `.galdr/**/*.md` (root, config/, docs/, tracking/) for these patterns (
 {project_name}  {Project Name}  {PROJECT_NAME}
 {Goal name}     {Measurable outcome}  {Target}
 {Phase Name}    {subsystem-name-1}    {subsystem-name-2}
-[Brief mission from PROJECT_CONTEXT.md]
+[Brief mission from PROJECT.md]
 [Phase and focus area]
 YYYY-MM-DD   (as literal unfilled date)
 [Your name here]  [Developer]
 ```
-Fill from PROJECT_CONTEXT.md where possible. Collect unknowns, ask user once at end.
+Fill from `.galdr/PROJECT.md` where possible. Collect unknowns, ask user once at end.
 
 ## Step 3: .project_id Check
 ```
@@ -61,9 +61,9 @@ vNext fields: `blast_radius, requires_verification, ai_safe`
 Missing required → add with sensible defaults
 Missing vNext → add: `blast_radius: "low"`, `requires_verification: false`, `ai_safe: true`, `tags: [legacy-upgraded]`
 
-## Step 7: PROJECT_GOALS.md Health
+## Step 7: PROJECT.md Goals health
 ```
-□ Exists? → NO: generate from PROJECT_CONTEXT.md vision + success criteria
+□ `.galdr/PROJECT.md` exists with a Goals section? → NO: generate from mission vision + success criteria
 □ Contains {Goal name} or {Measurable outcome}? → treat as missing, regenerate
 □ Has at least G-01 and G-02? → if not, flag for user
 ```
@@ -80,7 +80,7 @@ GALDR GROOMING REPORT — {date}
 ═══════════════════════════════════
 ✅ .project_id: valid UUID present
 ✅ TASKS.md ↔ files: 12/12 synced
-⚠️  Placeholders filled: 3 (PROJECT_GOALS.md)
+⚠️  Placeholders filled: 3 (PROJECT.md Goals)
 ⚠️  Legacy YAML upgraded: 2 task files
 ❌ Phase sync: phase3_*.md missing — created stub
 ✅ SUBSYSTEMS.md: 4 subsystems, all current

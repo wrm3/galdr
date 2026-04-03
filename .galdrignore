@@ -1,0 +1,126 @@
+# .galdrignore — controls which files the galdr file indexer (file_index MCP plugin) can see
+#
+# Syntax identical to .gitignore:
+#   - Lines starting with # are comments
+#   - Blank lines are ignored
+#   - Prefix with ! to un-ignore (whitelist) a pattern that would otherwise be excluded
+#   - Prefix with / to anchor to root
+#   - ** matches any depth
+#
+# IMPORTANT: This is SEPARATE from .gitignore.
+#   - .gitignore = what Git ignores (public/commit safety)
+#   - .galdrignore = what the galdr file indexer ignores (performance + noise)
+#   The indexer sees gitignored files UNLESS they're also in .galdrignore.
+#   Your .galdr/ folder, research/, etc. are visible UNLESS listed here.
+#
+# Default rule: index everything EXCEPT the patterns below.
+
+# ──────────────────────────────────────────────
+# Binary and compiled output
+# ──────────────────────────────────────────────
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.obj
+*.o
+*.a
+*.lib
+*.pyc
+*.pyo
+__pycache__/
+*.class
+*.jar
+
+# ──────────────────────────────────────────────
+# Archives and large media (not useful as text)
+# ──────────────────────────────────────────────
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.gz
+*.bz2
+*.mp4
+*.mp3
+*.wav
+*.mov
+*.avi
+*.mkv
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.ico
+*.svg
+*.ttf
+*.woff
+*.woff2
+*.eot
+
+# ──────────────────────────────────────────────
+# Node / Python / package manager artifacts
+# ──────────────────────────────────────────────
+node_modules/
+.venv/
+venv/
+env/
+.env.local
+dist/
+build/
+*.egg-info/
+.eggs/
+site-packages/
+
+# ──────────────────────────────────────────────
+# Version control
+# ──────────────────────────────────────────────
+.git/
+
+# ──────────────────────────────────────────────
+# IDE noise
+# ──────────────────────────────────────────────
+.cursor/cache/
+.cursor/plugins/cache/
+*.log
+*.tmp
+*.bak
+
+# ──────────────────────────────────────────────
+# Lock files (rarely useful to read)
+# ──────────────────────────────────────────────
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+uv.lock
+poetry.lock
+Pipfile.lock
+
+# ──────────────────────────────────────────────
+# Database / generated
+# ──────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.parquet
+*.feather
+
+# ──────────────────────────────────────────────
+# Secrets — NEVER index these
+# ──────────────────────────────────────────────
+.env
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ecdsa
+credentials.json
+service_account.json

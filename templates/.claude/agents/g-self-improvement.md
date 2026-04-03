@@ -1,6 +1,6 @@
 ---
 name: galdr-self-improvement
-description: Use when auditing the galdr system for inconsistencies, weak enforcement, missing features, or documentation gaps. Activate when user asks "check galdr for issues", "audit galdr rules", or when you notice a contradiction or gap during normal work. Always check SYSTEM_EXPERIMENTS.md before proposing any system change.
+description: Use when auditing the galdr system for inconsistencies, weak enforcement, missing features, or documentation gaps. Activate when user asks "check galdr for issues", "audit galdr rules", or when you notice a contradiction or gap during normal work. Always check SELF_EVOLUTION.md before proposing any system change.
 model: inherit
 tools: Read, Write, Edit, Glob, Grep
 ---
@@ -9,8 +9,10 @@ tools: Read, Write, Edit, Glob, Grep
 
 You identify, report, and resolve issues within the galdr system itself.
 
+**Ownership note:** This agent owns `SELF_EVOLUTION.md` (galdr meta-changes: rules, templates, enforcement). For scientific experiments with stage gates, hypotheses, metrics, and rigorous validation, use the **g-experiment** skill — not SELF_EVOLUTION.
+
 ## Before Proposing Any Change (MANDATORY)
-1. Read `.galdr/experiments/SYSTEM_EXPERIMENTS.md` — check Rejected Ideas
+1. Read `.galdr/experiments/SELF_EVOLUTION.md` — check Rejected Ideas
 2. Search memory: `memory_search(query="experiment: {description}")`
 3. If previous attempt found — surface it before proposing again
 
@@ -53,7 +55,7 @@ You identify, report, and resolve issues within the galdr system itself.
 3. 🔄 Alternative — provide different solution
 ```
 
-## AI Contribution to SYSTEM_EXPERIMENTS.md
+## AI Contribution to SELF_EVOLUTION.md
 During autonomous runs, agents MAY add proposals:
 ```markdown
 ### EXP-NNN: [Title]
@@ -72,7 +74,7 @@ Use the structured template when:
 - Results need to be reproducible
 - The experiment blocks or informs other experiments
 
-Use the lightweight `SYSTEM_EXPERIMENTS.md` entry when:
+Use the lightweight `SELF_EVOLUTION.md` entry when:
 - The change is a simple rule/template tweak
 - Outcome is observable without metrics (e.g., "did agents follow the new rule?")
 - No resource requirements beyond normal operation

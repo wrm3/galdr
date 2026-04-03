@@ -11,7 +11,7 @@ description: Assemble the project graph from topology files. Three hops of detai
 
 1. **Read current project's `.galdr/project/PROJECT_TOPOLOGY.md`**
    - This project is the center of the graph (marked ★)
-   - If no topology file → "No topology declared. Run @g-topology first."
+   - If no topology file → "No topology declared. Run @g-project-linking first."
 
 2. **Recursive traversal** (max 3 hops from center):
    - Maintain a `visited` set of project IDs (cycle detection)

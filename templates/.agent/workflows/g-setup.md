@@ -52,7 +52,7 @@ Create these template files:
 - `.galdr/SUBSYSTEMS.md` - Component registry
 - `.galdr/config/SPRINT.md` - Active sprint queue (cleanup-agent-generated placeholder)
 - `.galdr/reports/CLEANUP_REPORT.md` - Nightly report placeholder
-- `.galdr/experiments/SYSTEM_EXPERIMENTS.md` - System evolution log
+- `.galdr/experiments/SELF_EVOLUTION.md` - System evolution log
 - `.galdr/tracking/IDEA_BOARD.md` - Ideas parking lot (human + AI sections)
 - `.galdr/project/PROJECT_GOALS.md` - Strategic goals
 - `.galdr/templates/task_template.md` - Full vNext task YAML schema

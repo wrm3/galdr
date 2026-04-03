@@ -2,7 +2,7 @@ Review and action cross-project coordination items: $ARGUMENTS
 
 ## What This Command Does
 
-Opens `.galdr/tracking/INBOX.md` and walks through all pending items — conflicts, parent broadcasts, child requests, and sibling peer syncs. Resolves conflicts, creates tasks for actionable items, and marks done items as complete.
+Opens `.galdr/linking/INBOX.md` and walks through all pending items — conflicts, parent broadcasts, child requests, and sibling peer syncs. Resolves conflicts, creates tasks for actionable items, and marks done items as complete.
 
 ## Priority Order
 

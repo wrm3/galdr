@@ -10,7 +10,7 @@ These rules fire on EVERY response, even when no galdr agent is explicitly activ
 
 ## Error Reporting (Zero Tolerance)
 
-If your response mentions ANY of the following — create a `BUGS.md` entry immediately:
+If your response mentions ANY of the following — create a `.galdr/BUGS.md` entry and bug file in `.galdr/bugs/` immediately:
 - "error", "warning", "pre-existing", "was already there", "unrelated error"
 - "lint error", "TypeScript error", "compile error", "exception"
 
@@ -57,11 +57,12 @@ Before any `.galdr/` operation, select the most appropriate agent:
 |---|---|
 | Create/update/complete tasks, TASKS.md | `g-task-manager` |
 | Create task, spec it out, "please task" | `g-task-manager` |
-| Bugs, errors, BUGS.md | `g-qa-engineer` |
-| PRD, phases, planning, PLAN.md | `g-planner` |
-| Ideas, goals, IDEA_BOARD.md | `g-ideas-goals` |
+| Bugs, errors, BUGS.md, bugs/ | `g-qa-engineer` |
+| PRDs, planning, PLAN.md, prds/ | `g-planner` |
+| Ideas, goals, tracking/IDEA_BOARD.md | `g-ideas-goals` |
 | Grooming, sync, health checks | `g-project-manager` |
-| PROJECT_CONTEXT.md, SUBSYSTEMS.md | `g-infrastructure` |
+| PROJECT.md, CONSTRAINTS.md, SUBSYSTEMS.md | `g-infrastructure` |
+| Experiments, hypotheses, experiments/ | `g-experiment` skill |
 
 If unsure which agent — default to `g-task-manager`.
 **No exceptions. No "quick reads." No "just checking."**
@@ -73,9 +74,27 @@ If unsure which agent — default to `g-task-manager`.
 | "I know what's in the file already" | You might be wrong. The agent reads and enforces. You don't. |
 
 ### Task Creation Trigger Phrases (always route to `g-task-manager`)
-Any of these → full task creation workflow (file first, TASKS.md second, YAML, phase numbering):
+Any of these → full task creation workflow (file first, TASKS.md second, YAML, sequential numbering):
 `"create a task"` | `"add a task"` | `"make a task"` | `"task and spec"` | `"spec it out"` |
 `"please task"` | `"add to tasks"` | `"task this"` | `"create a task(2)"` | `"task them"`
+
+## Code Change Enforcement (BLOCKED without Task/Bug)
+
+If code files were modified in this response and no active task or bug is referenced, the agent MUST either:
+1. Create a retroactive task via g-task-new before proceeding, OR
+2. Create a bug via g-bug-report if the change was a fix
+
+**Exceptions** (no task/bug required):
+- `.galdr/` file edits (task management housekeeping)
+- Documentation-only changes (docs/, README.md, AGENTS.md, CLAUDE.md)
+- Git operations (commits, branch management)
+
+| Rationalization | Reality |
+|---|---|
+| "It's a quick fix, not worth a task" | Quick fixes become mystery changes. Log it. |
+| "I'll create the task after I'm done" | You won't. Create it before or during. |
+| "The user didn't ask for a task" | The system requires it. Create it retroactively. |
+| "It's just a config change" | Config changes break things. Track them. |
 
 ## Delegation Hint
 
@@ -84,3 +103,8 @@ If the user mentions a task ID (e.g., "task 42", "#103") without explicitly invo
 
 If the user reports a bug or describes unexpected behavior without invoking `g-qa-engineer`:
 → Apply bug logging rules from `g-qa-engineer` immediately.
+
+### Experiment Trigger Phrases (route to `g-experiment` skill)
+Any of these → experiment workflow:
+`"run experiment"` | `"check gate"` | `"experiment status"` | `"failure autopsy"` |
+`"new experiment"` | `"experiment chain"` | `"run stage"` | `"next experiment"`

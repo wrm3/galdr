@@ -125,7 +125,7 @@ docs/                          # Project documentation
 - `g-qa` - Bug tracking and quality assurance
 - `g-code-reviewer` - Comprehensive code reviews
 - `g-ideas-goals` - Idea board and project goals management
-- `g-topology` - View or edit cross-project topology declarations
+- `g-project-linking` - View or edit cross-project relationships (PROJECT_TOPOLOGY.md)
 - `g-inbox` - Review and action cross-project coordination queue
 - `g-broadcast` - Push tasks to child projects with cascade depth
 - `g-request` - Request action from a parent project (creates blocked local task)
@@ -282,7 +282,7 @@ Commands use the `g-` prefix.
 | `g-task-new` | Create a new task |
 | `g-task-sync-check` | Validate task synchronization |
 | `g-task-update` | Update task status |
-| `g-topology` | View or edit this project's cross-project topology |
+| `g-project-linking` | View or edit this project's cross-project relationships (project linking) |
 | `g-workflow` | Task expansion, sprint planning |
 
 ### Usage

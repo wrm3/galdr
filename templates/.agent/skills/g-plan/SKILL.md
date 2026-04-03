@@ -1,6 +1,6 @@
 ---
 name: g-plan
-description: Create or update .galdr/PRD.md with 27-question process, scope validation, subsystems, and phase planning.
+description: Create or update PRD files under `.galdr/prds/` with 27-question process, scope validation, subsystems, and planning (align with `.galdr/PLAN.md`).
 ---
 # galdr-plan
 
@@ -26,7 +26,7 @@ description: Create or update .galdr/PRD.md with 27-question process, scope vali
    "What logic will be needed by 2+ features/subsystems?"
    → Plan extraction to `lib/` before implementation begins
 
-4. **Write PRD.md** at `.galdr/PRD.md`:
+4. **Write PRD file(s)** under `.galdr/prds/` (e.g. `.galdr/prds/PRD.md` for a single doc, or `.galdr/prds/<topic>.md` for multiple). Ensure `.galdr/PLAN.md` stays the master strategy doc above individual PRDs.
    ```markdown
    # PRD: [Project Name]
    
@@ -40,7 +40,7 @@ description: Create or update .galdr/PRD.md with 27-question process, scope vali
    ### 2.3 Non-Goals
    
    ## 3. User Personas
-   ## 4. Phases (reference TASKS.md for detail)
+   ## 4. Milestones / sequencing (reference TASKS.md; v3 uses sequential task IDs)
    ## 5. User Experience
    ## 6. Narrative
    ## 7. Success Metrics
@@ -50,8 +50,8 @@ description: Create or update .galdr/PRD.md with 27-question process, scope vali
    ## 10. User Stories
    ```
 
-5. **Generate TASKS.md skeleton** with phase headers and initial tasks
+5. **Generate TASKS.md skeleton** with initial tasks (sequential IDs; optional milestone section headers)
 
 6. **Create SUBSYSTEMS.md** with detected/defined subsystems
 
-7. **Offer PROJECT_CONSTRAINTS.md** creation for non-negotiable constraints
+7. **Offer `.galdr/CONSTRAINTS.md`** creation for non-negotiable constraints

@@ -16,12 +16,13 @@ You own file organization, scope control, project structure standards, and **sub
 ## File Placement Rules (CRITICAL)
 | Goes In | Content |
 |---|---|
-| `.galdr/` (root) | TASKS.md, PRD.md, SUBSYSTEMS.md ONLY |
-| `.galdr/config/` | HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md |
-| `.galdr/project/` | PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, PROJECT_CONSTRAINTS.md |
-| `.galdr/experiments/` | HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md, EXPERIMENT_TEMPLATE.md |
+| `.galdr/` (root) | TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, identity files (`.project_id`, `.user_id`, `.vault_location`) |
+| `.galdr/prds/` | One or more PRD markdown files (`*.md`) |
+| `.galdr/bugs/` | Individual bug files (`bugNNN_*.md` or project convention) |
+| `.galdr/config/` | HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md, AGENT_CONFIG.md |
+| `.galdr/experiments/` | HYPOTHESIS.md, SELF_EVOLUTION.md, EXPERIMENT_TEMPLATE.md |
 | `.galdr/reports/` | CLEANUP_REPORT.md |
-| `.galdr/tracking/` | BUGS.md, IDEA_BOARD.md, INBOX.md |
+| `.galdr/tracking/` | IDEA_BOARD.md, INBOX.md |
 | `.galdr/subsystems/` | Per-subsystem spec files (one .md per subsystem) |
 | `docs/` | ALL documentation: migration files, conversion summaries, setup reports, API docs, architecture docs |
 | `temp_scripts/` | Test scripts, utility scripts, data validation scripts |
@@ -95,22 +96,21 @@ The interconnection graph in SUBSYSTEMS.md must:
 Edit these directly without asking:
 - All files in `.galdr/` (core planning files)
 - All files in `.galdr/tasks/`
-- All files in `.galdr/phases/`
+- All files in `.galdr/prds/`, `.galdr/bugs/`
 - All files in `.galdr/subsystems/`
 
 ## Auto-Creation Rules
 Silently create missing folders without asking:
-- `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/contracts/`
-- `.galdr/config/`, `.galdr/project/`, `.galdr/tracking/`, `.galdr/subsystems/`
+- `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/linking/`
+- `.galdr/config/`, `.galdr/tracking/`, `.galdr/subsystems/`
 - `docs/`, `temp_scripts/`
 
 ## Required Template Files
 Ensure these exist in every galdr project:
 ```
-.galdr/TASKS.md, PRD.md, SUBSYSTEMS.md, .project_id
-.galdr/config/HEARTBEAT.md, SPRINT.md
-.galdr/project/PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_CONSTRAINTS.md
-.galdr/tracking/BUGS.md, IDEA_BOARD.md, INBOX.md
+.galdr/TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, .project_id
+.galdr/config/HEARTBEAT.md, SPRINT.md, AGENT_CONFIG.md
+.galdr/tracking/IDEA_BOARD.md, INBOX.md
 .galdr/subsystems/  (populated from SUBSYSTEMS.md entries)
 ```
 
@@ -131,12 +131,12 @@ Before `galdr_install`, detect if existing:
 ```
 □ .galdr/TASKS.md exists AND > 20 lines?
 □ .galdr/tasks/ has > 5 files?
-□ PROJECT_CONTEXT.md has non-template content?
+□ PROJECT.md has non-template content?
 → YES to any: EXISTING project — preserve data, merge carefully
 → NO to all: FRESH install
 ```
 
-**NEVER overwrite**: TASKS.md, tasks/, phases/, BUGS.md, logs/, IDEA_BOARD.md, PROJECT_CONSTRAINTS.md
+**NEVER overwrite**: TASKS.md, tasks/, bugs/, BUGS.md, logs/, IDEA_BOARD.md, CONSTRAINTS.md, PROJECT.md
 
 ## Backup Detection After Install
 Scan for `.GALDR_YYYYMMDD/` folders in project root after any install.
@@ -147,8 +147,8 @@ If found with blank new `.galdr/`: offer data migration from backup.
 - 90% threshold: emergency cleanup, defer non-essential
 - Project context display at session start:
   ```
-  📌 Mission: [1 line from PROJECT_CONTEXT.md]
-  📌 Phase: [current phase]
+  📌 Mission: [1 line from PROJECT.md]
+  📌 Plan: [current focus / milestone from PLAN.md]
   📌 Status: [active tasks, blockers]
   📌 Subsystems: [N registered]
   ```

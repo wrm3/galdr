@@ -28,7 +28,7 @@ phase: M
 name: 'New Direction Name'
 status: in_progress
 subsystems: [affected_subsystems]
-task_range: 'M00-M99'
+task_numbering: 'sequential — see TASKS.md (no phase-based ID ranges)'
 prerequisites: []
 started_date: 'YYYY-MM-DD'
 completed_date: ''

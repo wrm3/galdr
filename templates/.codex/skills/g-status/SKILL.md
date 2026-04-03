@@ -45,7 +45,7 @@ Session start, checking project health, @g-status command.
 
 6. **Cross-project advisories** (if `.galdr/project/PROJECT_TOPOLOGY.md` exists):
 
-   Read `.galdr/tracking/INBOX.md` and categorize:
+   Read `.galdr/linking/INBOX.md` and categorize:
 
    a. **CONFLICTS** → Surface as `⚠️ WARNING` before anything else (not advisory — these gate planning):
    ```

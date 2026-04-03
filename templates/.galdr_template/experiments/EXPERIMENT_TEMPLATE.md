@@ -2,13 +2,14 @@
 id: EXP-{NNN}
 title: '{Short experiment title}'
 status: planned | running | completed | failed | abandoned
-phase: {N}
-hypothesis_ids: [HYP-NNN]    # Which hypotheses this experiment tests
+hypothesis_ids: [HYP-NNN]
 experiment_type: proof_of_concept | comparison | parameter_sweep | ablation | baseline
 started_date: ''
 completed_date: ''
 outcome: in_progress | validated | invalidated | inconclusive | superseded
-carry_forward: []             # Findings to bring into next experiment
+carry_forward: []
+previous_experiment: null
+change_from_previous: 'N/A — first experiment (or: single sentence describing the ONE variable changed)'
 ---
 
 # Experiment {NNN}: {Title}
@@ -29,6 +30,9 @@ carry_forward: []             # Findings to bring into next experiment
 ### Data
 - [ ] {Dataset / data source 1} — source: {where to get it}
 - [ ] {Dataset / data source 2}
+
+### Artifacts (Inputs)
+- [ ] {Pre-trained model, embeddings, or other artifacts needed}
 
 ### Resources
 - **VRAM**: {X GB}
@@ -55,29 +59,58 @@ carry_forward: []             # Findings to bring into next experiment
 - {Variable 1}: {value held constant}
 
 ### Independent Variable
-*(What we're changing/testing)*
+*(The ONLY thing that changes — one variable per experiment)*
 - {Variable}: {range or options}
 
 ---
 
-## Execution Steps
+## Stages
 
-1. {Step 1 — specific command or action}
-2. {Step 2}
-3. {Step 3}
+### Stage 1: {Name}
+**Goal**: {One sentence}
 
-**Checkpoint**: After step {N}, verify {what to check} before continuing.
+**Steps**:
+1. {Specific action or command}
+2. {Next action}
+
+**Gate**:
+| Metric | Target | Stop If |
+|--------|--------|---------|
+| {metric} | {target value} | {failure condition} |
+
+**Pass condition**: {What must be true to proceed to Stage 2}
+**Fail condition**: {What triggers a stop and failure autopsy}
 
 ---
 
-## Success Criteria
+### Stage 2: {Name}
+**Goal**: {One sentence}
+
+**Steps**:
+1. {Step}
+
+**Gate**:
+| Metric | Target | Stop If |
+|--------|--------|---------|
+| {metric} | {target} | {failure condition} |
+
+**Pass condition**: {criteria}
+**Fail condition**: {criteria}
+
+---
+
+*(Add more stages as needed. Each stage MUST have a gate.)*
+
+---
+
+## Success Criteria (Overall)
 
 | Metric | Target | Minimum Acceptable |
 |--------|--------|-------------------|
 | {metric_1} | {target} | {floor} |
 | {metric_2} | {target} | {floor} |
 
-**Stop Early If**: {Condition that makes continuing pointless — e.g., "loss diverges after epoch 2"}
+**Stop Early If**: {Condition that makes continuing pointless}
 
 ---
 
@@ -96,13 +129,31 @@ carry_forward: []             # Findings to bring into next experiment
 
 ## Resource Log
 
-| Stage | Duration | Cost (API/credits) | Notes |
-|-------|----------|--------------------|-------|
-| Setup | — | — | |
-| Run 1 | — | — | |
+| Stage | Duration | VRAM Peak | Notes |
+|-------|----------|-----------|-------|
+| 1. {name} | — | — | |
+| 2. {name} | — | — | |
 
-**Total compute**: {hours}
-**Total cost**: {USD if applicable}
+**Total compute**: —
+**Total wall time**: —
+
+---
+
+## Failure Autopsy
+*(Fill this in if ANY stage fails — do not skip)*
+
+### Stage {N}: {Stage Name}
+**What happened**: {Factual description of the failure}
+**Root cause**: {Analysis — why did it fail?}
+**What the metrics showed**:
+| Metric | Expected | Actual |
+|--------|----------|--------|
+| {metric} | {target} | {actual value} |
+
+**Suggested fix for next experiment**: {Actionable recommendation}
+**Suggested experiment change**: {The single variable to change in EXP-NNN+1}
+**Confidence in fix**: High | Medium | Low
+**Alternative approaches if fix fails**: {Backup plan}
 
 ---
 

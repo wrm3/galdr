@@ -9,8 +9,8 @@ Changing task status (start working, mark complete, pause, fail).
 
 ## Status Transitions
 ```
-[ ] → [📋] → [🔄] → [🔍] → [✅]
-              ↓         ↓
+[ ] -> [📋] -> [🔄] -> [🔍] -> [✅]
+              |         |
              [⏸️]       [📋] (verification failed — reset)
              [❌]
 ```
@@ -18,8 +18,8 @@ Changing task status (start working, mark complete, pause, fail).
 ## Steps
 
 1. **Read current state** (both files):
-   - `.galdr/tasks/taskNNN_*.md` → current YAML `status:`
-   - `.galdr/TASKS.md` → current indicator for task NNN
+   - `.galdr/tasks/taskNNN_*.md` -> current YAML `status:`
+   - `.galdr/TASKS.md` -> current indicator for task NNN
    - Verify they match — if not, fix mismatch first (file is source of truth)
 
 2. **Apply transition**:
@@ -49,16 +49,21 @@ completed_date: "YYYY-MM-DD"
    - Offer git commit
    - Check project files impact
 
-5. **Regenerate dependency graph** (if dependencies changed or task completed):
+5. **Append to subsystem Activity Log** (on completion or failure):
+   - Read the task's `subsystems:` field
+   - For each subsystem, read `.galdr/subsystems/{subsystem}.md`
+   - Append row to Activity Log table: `| YYYY-MM-DD | TASK | NNN | {title} | PRD-NNN |`
+
+6. **Regenerate dependency graph** (if dependencies changed or task completed):
    - If the task's `dependencies` field was modified, OR the task moved to `completed`/`failed`:
      regenerate `.galdr/DEPENDENCY_GRAPH.md` using the `g-dependency-graph` skill
-   - A completed task may unblock others — the graph must reflect this
 
-6. **Print sync confirmation**:
+7. **Print sync confirmation**:
 ```
 Task Sync Confirmation:
-- Task {ID} file: status: {new_status} ✅
-- TASKS.md entry: [{indicator}] ✅
-- Dependency graph: {updated ✅ | no dependency changes, skipped}
-- Sync verified: ✅
+- Task {ID} file: status: {new_status}
+- TASKS.md entry: [{indicator}]
+- Subsystem logs: {updated N subsystems | skipped}
+- Dependency graph: {updated | no dependency changes, skipped}
+- Sync verified
 ```

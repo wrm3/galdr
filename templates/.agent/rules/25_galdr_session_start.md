@@ -6,30 +6,32 @@ alwaysApply: true
 
 # Session Start Protocol
 
-## .galdr/ Folder Layout (v2)
+## .galdr/ Folder Layout (v3)
 ```
 .galdr/
 ├── .project_id, .user_id, .vault_location   # Identity (root)
-├── TASKS.md, PRD.md, SUBSYSTEMS.md           # Core files (root)
-├── config/     # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md
-├── project/    # PROJECT_CONTEXT.md, PROJECT_GOALS.md, PROJECT_TOPOLOGY.md, PROJECT_CONSTRAINTS.md
-├── experiments/ # HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md, EXPERIMENT_TEMPLATE.md
+├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md
+├── prds/       # One or more PRD markdown files
+├── bugs/       # Individual bug detail files (optional; index in BUGS.md)
+├── config/     # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md, AGENT_CONFIG.md
+├── experiments/ # EXPERIMENTS.md, SELF_EVOLUTION.md, HYPOTHESIS.md, EXPERIMENT_TEMPLATE.md, EXP-NNN.md
 ├── reports/    # CLEANUP_REPORT.md
-├── tracking/   # BUGS.md, IDEA_BOARD.md, INBOX.md
+├── tracking/   # IDEA_BOARD.md, INBOX.md
 ├── subsystems/ # Per-subsystem spec files (subsystem_name.md)
-├── tasks/      # Individual task files
-├── phases/     # Phase definition files
-├── contracts/, examples/, experiments/, reference/, templates/, vault/, logs/
+├── tasks/      # Individual task files (sequential task IDs)
+├── phases/     # Legacy v2 only — phase defs / archives; omit on greenfield v3
+├── linking/, vault/, logs/
 ```
 
 ## Display at Session Start (when .galdr/ exists)
 ```
 📌 SESSION CONTEXT
-Mission: [from project/PROJECT_CONTEXT.md, 1 line]
-Goals: G-01: [name] | G-02: [name]
-Phase: [current phase]
+Mission: [from PROJECT.md, 1 line]
+Goals: G-01: [name] | G-02: [name] (from PROJECT.md)
+Plan focus: [current milestone or theme from PLAN.md]
 Ideas: [N] active (from tracking/IDEA_BOARD.md)
 Subsystems: [N] registered (from SUBSYSTEMS.md + subsystems/)
+Experiments: [summary from experiments/EXPERIMENTS.md if it has active entries]
 ```
 
 ## Subsystem Awareness (MANDATORY)
@@ -40,16 +42,16 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 ## Sync Validation (Run When User Mentions Tasks/Phases/Status)
 
 **Step 1: Goals Check**
-- No `project/PROJECT_GOALS.md` or has `{Goal name}` placeholders → auto-generate from `project/PROJECT_CONTEXT.md`
+- PROJECT.md missing goals content or has `{Goal name}` placeholders → auto-generate from PROJECT.md mission / PLAN.md
 
 **Step 2: Task Sync**
-- Compare TASKS.md entries to `.galdr/tasks/` AND `.galdr/phases/phase*/` files
-- Active tasks ([📋][🔄][🔍]): look in tasks/ only
-- Completed tasks ([✅]): look in tasks/ AND phases/phase*/
-- Phantom = in TASKS.md but file not found in either location
+- Compare TASKS.md entries to `.galdr/tasks/` (v3 source of truth; sequential task IDs)
+- Legacy v2: completed tasks may still be under `.galdr/phases/phase*/` until migrated
+- Phantom = in TASKS.md but no matching `tasks/task{id}_*.md` (and not found in legacy archive if applicable)
 
-**Step 3: Phase Sync**
-- Every TASKS.md phase header → check `phases/phaseN_*.md` exists (definition file, not archive folder)
+**Step 3: Plan / PRD / Legacy Phase Sync**
+- Verify `.galdr/PLAN.md` and `.galdr/prds/` exist for delivery projects
+- Legacy v2: if TASKS.md still has phase headers → check `phases/phaseN_*.md` exists until migrated off phases
 
 **Step 4: SUBSYSTEMS.md Staleness**
 - Collect `subsystems:` values from task files → compare to SUBSYSTEMS.md
@@ -60,18 +62,24 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 **Step 5: ACTIVE_BACKLOG.md**
 - Older than 26 hours → flag as stale, offer regeneration
 
-**Step 6: Cross-Project INBOX Check** (if `.galdr/tracking/INBOX.md` exists)
-- Read `.galdr/tracking/INBOX.md`
+**Step 6: Cross-Project INBOX Check** (if `.galdr/linking/INBOX.md` exists)
+- Read `.galdr/linking/INBOX.md`
 - If any `[CONFLICT]` items exist → surface immediately as `⚠️ WARNING` before any other work
 - Otherwise: count open items by type (requests/broadcasts/syncs) and note in session context
 - Format: `INBOX: N open (N requests, N broadcasts, N syncs)` or `INBOX: clear`
 
-**Step 7: Cascade Forward Check** (if `.galdr/project/PROJECT_TOPOLOGY.md` has children declared)
+**Step 7: Cascade Forward Check** (if `.galdr/PROJECT.md` **Project Linking** section lists children with cascade)
 - Scan `.galdr/tasks/` for any task with `cascade_depth_remaining > 0` AND `cascade_forwarded: false`
 - If found: forward cascades to children listed in topology (follow `g-broadcast` skill pattern but using the cascade chain metadata from the task)
 - Mark forwarded tasks as `cascade_forwarded: true`
 - Report: `Forwarded N cascade task(s) to: [child names]`
 - If no children have `cascade_forward: true` or depth is 0: skip silently
+
+**Step 8: Experiment Staleness Check** (if `.galdr/experiments/EXPERIMENTS.md` exists)
+- Read EXPERIMENTS.md for active experiments
+- For each active experiment: read EXP file, check if any stage is `[🔄]` for >48h without update
+- Stale experiments → flag: `⚠️ EXP-NNN has a running stage with no update for >48h`
+- Display active experiment summary: `EXP-NNN (Stage M/N — status)`
 
 **Fix issues BEFORE proceeding with user request.**
 

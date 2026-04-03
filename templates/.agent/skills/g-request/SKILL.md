@@ -10,7 +10,7 @@ description: Child project requests parent action — writes parent INBOX.md and
 ## Steps
 
 1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`** — get parents list
-   - If no parents declared → "No parents in topology. Run @g-topology to declare a parent first."
+   - If no parents declared → "No parents in topology. Run @g-project-linking to declare a parent first."
 
 2. **Select target parent** (if multiple parents):
    - Which parent is being asked?
@@ -43,7 +43,7 @@ description: Child project requests parent action — writes parent INBOX.md and
    ---
    ```
 
-5. **Write to `parent/.galdr/tracking/INBOX.md`** (if path accessible):
+5. **Write to `parent/.galdr/linking/INBOX.md`** (if path accessible):
    ```markdown
    ## [OPEN] REQ-XXX — from: [this project_id] — YYYY-MM-DD
    **Type:** request
@@ -64,7 +64,7 @@ description: Child project requests parent action — writes parent INBOX.md and
    ```
    Request sent:
    - Target parent: [parent_id]
-   - INBOX entry: parent/.galdr/tracking/INBOX.md (REQ-XXX) ✅
+   - INBOX entry: parent/.galdr/linking/INBOX.md (REQ-XXX) ✅
    - Local task: taskNNN_[name].md created (status: blocked) ✅
    - Local TASKS.md: updated ✅
 

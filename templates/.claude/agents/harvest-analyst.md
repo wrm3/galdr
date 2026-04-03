@@ -36,8 +36,8 @@ If the user is merging their own projects, redirect to `codebase-analyst` agent 
 
 ### Project Context Awareness
 - Deep familiarity with SUBSYSTEMS.md architecture
-- Understanding of TASKS.md planned work and active phases
-- Awareness of PROJECT_CONTEXT.md mission and goals
+- Understanding of TASKS.md planned work and PLAN.md milestones
+- Awareness of PROJECT.md mission and goals
 - Recognition of existing capabilities to avoid duplication
 
 ### Suggestion Curation
@@ -61,8 +61,8 @@ Follow the 5-step harvest process defined in the skill exactly.
 **BEFORE looking at the external source**, understand our project:
 - Read `.galdr/SUBSYSTEMS.md` for current architecture
 - Read `.galdr/TASKS.md` for planned/in-progress work
-- Read `.galdr/PLAN.md` for product vision
-- Read `.galdr/project/PROJECT_CONTEXT.md` for mission
+- Read `.galdr/PLAN.md` for strategy and milestones
+- Read `.galdr/PROJECT.md` for mission, vision, and project linking context
 
 ### 3. Analyze the Source
 Adapt method to source type (repo, article, video, research).

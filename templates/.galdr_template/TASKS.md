@@ -1,10 +1,13 @@
 # {PROJECT_NAME} — Master Task List
 
 **Project**: {project_name}
-**Type**: delivery | research  *(set during @g-setup)*
-**PRD**: `.galdr/PRD.md`
-**Subsystems**: `.galdr/SUBSYSTEMS.md`
-**Architecture Constraints**: `.galdr/project/PROJECT_CONSTRAINTS.md`
+**Type**: delivery | research | maintenance | exploration  *(set during @g-setup)*
+**Plan**: `PLAN.md`
+**PRDs**: `prds/`
+**Project overview**: `PROJECT.md`
+**Constraints**: `CONSTRAINTS.md`
+**Bugs**: `BUGS.md`
+**Subsystems**: `SUBSYSTEMS.md`
 
 ---
 
@@ -22,7 +25,9 @@
 
 ---
 
-## Phase 0: {Phase Name} [ ]
+## Task backlog (sequential IDs)
+
+*v3 uses sequential task IDs in `tasks/task{id}_*.md`. Link PRDs from `PLAN.md`.*
 
 ### Subsystem: {subsystem-name-1}
 - [ ] **Task 001**: {Task description} — {brief acceptance summary}
@@ -34,15 +39,8 @@
 
 ---
 
-## Phase 1: {Phase Name} [ ]
-
-### Subsystem: {subsystem-name-1}
-- [ ] **Task 100**: {Task description}
-
----
-
 ## Bugs
-*(See `.galdr/tracking/BUGS.md` for full bug list)*
+*(See `BUGS.md` and individual files under `bugs/` for full detail.)*
 
 ---
 
@@ -57,5 +55,5 @@
 ---
 
 **Last Updated**: {YYYY-MM-DD}
-**Phase 0 Progress**: 0/{n} tasks
-**Overall Progress**: 0/{total} tasks
+**Open Tasks**: {n}
+**Overall Progress**: {completed}/{total} tasks

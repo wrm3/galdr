@@ -7,6 +7,8 @@ description: Validate TASKS.md entries match .galdr/tasks/ files. For session st
 ## When to Use
 Session start, after any bulk task operations, or when "phantom" / "orphan" issues are suspected.
 
+**v3 note:** Task IDs are **sequential** (globally increasing integers). Archived copies may still live under `phases/phase*/` depending on project hygiene.
+
 ## Steps
 
 1. **Read TASKS.md** — extract all task entries with their current indicators

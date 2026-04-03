@@ -3,7 +3,7 @@
 > **Specialized SubAgent for setting up the complete galdr task management system in new projects**
 
 ## Purpose
-Autonomous agent that initializes the full galdr task management system in a new project, including folder structure, template files, PROJECT_CONTEXT.md, and initial configuration based on project analysis.
+Autonomous agent that initializes the full galdr task management system in a new project, including folder structure, template files, PROJECT.md (v3 consolidated), and initial configuration based on project analysis.
 
 ## Agent Configuration
 
@@ -55,34 +55,32 @@ Create the following structure:
 
 ```
 .galdr/
-├── TASKS.md                  # Master task checklist
-├── PRD.md                    # Product Requirements Document
+├── TASKS.md                  # Master task checklist (sequential task IDs)
+├── PLAN.md                   # Strategy and milestones
+├── PROJECT.md                # Mission, vision, goals, project linking (v3 consolidated)
+├── CONSTRAINTS.md            # Rules agents must follow
+├── BUGS.md                   # Bug index
 ├── SUBSYSTEMS.md             # Component registry + interconnection diagram
 ├── .project_id               # Unique project identifier (UUID)
+├── prds/                     # One or more PRD markdown files
+├── bugs/                     # Individual bug detail files (optional)
 ├── config/                   # Operational configuration
 │   ├── HEARTBEAT.md          # Scheduled agent routines
-│   └── SPRINT.md             # Current sprint definition
-├── project/                  # Project documentation
-│   ├── PROJECT_CONTEXT.md    # Project mission and goals
-│   ├── PROJECT_GOALS.md      # Strategic goals and metrics
-│   ├── PROJECT_CONSTRAINTS.md  # Rules agents must follow
-│   └── PROJECT_TOPOLOGY.md   # Cross-project relationships
+│   ├── SPRINT.md             # Current sprint definition
+│   └── AGENT_CONFIG.md       # Autonomous agent / TTL / commit flags
 ├── experiments/              # Experiments and hypotheses
 │   ├── HYPOTHESIS.md         # Active hypotheses
-│   └── SYSTEM_EXPERIMENTS.md # Experiment tracking
+│   └── SELF_EVOLUTION.md # Experiment tracking
 ├── reports/                  # Generated reports
 │   └── CLEANUP_REPORT.md    # Cleanup/grooming reports
-├── tracking/                 # Status tracking
-│   ├── BUGS.md               # Bug tracking
+├── tracking/                 # Ideas and cross-project queue
 │   ├── IDEA_BOARD.md         # Ideas and improvement suggestions
 │   └── INBOX.md              # Cross-project message queue
 ├── subsystems/               # Per-subsystem spec files
 ├── tasks/                    # Individual task files
-├── phases/                   # Phase documentation
-├── templates/                # Task/phase templates
-│   ├── task_template.md
-│   └── phase_template.md
-└── contracts/                # Shared contract specs
+├── templates/                # Task templates
+│   └── task_template.md
+└── linking/                # Shared contract specs
 
 docs/                         # Project documentation (if not exists)
 temp_scripts/                 # Test scripts (if not exists)
@@ -90,48 +88,47 @@ temp_scripts/                 # Test scripts (if not exists)
 
 ### Phase 3: Generate Initial Files
 
-#### PROJECT_CONTEXT.md Template
+#### PROJECT.md Template (v3)
 
 ```markdown
-# Project Context: [Project Name]
+---
+project_id: "[UUID]"
+project_name: "[Project Name]"
+layer_hint: "application"
+links:
+  parents: []
+  siblings: []
+  children: []
+---
+
+# PROJECT.md — [Project Name]
 
 ## Mission
 [Brief mission statement - what problem does this solve?]
 
 ## Vision
-[Where is this project heading? What's the end goal?]
+[Where is this project heading?]
 
-## Key Stakeholders
-- **Primary Users**: [Who uses this?]
-- **Developers**: [Who maintains this?]
-- **Other**: [Any other stakeholders?]
+## Project Type
+**Type**: delivery | research
 
-## Success Criteria
-- [ ] [Key success metric 1]
-- [ ] [Key success metric 2]
-- [ ] [Key success metric 3]
-
-## Scope Boundaries
-
-### In Scope
-- [What IS included]
-
-### Out of Scope
+## Non-Goals (Explicitly Out of Scope)
 - [What is NOT included]
 
-## Technical Context
-- **Languages**: [e.g., Python, TypeScript]
-- **Frameworks**: [e.g., React, FastAPI]
-- **Infrastructure**: [e.g., AWS, Docker]
-- **Database**: [e.g., PostgreSQL, MongoDB]
+## Project Linking
+Parents / siblings / children projects (for broadcast & inbox). Empty if none.
 
-## Current Status
-- **Phase**: [Current phase]
-- **Health**: [Green/Yellow/Red]
-- **Last Updated**: [Date]
+## Key References
+- **Plan**: `PLAN.md`
+- **Constraints**: `CONSTRAINTS.md`
+- **PRDs**: `prds/`
+- **Tasks**: `TASKS.md`
+- **Bugs**: `BUGS.md`
+- **Ideas**: `tracking/IDEA_BOARD.md`
+- **Inbox**: `linking/INBOX.md`
 
 ---
-*This file is maintained by the galdr task management system.*
+*Maintained by galdr.*
 ```
 
 #### TASKS.md Template
@@ -139,19 +136,10 @@ temp_scripts/                 # Test scripts (if not exists)
 ```markdown
 # Tasks
 
-## Phase 0: Setup & Infrastructure
-<!-- Task IDs: 1-99 -->
+<!-- v3: sequential task IDs (1, 2, 3, …). Next ID = max existing + 1. -->
 
 - [ ] Initial project setup
 - [ ] Development environment configuration
-
-## Phase 1: Foundation
-<!-- Task IDs: 100-199 -->
-
-<!-- Add tasks as they are created -->
-
-## Phase 2: Core Development
-<!-- Task IDs: 200-299 -->
 
 <!-- Add tasks as they are created -->
 
@@ -171,62 +159,27 @@ temp_scripts/                 # Test scripts (if not exists)
 #### PLAN.md Template
 
 ```markdown
-# PRD: [Project Name]
+# Plan — [Project Name]
 
-## 1. Product Overview
+## Summary
+[2-3 paragraphs: strategy, sequencing, what "done" looks like]
 
-### 1.1 Document Title and Version
-- PRD: [Project Name]
-- Version: 1.0
-- Last Updated: [Date]
+## Milestones
+| Milestone | Target | Status | Linked tasks (optional) |
+|-----------|--------|--------|-------------------------|
+| M1 — Setup | [date or criterion] | planned | |
+| M2 — Foundation | | planned | |
 
-### 1.2 Product Summary
-[2-3 paragraphs describing the project]
+## Technical themes
+- **Stack**: [languages, frameworks]
+- **Risks**: [top risks]
 
-## 2. Goals
-
-### 2.1 Business Goals
-- [Goal 1]
-- [Goal 2]
-
-### 2.2 User Goals
-- [Goal 1]
-- [Goal 2]
-
-### 2.3 Non-Goals
-- [Explicitly out of scope]
-
-## 3. Phases
-
-### Phase 0: Setup & Infrastructure (Tasks 1-99)
-- [ ] Environment setup
-- [ ] Initial configuration
-
-### Phase 1: Foundation (Tasks 100-199)
-- [ ] Core architecture
-- [ ] Base functionality
-
-### Phase 2: Core Development (Tasks 200-299)
-- [ ] Main features
-- [ ] Integration
-
-## 4. Technical Considerations
-
-### 4.1 Architecture
-[High-level architecture description]
-
-### 4.2 Technology Stack
-- **Frontend**: [if applicable]
-- **Backend**: [if applicable]
-- **Database**: [if applicable]
-- **Infrastructure**: [if applicable]
-
-### 4.3 Constraints
-- [Technical constraints]
-- [Business constraints]
+## Non-goals
+- [Explicitly out of scope for this plan]
 
 ---
-*Managed by galdr task management system*
+*Detailed product requirements live in `prds/`.*
+*Managed by galdr.*
 ```
 
 #### SUBSYSTEMS.md Template
@@ -271,6 +224,8 @@ This document tracks the major components/modules of the project.
 ```markdown
 # Bug Tracking
 
+<!-- v3: optional per-bug files under bugs/; this file is the index -->
+
 ## Active Bugs
 
 <!-- Bugs are added here as they are discovered -->
@@ -308,7 +263,6 @@ title: '{title}'
 type: feature | bug_fix | refactor | documentation
 status: pending | in_progress | completed | failed
 priority: critical | high | medium | low
-phase: 0
 subsystems: []
 project_context: 'Brief connection to project goal'
 dependencies: []
@@ -333,41 +287,8 @@ created_date: '{date}'
 - [ ] Code reviewed
 ```
 
-#### Phase Template (templates/phase_template.md)
-
-```markdown
-# Phase {N}: [Phase Name]
-
-## Overview
-[Brief description of the phase goals and scope]
-
-## Status
-- **Status**: [ ] Pending | [🔄] In Progress | [✅] Completed
-- **Task Range**: {N×100} to {N×100+99}
-- **Start Date**: [Date or TBD]
-- **Target Completion**: [Date or TBD]
-
-## Objectives
-- [Objective 1]
-- [Objective 2]
-
-## Subsystems Affected
-- [SS-XX]: [Impact description]
-
-## Deliverables
-- [ ] [Deliverable 1]
-- [ ] [Deliverable 2]
-
-## Acceptance Criteria
-- [ ] [Criterion 1]
-- [ ] [Criterion 2]
-
-## Tasks in This Phase
-<!-- Auto-populated as tasks are created -->
-
----
-*Managed by galdr task management system*
-```
+#### v3 note (replaces v2 phase_template.md)
+Milestones and sequencing live in **PLAN.md**. Task IDs are **sequential** in `TASKS.md` / `.galdr/tasks/`. Legacy repos may still carry `templates/phase_template.md` until groomed off v2.
 
 ### Phase 4: Auto-Detect Subsystems
 
@@ -408,7 +329,6 @@ title: 'Project setup and Galdr initialization'
 type: documentation
 status: completed
 priority: high
-phase: 0
 subsystems: [infrastructure]
 project_context: 'Establish project foundation and task management'
 dependencies: []
@@ -423,10 +343,13 @@ Initialize the galdr task management system for this project.
 
 ## Acceptance Criteria
 - [x] .galdr/ folder structure created
-- [x] PROJECT_CONTEXT.md populated
+- [x] PROJECT.md populated
+- [x] CONSTRAINTS.md initialized
+- [x] BUGS.md and prds/ initialized
 - [x] TASKS.md initialized
 - [x] PLAN.md template created
 - [x] SUBSYSTEMS.md with detected subsystems
+- [x] config/AGENT_CONFIG.md stub created
 - [x] Template files created
 
 ## Implementation Notes
@@ -452,31 +375,30 @@ Location: [Path]
 CREATED STRUCTURE:
 ✅ .galdr/
    ├── TASKS.md
-   ├── PRD.md
+   ├── PLAN.md
+   ├── PROJECT.md
+   ├── CONSTRAINTS.md
+   ├── BUGS.md
    ├── SUBSYSTEMS.md
    ├── .project_id
+   ├── prds/
+   ├── bugs/
    ├── config/
    │   ├── HEARTBEAT.md
-   │   └── SPRINT.md
-   ├── project/
-   │   ├── PROJECT_CONTEXT.md
-   │   ├── PROJECT_GOALS.md
-   │   └── PROJECT_CONSTRAINTS.md
+   │   ├── SPRINT.md
+   │   └── AGENT_CONFIG.md
    ├── experiments/
-   │   └── SYSTEM_EXPERIMENTS.md
+   │   └── SELF_EVOLUTION.md
    ├── reports/
    │   └── CLEANUP_REPORT.md
    ├── tracking/
-   │   ├── BUGS.md
    │   ├── IDEA_BOARD.md
    │   └── INBOX.md
    ├── subsystems/
    ├── tasks/
    │   └── task001_project_setup.md
-   ├── phases/
    └── templates/
-       ├── task_template.md
-       └── phase_template.md
+       └── task_template.md
 ✅ docs/ (created/verified)
 ✅ temp_scripts/ (created/verified)
 
@@ -484,14 +406,14 @@ DETECTED SUBSYSTEMS:
 • SS-01: [Name] - [Description]
 • SS-02: [Name] - [Description]
 
-INITIAL PHASE:
-• Phase 0: Setup & Infrastructure (Tasks 1-99)
+INITIAL MILESTONE:
+• Setup complete — sequential task IDs from here (next task id: 2)
 
 NEXT STEPS:
-1. Review PROJECT_CONTEXT.md and update mission/goals
+1. Review PROJECT.md and PLAN.md; extend prds/ as needed
 2. Review SUBSYSTEMS.md and adjust as needed
-3. Create your first real task with @g-new-task
-4. Start Phase 1 planning when ready
+3. Create your next task with @g-task-new (or project’s task command)
+4. Run planning / grooming when ready
 
 COMMANDS AVAILABLE:
 • @g-new-task - Create a new task
@@ -509,12 +431,12 @@ COMMANDS AVAILABLE:
 
 ### With Rules
 - Follows all conventions from `10_GALDR_core.mdc`
-- Respects phase numbering from `11_GALDR_planning.mdc`
+- Uses sequential task IDs (v3); legacy phase numbering only if repo not yet migrated
 - Creates bug tracking per `12_GALDR_qa.mdc`
 
 ### With Skills
 - References `g-task-management` for task format
-- References `g-planning` for PRD structure
+- References `g-planning` for PRD structure under `prds/`
 - References `g-qa` for bug tracking format
 
 ## Error Handling
@@ -548,7 +470,7 @@ Please provide:
 - Analyze project before creating files
 - Ask clarifying questions if needed
 - Detect existing structure and subsystems
-- Create meaningful PROJECT_CONTEXT.md
+- Create meaningful PROJECT.md and PLAN.md
 - Provide clear next steps
 - Mark setup task as completed
 

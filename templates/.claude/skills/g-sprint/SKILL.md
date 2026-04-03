@@ -10,8 +10,8 @@ description: Autonomous 2-hour sprint — read SPRINT.md, claim tasks, implement
 ## Pre-Flight Checks (MANDATORY — All Must Pass)
 ```
 □ git pull — work on current state
-□ Read PROJECT_CONTEXT.md — autonomous config allows this?
-□ Read PROJECT_CONSTRAINTS.md — no violations?
+□ Read `.galdr/PROJECT.md` — autonomous config allows this?
+□ Read `.galdr/CONSTRAINTS.md` — no violations?
 □ Read SPRINT.md — generated within last 2 hours? (else stale)
 □ can_agents_commit_directly flag? → false = STOP
 ```

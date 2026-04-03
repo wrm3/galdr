@@ -43,7 +43,7 @@ Create a .galdr/ folder with these files:
 - INBOX.md (cross-project coordination queue)
 - tasks/ (individual task files)
 - phases/ (phase documentation)
-- contracts/ (shared API contracts)
+- linking/ (shared API contracts)
 ```
 
 ### Step 2: Create .codex/config.toml

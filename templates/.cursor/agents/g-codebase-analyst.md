@@ -44,9 +44,9 @@ Compare:
 - Migration risk assessment
 
 ### Phase 4: Integration Plan
-Create phase + tasks:
-1. Add new phase to TASKS.md and `.galdr/phases/phaseN_integration.md`
-2. Create fully-specced task files for each integration component
+Create plan entries + tasks (v3 paths):
+1. Update `.galdr/PLAN.md` with integration milestones; add or extend a PRD under `.galdr/prds/` if needed
+2. Add sequenced tasks to `TASKS.md` and create fully-specced task files under `.galdr/tasks/`
 3. Order by dependency (shared utilities first, features last)
 4. Flag blast_radius: high for any structural changes
 
@@ -55,7 +55,7 @@ Create phase + tasks:
 □ Architecture map covers ALL directories
 □ Comparison covers ALL components
 □ No env vars or settings missed
-□ Phase file and TASKS.md header synchronized
+□ PLAN.md (and prds/ if used) aligned with TASKS.md
 □ All task files created with YAML frontmatter
 □ Documents follow naming convention
 ```
@@ -65,8 +65,8 @@ Create phase + tasks:
 |---|---|
 | Architecture Map | `docs/YYYYMMDD_..._ARCHITECTURE_MAP.md` |
 | Comparison | `docs/YYYYMMDD_..._COMPARISON.md` |
-| Phase file | `.galdr/phases/phaseN_integration.md` |
-| Tasks | Updated TASKS.md + task files |
+| Plan / PRD | `.galdr/PLAN.md` and/or `.galdr/prds/*.md` |
+| Tasks | Updated TASKS.md + `.galdr/tasks/` |
 
 ## Shared Module Identification (Critical)
 During comparison, identify any logic that:

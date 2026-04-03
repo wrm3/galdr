@@ -44,7 +44,7 @@ Commands use the `@g-` prefix in Cursor or `/g-` in Claude Code.
 
 | Command | Description |
 |---------|-------------|
-| `g-topology` | View/edit project topology |
+| `g-project-linking` | View/edit project linking (PROJECT_TOPOLOGY.md) |
 | `g-inbox` | Review cross-project coordination items |
 | `g-broadcast` | Push tasks to child projects |
 | `g-request` | Request action from parent project |

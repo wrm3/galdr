@@ -1,4 +1,4 @@
-# Subsystems Registry
+# SUBSYSTEMS.md — {project_name}
 
 ## Overview
 This document is the **master registry** of all subsystems in this project. Each subsystem has a detailed spec file in `.galdr/subsystems/{name}.md` — read the spec before modifying any subsystem.

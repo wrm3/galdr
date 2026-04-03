@@ -10,10 +10,10 @@ Manage project tasks using the galdr task management system. This Skill provides
 ## System Overview
 
 The galdr system uses a file-based approach where:
-- **Master checklist**: `.galdr/TASKS.md` - Central task list with phase headers and status indicators
+- **Master checklist**: `.galdr/TASKS.md` - Central task list (optional milestone/phase headers) and status indicators
 - **Individual tasks**: `.galdr/tasks/task{id}_descriptive_name.md` - Detailed task files
-- **Phase files**: `.galdr/phases/phase{N}_{name}.md` - Phase details with subsystems and objectives
-- **Project context**: `.galdr/project/PROJECT_CONTEXT.md` - Project goals and scope
+- **Phase files** (optional): `.galdr/phases/phase{N}_{name}.md` - Milestone docs; **do not** imply fixed task ID ranges in v3
+- **Project context**: `.galdr/PROJECT.md` - Mission, goals, and project linking
 - **Subsystems**: `.galdr/SUBSYSTEMS.md` - Architectural component registry
 
 ### Key Synchronization Rules
@@ -21,32 +21,22 @@ The galdr system uses a file-based approach where:
 - **Phase Sync**: TASKS.md phase headers ↔ phase files (status must match)
 - **Atomic Updates**: Always update both files in the same response
 
-## Phase-Based Task Numbering
+## Sequential task numbering (v3)
 
-**Phase System**: Tasks are organized into logical phases representing project milestones or work stages.
-
-**Task ID Numbering by Phase**:
-- **Phase 0** (Setup/Infrastructure): Tasks start at `1` (1-99)
-- **Phase 1** (Foundation): Tasks start at `100` (100-199)
-- **Phase 2** (Core Development): Tasks start at `200` (200-299)
-- **Phase 3** (Enhancement): Tasks start at `300` (300-399)
-- **Phase N**: Tasks start at `N * 100`
+**Task IDs** are a single global sequence of positive integers: `1`, `2`, `3`, … Assign the **next free ID** after the highest existing task ID in `TASKS.md` and `.galdr/tasks/` (and any archived copies your project keeps).
 
 **Examples**:
 ```
-Phase 0: task001_setup_virtual_environment.md
-Phase 0: task002_configure_mcp_server.md
-Phase 1: task100_design_database_schema.md
-Phase 1: task101_create_mysql_handler.md
-Phase 2: task200_build_core_classes.md
-Phase 2: task201_implement_api_endpoints.md
+task001_setup_virtual_environment.md
+task002_configure_mcp_server.md
+task003_design_database_schema.md
+task004_create_mysql_handler.md
+task005_build_core_classes.md
 ```
 
-**Dynamic Phase Addition**:
-- Phases can be added as project vision clarifies
-- New phases can be inserted to pivot project direction
-- Phases can be marked complete or cancelled
-- Phase gaps are allowed (e.g., skip from Phase 2 to Phase 5)
+**Milestones / phases (optional)**:
+- You may still group tasks under `## Phase N: …` or thematic headers in `TASKS.md` and keep optional files in `phases/` — they are **organizational only**, not ID-range rules.
+- Phases can be added, reordered, paused, or completed without changing how IDs are chosen.
 
 ## Task File Structure
 
@@ -60,12 +50,12 @@ Every task file begins with YAML frontmatter containing metadata:
 
 ```yaml
 ---
-id: {number}                    # Sequential ID based on phase
+id: {number}                    # Next sequential integer (global)
 title: 'Task Title'             # Brief, actionable title
 type: task|bug_fix|phase|retroactive_fix
 status: pending|in-progress|completed|failed
 priority: critical|high|medium|low
-phase: 0                        # Phase number (0, 1, 2, etc.)
+phase: 0                        # Optional milestone index (organizational; does not define ID range)
 subsystems: [list]              # Affected system components
 project_context: 'Brief description of how this task relates to project goals'
 dependencies: [task_ids]        # Tasks that must complete first
@@ -89,22 +79,22 @@ After the YAML frontmatter, include:
 ### Creating a New Task
 
 **Process:**
-1. Determine which phase the task belongs to
-2. Determine next available task ID within that phase range
+1. Determine milestone/section for the task (optional `phase` field)
+2. Determine next sequential task ID (max existing `id` + 1)
 3. Create task file: `.galdr/tasks/task{id}_descriptive_name.md`
-4. Add YAML frontmatter with all required fields including `phase`
+4. Add YAML frontmatter with all required fields including optional `phase`
 5. Add task content (objective, acceptance criteria, notes)
-6. Update `.galdr/TASKS.md` with new entry under correct phase
+6. Update `.galdr/TASKS.md` with new entry in the appropriate section
 
 **TASKS.md Entry Format:**
 ```markdown
-## Phase 0: Setup & Infrastructure
-- [ ] Task 001: Setup project structure
-- [ ] Task 002: Configure development environment
+## Setup
+- [ ] Task 1: Setup project structure
+- [ ] Task 2: Configure development environment
 
-## Phase 1: Foundation
-- [ ] Task 100: Design database schema
-- [ ] Task 101: Create data handlers
+## Foundation
+- [ ] Task 3: Design database schema
+- [ ] Task 4: Create data handlers
 ```
 
 ### Updating Task Status
@@ -139,11 +129,11 @@ After the YAML frontmatter, include:
 
 **Example TASKS.md Updates:**
 ```markdown
-## Phase 1: Foundation
-- [ ] Task 100: Setup database schema
-- [🔄] Task 101: Implement user authentication (in progress)
-- [✅] Task 102: Create login page (completed)
-- [❌] Task 103: Legacy system integration (blocked)
+## Foundation
+- [ ] Task 10: Setup database schema
+- [🔄] Task 11: Implement user authentication (in progress)
+- [✅] Task 12: Create login page (completed)
+- [❌] Task 13: Legacy system integration (blocked)
 ```
 
 ### 🚨 Task Synchronization (MANDATORY)
@@ -156,12 +146,12 @@ After the YAML frontmatter, include:
 
 ```markdown
 ## Task Sync Update
-- **Task ID**: 101
-- **Task File**: `.galdr/tasks/task101_implement_auth.md`
+- **Task ID**: 11
+- **Task File**: `.galdr/tasks/task011_implement_auth.md`
   - Old status: pending → New status: in-progress
 - **TASKS.md Entry**:
-  - Old: [📋] Task 101: Implement authentication
-  - New: [🔄] Task 101: Implement authentication
+  - Old: [📋] Task 11: Implement authentication
+  - New: [🔄] Task 11: Implement authentication
 - **Sync Status**: ✅ SYNCHRONIZED
 ```
 
@@ -202,7 +192,7 @@ Action: Add to TASKS.md or delete file
 
 **Phantoms** (TASKS.md entries without files):
 ```markdown
-📋 PHANTOM: Task 055 in TASKS.md but no file exists
+📋 PHANTOM: Task 55 in TASKS.md but no file exists
 Action: Create file or remove entry
 ```
 
@@ -234,7 +224,7 @@ Parse TASKS.md and filter by status indicators
 Read TASKS.md sections organized by phase
 
 **To view project context:**
-Read `.galdr/project/PROJECT_CONTEXT.md` for goals and scope
+Read `.galdr/PROJECT.md` for goals, mission, and scope
 
 ### Listing Tasks
 
@@ -243,7 +233,7 @@ Read `.galdr/project/PROJECT_CONTEXT.md` for goals and scope
 - "Show pending tasks" → Filter by `[ ]`
 - "Show in-progress tasks" → Filter by `[🔄]`
 - "Show completed tasks" → Filter by `[✅]`
-- "Show Phase 1 tasks" → Filter by Phase 1 section
+- "Show Foundation tasks" → Filter by that section header in TASKS.md
 - "Show task 5" → Read task005_*.md
 
 ## Task Types
@@ -331,17 +321,21 @@ bug_reference: BUG-001  # Links to entry in BUGS.md
 ```
 
 ### Link to Project Context
-All tasks should align with project goals in PROJECT_CONTEXT.md. The `project_context` field explains this connection.
+All tasks should align with project goals in `.galdr/PROJECT.md`. The `project_context` field explains this connection.
 
 ## File Organization Rules
 
 ### Core Files (Always in .galdr/)
 - `TASKS.md` - Master task checklist
 - `tasks/` - Individual task files
-- `phases/` - Phase documentation
-- `PLAN.md` - Product requirements
-- `PROJECT_CONTEXT.md` - Project goals
-- `BUGS.md` - Bug tracking
+- `phases/` - Optional milestone documentation
+- `PLAN.md` - Master strategy (above PRDs)
+- `prds/` - Product requirement documents
+- `PROJECT.md` - Mission, goals, project linking
+- `CONSTRAINTS.md` - Non-negotiable constraints
+- `BUGS.md` - Bug index (root)
+- `bugs/` - Optional per-bug detail files
+- `config/AGENT_CONFIG.md` - Agent configuration (when present)
 
 ### Documentation (Goes in docs/)
 - Project documentation
@@ -364,7 +358,8 @@ The following files in `.galdr/` are **working files** that should be edited DIR
 ### Core Planning Files (CAPITALIZED names)
 - `PLAN.md` - ✅ Edit directly, no permission needed
 - `TASKS.md` - ✅ Edit directly, no permission needed
-- `PROJECT_CONTEXT.md` - ✅ Edit directly, no permission needed
+- `PROJECT.md` - ✅ Edit directly, no permission needed
+- `CONSTRAINTS.md` - ✅ Edit directly, no permission needed
 - `BUGS.md` - ✅ Edit directly, no permission needed
 - `SUBSYSTEMS.md` - ✅ Edit directly, no permission needed
 - `FILE_REGISTRY.md` - ✅ Edit directly, no permission needed
@@ -399,7 +394,7 @@ When working with tasks, automatically create missing folders and files:
 
 **Auto-create template files:**
 - `TASKS.md` with blank template if missing
-- `PROJECT_CONTEXT.md` with template if missing
+- `PROJECT.md` with template if missing
 
 **No confirmation needed** - Create files and folders silently, report what was created.
 
@@ -599,17 +594,17 @@ SWOT: Approved by user on {date}"
 
 ### Workflow: Create Task from User Request
 1. User requests: "Create a task to implement user login"
-2. Determine appropriate phase (e.g., Phase 1 for foundation work)
-3. Read TASKS.md to determine next ID within phase range
+2. Determine milestone/section and optional `phase` field (e.g. Foundation)
+3. Read TASKS.md and `tasks/` to determine next sequential task ID
 4. Create task file with proper naming
-5. Add YAML frontmatter with all fields including phase
+5. Add YAML frontmatter with all fields including optional `phase`
 6. Add objective and acceptance criteria
-7. Update TASKS.md with new entry under correct phase section
-8. Confirm task created with ID and phase
+7. Update TASKS.md with new entry under the right section
+8. Confirm task created with ID
 
 ### Workflow: Update Task Status
-1. User requests: "Mark task 105 as in progress"
-2. Read task105_*.md file
+1. User requests: "Mark task 14 as in progress"
+2. Read task014_*.md file
 3. Update `status: in-progress` in YAML
 4. Update TASKS.md entry from `[ ]` to `[🔄]`
 5. Confirm status updated
@@ -623,8 +618,8 @@ SWOT: Approved by user on {date}"
 6. Identify blockers
 
 ### Workflow: Complete Task
-1. User requests: "Complete task 103"
-2. Read task103_*.md
+1. User requests: "Complete task 14"
+2. Read task014_*.md
 3. Verify acceptance criteria are met
 4. Update `status: completed` in YAML
 5. Update TASKS.md entry from `[🔄]` to `[✅]`
@@ -642,7 +637,7 @@ If TASKS.md or task files are missing:
 
 ### Invalid Task IDs
 If user references non-existent task:
-1. List available tasks in that phase
+1. List available tasks in that section or ID range
 2. Suggest correct ID
 3. Offer to create new task if intended
 
@@ -655,17 +650,17 @@ If file conflicts occur:
 
 ## Examples
 
-### Example: Create Phase 1 Task
+### Example: Create task (sequential ID)
 **User**: "Create a task to add password reset feature"
 
 **Action**:
-1. Determine this is Phase 1 (Foundation) work
-2. Read TASKS.md → Next Phase 1 ID is 115
-3. Create `.galdr/tasks/task115_add_password_reset.md`:
+1. Determine this belongs under the Foundation milestone (optional `phase` metadata)
+2. Read TASKS.md → next sequential ID is 24
+3. Create `.galdr/tasks/task024_add_password_reset.md`:
 
 ```yaml
 ---
-id: 115
+id: 24
 title: 'Add Password Reset Feature'
 type: task
 status: pending
@@ -673,11 +668,11 @@ priority: high
 phase: 1
 subsystems: [auth, email, ui]
 project_context: 'Enables users to recover accounts, improving user experience and reducing support burden'
-dependencies: [112]
+dependencies: [22]
 estimated_effort: '1-2 days'
 ---
 
-# Task 115: Add Password Reset Feature
+# Task 24: Add Password Reset Feature
 
 ## Objective
 Implement password reset functionality allowing users to securely reset forgotten passwords via email.
@@ -707,30 +702,30 @@ Implement password reset functionality allowing users to securely reset forgotte
 
 3. Update TASKS.md:
 ```markdown
-## Phase 1: Foundation
-- [ ] Task 115: Add password reset feature
+## Foundation
+- [ ] Task 24: Add password reset feature
 ```
 
-4. Confirm: "Created Task 115 (Phase 1): Add Password Reset Feature"
+4. Confirm: "Created Task 24 (Foundation milestone): Add Password Reset Feature"
 
 ### Example: Update Task Status
-**User**: "Start working on task 115"
+**User**: "Start working on task 24"
 
 **Action**:
-1. Read task115_add_password_reset.md
+1. Read task024_add_password_reset.md
 2. Update YAML: `status: in-progress`
-3. Update TASKS.md: `[🔄] Task 115: Add password reset feature`
-4. Confirm: "Task 115 status updated to in-progress"
+3. Update TASKS.md: `[🔄] Task 24: Add password reset feature`
+4. Confirm: "Task 24 status updated to in-progress"
 
 ### Example: Complete Task
-**User**: "Task 115 is done"
+**User**: "Task 24 is done"
 
 **Action**:
-1. Read task115_add_password_reset.md
+1. Read task024_add_password_reset.md
 2. Review acceptance criteria
 3. Update YAML: `status: completed`
-4. Update TASKS.md: `[✅] Task 115: Add password reset feature`
-5. Confirm: "Task 115 marked as completed. Great work!"
+4. Update TASKS.md: `[✅] Task 24: Add password reset feature`
+5. Confirm: "Task 24 marked as completed. Great work!"
 
 ## Compatibility Notes
 
@@ -740,7 +735,7 @@ This Skill is designed to work with Cursor's galdr rules system. The system uses
 - Markdown content
 - Windows-safe emoji indicators
 - Git-friendly plain text files
-- Phase-based task organization
+- Sequential task IDs with optional milestone sections
 
 ## Template Maintenance
 
@@ -799,7 +794,7 @@ When adding features, ensure compatibility:
 - Basic file organization
 - Standard project structure
 - YAML frontmatter in task files
-- Phase-based task organization
+- Sequential task IDs with optional milestone sections
 
 ### Template Maintenance Workflow
 

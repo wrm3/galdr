@@ -14,7 +14,7 @@ Skills provide specialized capabilities and domain knowledge for AI agents.
 ## Cross-Project Coordination
 | Skill | Description |
 |-------|-------------|
-| `g-topology` | View/edit cross-project topology |
+| `g-project-linking` | View/edit project linking (PROJECT_TOPOLOGY.md) |
 | `g-inbox` | Review cross-project coordination queue |
 | `g-broadcast` | Push tasks to child projects |
 | `g-request` | Request action from parent project |

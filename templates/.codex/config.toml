@@ -145,7 +145,7 @@ path = ".codex/skills/g-continual-learning"
 enabled = true
 
 [[skills.config]]
-path = ".codex/skills/g-topology"
+path = ".codex/skills/g-project-linking"
 enabled = true
 
 [[skills.config]]

@@ -10,7 +10,7 @@ description: As a parent project, push a task to one or more child projects with
 ## Steps
 
 1. **Read `.galdr/project/PROJECT_TOPOLOGY.md`** — get children list
-   - If no children declared → warn: "No children in topology. Run @g-topology to declare children first."
+   - If no children declared → warn: "No children in topology. Run @g-project-linking to declare children first."
 
 2. **Determine target children**:
    - All children (default)
@@ -60,7 +60,7 @@ description: As a parent project, push a task to one or more child projects with
    c. Append to `child/.galdr/TASKS.md` under their current phase:
    `- [📋] **Task NNN**: [title] — broadcast from [this project]`
 
-   d. Append to `child/.galdr/tracking/INBOX.md`:
+   d. Append to `child/.galdr/linking/INBOX.md`:
    ```markdown
    ## [OPEN] BCAST-XXX — from: [this project] — YYYY-MM-DD
    **Type:** broadcast

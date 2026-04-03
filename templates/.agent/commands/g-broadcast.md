@@ -22,7 +22,7 @@ Children forward automatically on their next session open (Step 7 of session sta
 
 In each target child project:
 - A task file in `.galdr/tasks/` with cross-project YAML metadata
-- An INBOX entry in `.galdr/tracking/INBOX.md`
+- An INBOX entry in `.galdr/linking/INBOX.md`
 - An entry in their TASKS.md
 
 In this project:

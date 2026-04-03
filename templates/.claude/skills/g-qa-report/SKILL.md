@@ -1,6 +1,6 @@
 ---
 name: g-qa-report
-description: Generate quality metrics — bug counts, resolution rates, severity, phase impact, health score.
+description: Generate quality metrics — bug counts, resolution rates, severity, subsystem/area impact, health score.
 ---
 # galdr-qa-report
 
@@ -20,7 +20,7 @@ description: Generate quality metrics — bug counts, resolution rates, severity
    - Average age (open bugs): days since created
    - Regression count: bugs introduced by a fix
 
-4. **Phase impact analysis**: which phases have most bugs?
+4. **Subsystem / area impact**: which subsystems or features have the most bugs?
 
 5. **Reusability metrics** (from code review history):
    - 3-strike violations detected
@@ -30,7 +30,7 @@ description: Generate quality metrics — bug counts, resolution rates, severity
 ```markdown
 # Quality Metrics Report
 **Generated**: YYYY-MM-DD HH:MM
-**Project**: [from PROJECT_CONTEXT.md]
+**Project**: [from PROJECT.md]
 
 ## Bug Summary
 | Metric | Value |
@@ -49,11 +49,11 @@ description: Generate quality metrics — bug counts, resolution rates, severity
 | Medium | N | N | N |
 | Low | N | N | N |
 
-## Phase Impact
-| Phase | Bug Count | Open |
+## Subsystem / area impact
+| Area | Bug count | Open |
 |---|---|---|
-| Phase 0 | N | N |
-| Phase 1 | N | N |
+| {subsystem or feature A} | N | N |
+| {subsystem or feature B} | N | N |
 
 ## Quality Score
 Score: N/100

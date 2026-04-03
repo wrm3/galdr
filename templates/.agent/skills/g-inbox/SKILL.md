@@ -9,7 +9,7 @@ description: Review and action all incoming cross-project coordination items —
 
 ## Steps
 
-1. **Read `.galdr/tracking/INBOX.md`**
+1. **Read `.galdr/linking/INBOX.md`**
    - If empty or not exists → "INBOX clear — no cross-project items pending"
    - Categorize items: CONFLICT | request | broadcast | peer_sync
 
@@ -47,7 +47,7 @@ description: Review and action all incoming cross-project coordination items —
 6. **Handle PEER SYNCS** (sibling contract changed):
    - Show: which sibling, which contract, what changed
    - Confirm task exists (created when peer_sync arrived)
-   - Open the contract for review: `.galdr/contracts/<name>.md`
+   - Open the contract for review: `.galdr/linking/<name>.md`
    - After human updates the contract: mark task complete, update INBOX to `[DONE]`
    - If sibling path accessible: write completion notice to sibling's INBOX.md
 

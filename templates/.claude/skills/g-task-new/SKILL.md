@@ -10,12 +10,11 @@ Creating a new task. Triggered by @g-task-new or "create task NNN".
 ## Steps
 
 1. **Determine task ID**
-   - Check TASKS.md for the current phase's highest ID
-   - Next ID = highest + 1 within the phase range
-   - Phase 0: 1-99 | Phase 1: 100-199 | Phase N: N×100 to N×100+99
+   - Read TASKS.md, find the highest task ID across ALL sections
+   - Next ID = highest + 1 (globally sequential, no phase ranges)
 
 2. **Assess complexity** (score 1-10+, see galdr-workflow-manager)
-   - Score ≥7: STOP — expand to sub-tasks first using `@g-workflow`
+   - Score >=7: STOP — expand to sub-tasks first using `@g-workflow`
 
 3. **Create task file** at `.galdr/tasks/taskNNN_descriptive_name.md`:
 ```yaml
@@ -25,7 +24,7 @@ title: 'Task Title'
 type: feature | bug_fix | refactor | documentation
 status: pending
 priority: critical | high | medium | low
-phase: N
+prd: null
 subsystems: [component1, component2]
 project_context: 'Why this task matters to project goals'
 dependencies: []
@@ -37,9 +36,9 @@ execution_cost: low
 created_date: 'YYYY-MM-DD'
 completed_date: ''
 # Cross-project fields (omit if task is purely internal):
-# task_source: other-project-id        # project that originated this task
-# source_task_id: 187                  # task ID in the source project
-# delegation_type: broadcast           # broadcast | request | peer_sync
+# task_source: other-project-id
+# source_task_id: 187
+# delegation_type: broadcast | request | peer_sync
 # cascade_depth_original: 2
 # cascade_depth_remaining: 1
 # cascade_chain: [source-project]
@@ -71,19 +70,19 @@ completed_date: ''
 ```
 
 4. **Add to TASKS.md** (atomic — same response):
-   - Find the correct phase section
-   - Add: `| [📋] | NNN | Task Title — brief acceptance summary |`
+   - Find the appropriate section (or create one if needed)
+   - Add: `- [📋] **Task NNN**: Task Title — brief acceptance summary`
 
 5. **Regenerate dependency graph** (if task has dependencies):
    - If `dependencies: []` is non-empty, regenerate `.galdr/DEPENDENCY_GRAPH.md`
    - Follow the `g-dependency-graph` skill steps
-   - Read all task files, build adjacency list, compute critical path, write graph
 
 6. **Confirm**:
 ```
 Task Sync Confirmation:
-- Task NNN file: .galdr/tasks/taskNNN_*.md ✅
-- TASKS.md entry: [📋] ✅
-- Dependency graph: {updated ✅ | no dependencies, skipped}
-- Sync verified: ✅
+- Task NNN file: .galdr/tasks/taskNNN_*.md
+- TASKS.md entry: [📋]
+- PRD reference: {PRD-NNN or none}
+- Dependency graph: {updated | no dependencies, skipped}
+- Sync verified
 ```

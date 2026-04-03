@@ -5,15 +5,15 @@ description: Track bugs, QA, and fixes in .galdr/. For bug reports, issues, qual
 
 # galdr Quality Assurance Skill
 
-Track bugs, manage quality assurance processes, and document fixes using the galdr QA system. This Skill provides structured bug tracking that integrates with task management and phase documentation.
+Track bugs, manage quality assurance processes, and document fixes using the galdr QA system. This Skill provides structured bug tracking that integrates with task management and subsystem/milestone context.
 
 ## System Overview
 
 the galdr QA system uses:
-- **BUGS.md**: `.galdr/tracking/BUGS.md` - Centralized bug tracking
+- **BUGS.md**: `.galdr/BUGS.md` (root) — centralized bug index; optional detail files in `.galdr/bugs/`
 - **Bug Tasks**: `.galdr/tasks/` - Bug fix task files
 - **Task Integration**: Links to TASKS.md for bug resolution tracking
-- **Phase Integration**: Links to phases/ for impact assessment
+- **Milestone / subsystem context**: Links to `phases/` or task metadata for impact assessment (v3 uses sequential task IDs)
 
 ## Bug Tracking System
 
@@ -33,7 +33,7 @@ the galdr QA system uses:
 
 ### BUGS.md Structure
 
-**Location**: `.galdr/tracking/BUGS.md`
+**Location**: `.galdr/BUGS.md`
 
 **Format**:
 ```markdown
@@ -45,7 +45,7 @@ the galdr QA system uses:
 - **Title**: [Brief description of the issue]
 - **Severity**: [Critical/High/Medium/Low]
 - **Source**: [User Reported/Development/Testing/Production]
-- **Phase Impact**: [List affected phases]
+- **Area impact**: [Subsystems, features, or milestones affected]
 - **Status**: [Open/Investigating/Fixing/Testing/Closed]
 - **Task Reference**: [Link to task in TASKS.md]
 - **Created**: [Date]
@@ -67,7 +67,7 @@ the galdr QA system uses:
 - **Title**: {Brief description}
 - **Severity**: {Critical|High|Medium|Low}
 - **Source**: {User Reported|Development|Testing|Production}
-- **Phase Impact**: {affected phases}
+- **Area impact**: {subsystems or milestones affected}
 - **Status**: {Open|Investigating|Fixing|Testing|Closed}
 - **Task Reference**: Task {id}
 - **Created**: {date}
@@ -101,7 +101,7 @@ the galdr QA system uses:
 1. Create BUGS.md entry with bug details
 2. Create corresponding task in TASKS.md with `[BUG]` prefix
 3. Create task file in tasks/ folder with bug_fix type
-4. Link bug to affected phases in phase documents
+4. Link bug to affected subsystems / tasks (update phase docs only if the project still uses them)
 5. Track resolution through task completion
 
 ### Bug Task File Format
@@ -247,7 +247,7 @@ Document {fix_type} that was completed in chat
 - **Bug Discovery Rate**: Bugs found per development cycle
 - **Bug Resolution Time**: Average time from discovery to resolution
 - **Bug Severity Distribution**: Breakdown by severity level
-- **Phase Impact Analysis**: Which phases are most affected
+- **Area impact analysis**: Which subsystems or features are most affected
 - **Regression Rate**: Percentage of fixes that introduce new bugs
 
 **Quality Gates**:
@@ -292,7 +292,7 @@ Document {fix_type} that was completed in chat
 3. Create bug entry in BUGS.md
 4. Create bug fix task file
 5. Update TASKS.md with bug fix task
-6. Link to affected phases
+6. Link to affected subsystems / related tasks
 
 ### Update Bug Status
 
@@ -335,10 +335,10 @@ Document {fix_type} that was completed in chat
 - Task completion closes the bug
 - Task status reflects bug resolution progress
 
-### Link to Phases
-- Bugs reference affected phases
-- Phase documents list related bugs
-- Phase impact assessment through bug analysis
+### Link to milestones / tasks
+- Bugs reference affected subsystems and tasks
+- Optional phase docs may list related bugs if the project uses `phases/`
+- Impact assessment through subsystem and task linkage
 
 ### Link to Project Context
 - Bug patterns inform architecture decisions
@@ -348,13 +348,14 @@ Document {fix_type} that was completed in chat
 ## File Organization
 
 ### Core QA Files
-- `.galdr/tracking/BUGS.md` - Bug tracking
+- `.galdr/BUGS.md` - Bug tracking (root index)
+- `.galdr/bugs/` - Optional per-bug detail files (see `g-bug-report`)
 - `.galdr/tasks/` - Bug fix task files
-- `.galdr/phases/` - Phase impact documentation
+- `.galdr/phases/` - Optional milestone docs (if the project uses phase files)
 
 ### Auto-Creation
 Automatically create missing files:
-- `.galdr/tracking/BUGS.md` with template if missing
+- `.galdr/BUGS.md` with template if missing
 - Bug fix task files as needed
 - Update TASKS.md automatically
 
@@ -384,7 +385,7 @@ Automatically create missing files:
 ### Documentation
 1. Document significant fixes retroactively
 2. Capture lessons learned
-3. Update phase documentation
+3. Update related docs or subsystem notes as needed
 4. Maintain bug history
 5. Archive resolved bugs
 
@@ -407,9 +408,9 @@ Automatically create missing files:
 - **Title**: Login button not responding to clicks
 - **Severity**: High
 - **Source**: User Reported
-- **Phase Impact**: Phase 1 (Foundation)
+- **Area impact**: auth, UI
 - **Status**: Open
-- **Task Reference**: Task 115
+- **Task Reference**: Task 42
 - **Created**: 2025-10-19
 - **Assigned**: TBD
 
@@ -433,8 +434,8 @@ Button click has no effect
 - Version: 1.2.0
 ```
 
-3. Create bug fix task file (within Phase 1 range: 100-199)
-4. Update TASKS.md: `- [ ] Task 115: [BUG] Fix login button not responding`
+3. Create bug fix task file using the next sequential task ID (read TASKS.md / `tasks/` for max `id`)
+4. Update TASKS.md: `- [ ] Task 42: [BUG] Fix login button not responding`
 5. Confirm: "Bug BUG-001 reported and task created"
 
 ### Workflow: Update Bug Status
@@ -444,8 +445,8 @@ Button click has no effect
 **Action**:
 1. Read BUG-001 from BUGS.md
 2. Update Status to "Investigating"
-3. Update task115 status to "in-progress"
-4. Update TASKS.md: `[🔄] Task 115: [BUG] Fix login button not responding`
+3. Update task file for that ID to `in-progress`
+4. Update TASKS.md: `[🔄] Task 42: [BUG] Fix login button not responding`
 5. Confirm: "Bug BUG-001 status updated to Investigating"
 
 ### Workflow: Close Bug
@@ -456,8 +457,8 @@ Button click has no effect
 1. Read BUG-001 from BUGS.md
 2. Update Status to "Closed"
 3. Move to "Closed Bugs" section
-4. Update task115 status to "completed"
-5. Update TASKS.md: `[✅] Task 115: [BUG] Fix login button not responding`
+4. Update task file for that ID to `completed`
+5. Update TASKS.md: `[✅] Task 42: [BUG] Fix login button not responding`
 6. Confirm: "Bug BUG-001 closed. Great work!"
 
 ### Workflow: Document Retroactive Fix
@@ -466,16 +467,16 @@ Button click has no effect
 
 **Action**:
 1. Assess scope (affects multiple files, required debugging)
-2. Determine appropriate phase for task ID
+2. Determine next sequential task ID
 3. Create retroactive task file:
 ```yaml
 ---
-id: 216
+id: 58
 title: '[RETROACTIVE] Fixed database query performance issue'
 type: retroactive_fix
 status: completed
 priority: high
-phase: 2
+phase: 0
 created_date: '2025-10-19'
 completed_date: '2025-10-19'
 project_context: 'Documents performance optimization that reduced query time from 5s to 0.2s'
@@ -485,7 +486,7 @@ actual_effort: '2 hours'
 ---
 ```
 
-3. Update TASKS.md: `[✅] Task 216: [RETROACTIVE] Fixed database query performance issue`
+3. Update TASKS.md: `[✅] Task 58: [RETROACTIVE] Fixed database query performance issue`
 4. Confirm: "Retroactive task created to document the fix"
 
 ## Examples
@@ -503,9 +504,9 @@ actual_effort: '2 hours'
 - **Title**: Application crashes on data save
 - **Severity**: Critical
 - **Source**: Production
-- **Phase Impact**: Phase 1 (Foundation), Phase 2 (Core)
+- **Area impact**: database, API, persistence
 - **Status**: Open
-- **Task Reference**: Task 117
+- **Task Reference**: Task 43
 - **Created**: 2025-10-19
 - **Assigned**: Dev Team
 
@@ -564,4 +565,4 @@ This Skill works with Cursor's galdr QA system. The system uses:
 - Standard markdown format for BUGS.md
 - Consistent YAML frontmatter for bug fix tasks
 - Git-friendly plain text files
-- Phase-based impact tracking
+- Sequential task IDs with subsystem / area impact tracking

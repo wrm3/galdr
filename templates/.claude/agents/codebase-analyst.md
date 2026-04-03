@@ -88,23 +88,19 @@ Search the GaldrWorks codebase for existing integration points:
 **Wait for user approval.** Do NOT create tasks until the user says "yes" or "approved".
 
 ### 5. Produce Deliverables (After Approval)
-1. Architecture Map → `docs/YYYYMMDD_HHMMSS_Cursor_{PROJECT}_ARCHITECTURE_MAP.md`
-2. Comparison Document → `docs/YYYYMMDD_HHMMSS_Cursor_{PROJECT}_VS_GALDRWORKS_COMPARISON.md`
-3. Phase File → `.galdr/phases/phase{N}_{project}-integration.md`
-4. Tasks → `.galdr/TASKS.md` (updated with new phase)
+Generate all three documents:
+1. Architecture Map (in `docs/`)
+2. Comparison Document (in `docs/`)
+3. Integration Phase + Tasks (in `.galdr/`)
+
 ### 5. Verify Completeness
 Run the deliverables checklist from the skill.
-- [ ] Every directory covered in architecture doc
-- [ ] Every component in comparison doc
-- [ ] No settings/env vars missed
-- [ ] Phase file has proper YAML
-- [ ] TASKS.md updated and stats refreshed
 
 ## When to Use
 
 ### Proactive Triggers
 - User places a new project in `research/` directory
-- User asks to "analyze", "review", "integrate", "compare" a project
+- User mentions "analyze", "review", "integrate", "compare" a project
 - User asks "what are we missing from {project}"
 - User asks to "map out" or "understand" an external codebase
 
@@ -130,10 +126,9 @@ Run the deliverables checklist from the skill.
 - Must include settings comparison
 
 ### Integration Plan
-- Phase file: `.galdr/phases/phase{N}_{project}-integration.md`
-- Tasks in: `.galdr/TASKS.md`
+- Strategy / milestones: update `.galdr/PLAN.md`; optional PRD fragment under `.galdr/prds/` if scope warrants a standalone doc
+- Tasks in: `.galdr/TASKS.md` + task files under `.galdr/tasks/` (sequential IDs, v3)
 - Must include verification, implementation, config, and documentation tasks
-- Must follow galdr task numbering conventions
 
 ## Integration Points
 

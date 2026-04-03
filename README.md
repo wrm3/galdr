@@ -166,7 +166,7 @@ If an agent's action would violate a constraint, it must flag the conflict and g
 Projects can declare parent/child/sibling relationships. Parents can broadcast tasks to children. Children can request actions from parents. Siblings can sync shared contracts.
 
 ```
-@g-topology                    # View project graph
+@g-project-linking             # Project linking (PROJECT_TOPOLOGY.md)
 @g-broadcast "Update API v2"   # Push task to child projects
 @g-request "Need auth service" # Request from parent
 ```

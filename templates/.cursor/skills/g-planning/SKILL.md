@@ -10,15 +10,18 @@ Create and manage comprehensive project plans, Product Requirements Documents (P
 ## System Overview
 
 the galdr planning system uses:
-- **PLAN.md**: `.galdr/PLAN.md` - Main Product Requirements Document
-- **Phases**: `.galdr/phases/` - Individual phase specifications
-- **Project Context**: `.galdr/project/PROJECT_CONTEXT.md` - Project goals and scope
+- **PLAN.md**: `.galdr/PLAN.md` - Master strategy (above individual PRDs)
+- **PRDs**: `.galdr/prds/` - One or more product requirement documents
+- **Phases**: `.galdr/phases/` - Optional milestone specifications (organizational; v3 task IDs are sequential)
+- **Project**: `.galdr/PROJECT.md` - Mission, goals, and **Project Linking**
+- **Constraints**: `.galdr/CONSTRAINTS.md` - Non-negotiable rules
 - **Tasks**: Links to `.galdr/TASKS.md` for implementation tracking
 
 ## PRD Structure
 
-### File Location
-**Single mandatory file**: `.galdr/PLAN.md`
+### File locations
+- **Strategy**: `.galdr/PLAN.md` (master plan)
+- **PRDs**: `.galdr/prds/*.md` (one or more requirement docs)
 
 ### 10-Section PRD Template
 
@@ -36,12 +39,9 @@ the galdr planning system uses:
 - **3.2 Basic persona details**: Brief persona descriptions
 - **3.3 Role-based access**: Permissions and access levels
 
-#### 4. Phases
-- **4.1 Project Phases**: Phase list with task ID ranges
-  - Phase 0: Setup & Infrastructure (Task IDs: 1-99)
-  - Phase 1: Foundation (Task IDs: 100-199)
-  - Phase 2: Core Development (Task IDs: 200-299)
-- **4.2 Phase References**: Links to individual phase documents
+#### 4. Phases / milestones
+- **4.1 Project phases**: Milestone list (names, objectives). **v3:** task IDs are **sequential** — phases do not own numeric ID bands.
+- **4.2 Phase references**: Links to optional `phases/` docs and to `TASKS.md` sections
 
 #### 5. User Experience
 - **5.1 Entry points & first-time user flow**: Initial access patterns
@@ -87,9 +87,9 @@ Individual user stories with:
 ## Overview
 [Brief description of the phase objectives]
 
-## Task ID Range
-- Start: N×100 (or 1 for Phase 0)
-- End: N×100+99 (or 99 for Phase 0)
+## Task numbering (v3)
+- Global **sequential** IDs — next ID = max existing task id + 1 (see `TASKS.md` and `.galdr/tasks/`)
+- This phase file does **not** define a reserved ID range
 
 ## Objectives
 - [Objective 1]
@@ -306,8 +306,8 @@ When initializing galdr in existing projects with code
    - Document data flows
 
 ### Analysis Outputs
-- Generate PLAN.md based on current code structure
-- Create phase documents for each major milestone
+- Generate or update `.galdr/PLAN.md` and PRD file(s) under `.galdr/prds/` from current code structure
+- Create phase documents for each major milestone (optional)
 - Identify subsystems from code organization
 - Document current architecture and integration points
 
@@ -318,10 +318,10 @@ When initializing galdr in existing projects with code
 **Process**:
 1. Conduct scope validation (5 essential questions)
 2. Optionally run planning questionnaire (27 questions)
-3. Create `.galdr/PLAN.md` with 10-section template
+3. Create or update `.galdr/PLAN.md` (strategy) and write the detailed PRD under `.galdr/prds/` (e.g. `prds/PRD.md` or `prds/<feature>.md`) using the 10-section template
 4. Fill in all sections based on gathered requirements
-5. Create phase documents in `phases/` folder
-6. Link phases to PLAN.md
+5. Create phase documents in `phases/` folder when milestones need separate specs
+6. Cross-link `PLAN.md`, `prds/`, and optional `phases/`
 
 ### Update Existing PRD
 
@@ -349,7 +349,7 @@ When initializing galdr in existing projects with code
 1. Read `.galdr/PLAN.md`
 2. Display relevant sections
 3. Optionally read related phase documents
-4. Show project context from PROJECT_CONTEXT.md
+4. Show project context from `.galdr/PROJECT.md`
 
 ## Integration with Other Systems
 
@@ -363,24 +363,27 @@ When initializing galdr in existing projects with code
 - Phase documents list related bugs
 - Phase impact assessment through bug analysis
 
-### Link to Project Context
-- PLAN.md aligns with PROJECT_CONTEXT.md mission
-- Phases support project goals
-- Scope boundaries defined in both documents
+### Link to project context
+- `PLAN.md` and `prds/` align with `.galdr/PROJECT.md` mission and goals
+- Optional phases support delivery milestones
+- Scope boundaries defined in `PROJECT.md`, `CONSTRAINTS.md`, and PRDs
 
 ## File Organization
 
 ### Core Planning Files
-- `.galdr/PLAN.md` - Main PRD
-- `.galdr/phases/` - Phase documents
-- `.galdr/project/PROJECT_CONTEXT.md` - Project goals
+- `.galdr/PLAN.md` - Master strategy
+- `.galdr/prds/` - PRD documents
+- `.galdr/phases/` - Optional phase documents
+- `.galdr/PROJECT.md` - Mission, goals, project linking
+- `.galdr/CONSTRAINTS.md` - Hard constraints
 
 ### Auto-Creation
 Automatically create missing folders and files:
 - `.galdr/` directory
 - `.galdr/phases/` subdirectory
 - `PLAN.md` with blank template if missing
-- `PROJECT_CONTEXT.md` with template if missing
+- `prds/` with a starter PRD if missing
+- `PROJECT.md` with template if missing
 
 ## Best Practices
 
@@ -514,17 +517,17 @@ A simple, personal todo list application for managing daily tasks. The app allow
 ### 3.3 Role-based access
 - Single user with full access to all features
 
-## 4. Phases
-### 4.1 Project Phases
-- **Phase 0: Setup & Infrastructure** (Task IDs: 1-99)
+## 4. Phases / milestones
+### 4.1 Delivery phases (v3: sequential task IDs — phases are labels only)
+- **Phase 0: Setup & Infrastructure**
   - Project setup and environment configuration
   - Basic folder structure
   
-- **Phase 1: Foundation** (Task IDs: 100-199)
+- **Phase 1: Foundation**
   - Task data model
   - Basic task persistence
   
-- **Phase 2: Core Development** (Task IDs: 200-299)
+- **Phase 2: Core Development**
   - Task creation and editing
   - Task list display
   - Priority and due date support
@@ -555,9 +558,8 @@ A simple, personal todo list application for managing daily tasks. The app allow
 ## Overview
 Allow users to create tasks that automatically repeat on a schedule (daily, weekly, monthly).
 
-## Task ID Range
-- Start: 300
-- End: 399
+## Task numbering (v3)
+- Use the next sequential task IDs when creating work in TASKS.md (no fixed 300–399 band).
 
 ## Objectives
 - Define recurrence pattern (daily, weekly, monthly)
@@ -584,14 +586,14 @@ Allow users to create tasks that automatically repeat on a schedule (daily, week
 - [ ] Recurrence data persisted correctly
 
 ## Related Tasks
-- Task 300: Implement recurrence UI
-- Task 301: Implement recurrence logic
-- Task 302: Update persistence layer
+- Task 18: Implement recurrence UI (example sequential ID)
+- Task 19: Implement recurrence logic
+- Task 20: Update persistence layer
 ```
 
-3. Update PLAN.md section 4.1:
+3. Update PLAN.md (and PRD in `prds/` if applicable) section 4.1:
 ```markdown
-- **Phase 3: Recurring Tasks** (Task IDs: 300-399)
+- **Phase 3: Recurring Tasks**
   - Create tasks with recurrence patterns
   - Automatic task instance creation
   - Manage recurring series
@@ -606,4 +608,4 @@ This Skill works with Cursor's galdr planning system. The system uses:
 - Standard markdown format
 - Consistent section structure
 - Git-friendly plain text files
-- Phase-based project organization
+- Sequential task IDs with optional milestone / phase documentation

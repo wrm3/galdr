@@ -12,10 +12,11 @@ Governs unattended sprint and cleanup agent behavior. Every safety gate is non-n
 ## Before ANY Autonomous Action (MANDATORY)
 ```
 1. git pull — never work on stale state
-2. Read PROJECT_CONTEXT.md — verify autonomous config allows this
-3. Read PROJECT_CONSTRAINTS.md — NEVER violate an active constraint
-4. Read SPRINT.md — verify generated within last 2 hours (else stale)
-5. Check can_agents_commit_directly flag — if false, STOP
+2. Read `.galdr/PROJECT.md` — verify autonomous config allows this
+3. Read `.galdr/CONSTRAINTS.md` — NEVER violate an active constraint
+4. Read `.galdr/config/AGENT_CONFIG.md` when present — autonomous / TTL / commit flags
+5. Read SPRINT.md — verify generated within last 2 hours (else stale)
+6. Check can_agents_commit_directly flag (AGENT_CONFIG or equivalent) — if false, STOP
 ```
 
 ## Task Claim Protocol

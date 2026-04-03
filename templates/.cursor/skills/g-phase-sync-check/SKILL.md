@@ -7,6 +7,8 @@ description: Validate TASKS.md phase headers match .galdr/phases/ definition fil
 ## When to Use
 Before any phase operation, at session start, or when phase sync issues are suspected.
 
+**v3 note:** Task IDs are **sequential** (no Phase 0 = 1–99 / Phase N = N×100 bands). Phase headers and `phases/` files are optional **milestone** metadata; they do not imply ID ranges.
+
 ## Steps
 
 1. **Read TASKS.md** — extract all phase headers:

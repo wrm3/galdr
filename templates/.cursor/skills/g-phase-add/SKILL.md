@@ -9,10 +9,10 @@ Adding a new development phase. @g-phase-add or "add phase N".
 
 ## Steps
 
-1. **Determine phase number**:
+1. **Determine phase number** (milestone label only — v3 does **not** reserve numeric task ID bands):
    - Check existing phase headers in TASKS.md
    - Next phase = highest existing + 1 (gaps allowed)
-   - Task ID range = N×100 to N×100+99 (Phase 0: 1-99)
+   - New tasks use the **next sequential task ID** globally (read TASKS.md + `tasks/` for max `id`)
 
 2. **Pre-sync check**:
    - Verify all existing phases have both TASKS.md header AND phase file
@@ -25,7 +25,7 @@ phase: N
 name: 'Phase Name'
 status: planning
 subsystems: [subsystem1, subsystem2]
-task_range: 'N00-N99'
+task_numbering: 'sequential — see TASKS.md (no phase-based ID ranges)'
 prerequisites: [0, 1]
 started_date: ''
 completed_date: ''
@@ -55,7 +55,7 @@ pivot_reason: ''
 
 | Status | ID | Task |
 |--------|----|----|
-| [ ] | N00 | [First task placeholder] |
+| [ ] | {next_seq_id} | [First task placeholder] |
 ```
 
 5. **Update CLAUDE.md** if it exists:

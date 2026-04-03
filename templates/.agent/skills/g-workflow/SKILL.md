@@ -43,17 +43,17 @@ Assigned > 5 story points                 → +1
 Sprint output:
 ```markdown
 ## Proposed Sprint (N story points / M days)
-1. task100 — DB Schema (3 SP, phase:1, no blockers)
-2. task101 — API Layer (5 SP, phase:1, needs task100)
-3. task002 — Fix lint (1 SP, phase:0, independent)
+1. task5 — DB Schema (3 SP, no blockers)
+2. task6 — API Layer (5 SP, needs task5)
+3. task7 — Fix lint (1 SP, independent)
 ```
 
 ## Mode C: Dependency Diagram
 Generate Mermaid flowchart from task files (see galdr-visualizer for full implementation):
 ```
 flowchart TD
-  subgraph Phase0["Phase 0"]
-    T001["✅ task001"]
+  subgraph M1["Milestone A"]
+    T001["✅ task1"]
   end
-  T001 --> T100
+  T001 --> T005
 ```
