@@ -26,7 +26,7 @@
 │   └── g-skl-*/
 │       └── SKILL.md
 └── workflows/       # Gemini workflow definitions (equivalent to agents in Cursor/Claude)
-    └── g-*.md       # Same content as commands in other platforms
+    └── g-*.md       # Invoked as /g-name — same user-facing invocation as other platforms
 ```
 
 **Note**: There is no `agents/` subfolder in `.agent/`. Gemini uses `workflows/` for what Cursor and Claude Code call "agents." See the Workflows section below.
@@ -36,13 +36,11 @@
 ## What Makes Gemini / Antigravity Unique
 
 ### No `agents/` Folder — Uses `workflows/` Instead
-This is the most confusing structural difference. In Cursor and Claude Code, specialized AI assistants live in `agents/`. In Gemini/Antigravity, the equivalent concept is called **Workflows** and lives in `workflows/`. The files have the same `g-` naming prefix as commands in other platforms.
+This is the most confusing structural difference. In Cursor and Claude Code, specialized AI assistants live in `agents/`. In Gemini/Antigravity, the equivalent concept is called **Workflows** and lives in `workflows/`. The files use the same `g-` naming prefix as commands on all other platforms.
 
 **Why this difference exists**: Antigravity's agent model is workflow-first. The IDE is built around planning and executing workflows, not just calling pre-defined agents. A "workflow" in Gemini is a slash-command that can include `// turbo` annotations for auto-execution steps.
 
-**Design note**: The `g-wkflw-` prefix on workflows makes them immediately distinguishable when reading references inside skills, agents, and rules — you see `g-wkflw-setup` and know it's a Gemini workflow without checking the folder. This is consistent with the galdr naming convention (agents = `g-agnt-`, skills = `g-skl-`, rules = `g-rl-`, hooks = `g-hk-`).
-
-If you see `/g-wkflw-setup` in documentation, that is the Gemini-specific invocation. The equivalent `@g-setup` in Cursor and `/g-setup` in Claude/OpenCode/Codex reference the commands in their respective platforms — the workflow content is the same, but the file is named `g-wkflw-setup.md` in `.agent/workflows/` to distinguish it.
+**Important**: Workflow files are named `g-*.md` (e.g., `g-setup.md`) so they invoke cleanly as `/g-setup` — the same slash command users already know from Claude Code and OpenCode. The `workflows/` folder location is enough to distinguish them from `commands/` when working on the system internally. You do not need to type a different prefix to use them.
 
 ### GEMINI.md Auto-Loading
 `GEMINI.md` in the project root is Antigravity's project instruction file (equivalent to `CLAUDE.md`). It supplements `AGENTS.md` with Gemini-specific configuration.
@@ -100,11 +98,13 @@ MCP servers go in `mcp_config.json` at the project root (not inside `.agent/`):
 
 | Component | Prefix | Location |
 |-----------|--------|----------|
-| Workflows (≈agents) | `g-wkflw-` | `.agent/workflows/g-wkflw-*.md` |
+| Workflows (≈agents) | `g-` | `.agent/workflows/g-*.md` |
 | Skills | `g-skl-` | `.agent/skills/g-skl-*/SKILL.md` |
 | Commands | `g-` | `.agent/commands/g-*.md` |
 | Rules | `g-rl-` | `.agent/rules/g-rl-*.md` |
 | Hooks | `g-hk-` | `.agent/hooks/g-hk-*.ps1` |
+
+**Note**: Workflows and commands share the `g-` prefix — their location (`workflows/` vs `commands/`) distinguishes them when working on the system. Users see only `/g-name` regardless of which folder backs it.
 
 ---
 
@@ -114,7 +114,7 @@ MCP servers go in `mcp_config.json` at the project root (not inside `.agent/`):
 A: Gemini/Antigravity uses `workflows/` for the same purpose. Agent-like behaviors are defined as slash-command workflows rather than named sub-agents. The IDE invokes them via `/workflow-name`.
 
 **Q: Are the workflows the same as commands?**
-A: Nearly identical in content. In Gemini, `workflows/` are explicitly slash-command workflows with optional `// turbo` steps. The `commands/` folder is also present for Gemini — both serve the same purpose. `workflows/` is the more idiomatic Gemini location.
+A: Nearly identical in content. In Gemini, `workflows/` are explicitly slash-command workflows with optional `// turbo` steps. The `commands/` folder is also present for Gemini — both serve similar purposes. `workflows/` is the more idiomatic Gemini location. Both are invoked with `/g-name`.
 
 **Q: Do phase files (g-phase-add, g-phase-pivot, etc.) in workflows still make sense?**
 A: Those are legacy v2 workflow files. In v3 (sequential task IDs), phases are no longer a hard concept. The files are kept for backward compatibility but won't be used in new projects.

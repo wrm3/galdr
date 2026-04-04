@@ -75,8 +75,8 @@ These agents adopt development roles. Use them for actual coding work.
 |------|---------|---------|
 | galdr system agents | `g-agnt-{name}.md` | `g-agnt-task-manager.md` |
 | Skills | `g-skl-{name}/SKILL.md` | `g-skl-code-review/SKILL.md` |
-| Commands (Cursor/Claude/OpenCode) | `g-{name}.md` | `g-code-review.md` |
-| Workflows (Gemini `.agent/workflows/`) | `g-wkflw-{name}.md` | `g-wkflw-code-review.md` |
+| Commands (Cursor/Claude/OpenCode/Gemini) | `g-{name}.md` | `g-code-review.md` |
+| Workflows (Gemini `.agent/workflows/`) | `g-{name}.md` | `g-code-review.md` |
 | Rules | `g-rl-{nnn}-{name}.mdc` | `g-rl-00-always.mdc` |
 | Hooks | `g-hk-{name}.ps1` | `g-hk-session-start.ps1` |
 

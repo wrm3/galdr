@@ -1,7 +1,6 @@
 # galdr Commands Reference
 
-Commands use the `@g-` prefix in Cursor, `/g-` in Claude Code and OpenCode.
-Gemini workflows use `/g-wkflw-` prefix (files live in `.agent/workflows/`).
+Commands use the `@g-` prefix in Cursor, `/g-` in Claude Code, OpenCode, and Gemini.
 
 All commands are thin wrappers — they activate the underlying skill. See `docs/SKILLS.md` for the full skill reference.
 
@@ -92,7 +91,6 @@ All commands are thin wrappers — they activate the underlying skill. See `docs
 - **Cursor**: `@g-task-new`, `@g-medkit`, `@g-status`
 - **Claude Code**: `/g-task-new`, `/g-medkit`, `/g-status`
 - **OpenCode**: `/g-task-new`, `/g-medkit`, `/g-status`
-- **Gemini (.agent/workflows/)**: `/g-wkflw-task-new`, `/g-wkflw-medkit`, `/g-wkflw-status`
+- **Gemini (.agent/workflows/)**: `/g-task-new`, `/g-medkit`, `/g-status`
 
-> Gemini workflows use the `g-wkflw-` prefix to distinguish them from commands on other platforms.
-> All other platforms share the same `g-` command names.
+All platforms use the same `g-` command names. In Gemini, commands are backed by workflow files in `.agent/workflows/` rather than `.agent/commands/`, but the user-facing slash invocation is identical.
