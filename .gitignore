@@ -8,20 +8,8 @@
 .env
 *.env.local
 
-# Machine-specific MCP config
-.mcp.json
-
-
-# ============================================================
-# .galdr/ — task management data
-# ============================================================
-# The .galdr/ folder contains project-specific task tracking data.
-# In the SOURCE REPO (this repo), .galdr/ is local only and not committed.
-# Consumer projects may choose to commit .galdr/ selectively.
-.galdr/
-
-# galdr template (root-level copy)
-.galdr_template/
+# Machine-specific MCP config (generated per-install, not source)
+/.mcp.json
 
 
 # ============================================================
