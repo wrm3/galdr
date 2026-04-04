@@ -10,7 +10,6 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.0.0-green.svg" alt="Version"></a>
   <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
-  <a href="docker/docker-compose.yml"><img src="https://img.shields.io/badge/docker-compose-blue.svg" alt="Docker"></a>
   <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
 </p>
 ---
@@ -97,22 +96,24 @@ cd docker && docker compose up -d
 
 Then use the `galdr_install` MCP tool to deploy the framework into any project.
 
-### Option C: Symlink Mode (Power Users)
+### Option C: Clone and Use Directly (Recommended)
 
-Clone once, symlink into every project:
+Clone once, copy into every project:
 
 ```bash
-git clone https://github.com/wrm3/galdr.git ~/galdr
-cd ~/galdr && cd docker && docker compose up -d
+git clone https://github.com/wrm3/galdr.git
+cd your-project
 
-# In your project directory:
-ln -s ~/galdr/templates/.cursor .cursor
-ln -s ~/galdr/templates/.claude .claude
-ln -s ~/galdr/templates/.agent .agent
-cp -r ~/galdr/templates/.galdr .galdr    # Copy, don't link (project-specific data)
+# Copy the platform configs (not symlinks — each project has its own .galdr/ data)
+cp -r ~/galdr/.cursor .cursor
+cp -r ~/galdr/.claude .claude
+cp -r ~/galdr/.agent .agent
+cp -r ~/galdr/.codex .codex
+cp -r ~/galdr/.opencode .opencode
+cp -r ~/galdr/.galdr .galdr    # Project-specific task data
 ```
 
-On Windows, use `mklink /J` for junction links instead of `ln -s`.
+On Windows, use `robocopy` or file explorer to copy the folders.
 
 ## Key Features
 
@@ -260,7 +261,7 @@ Edit `.galdr/.vault_location` to control where knowledge is stored:
 ## Design Principles
 
 1. **File-first** -- Every feature works without Docker or MCP. Agents read/write `.galdr/` files directly. MCP tools enhance but never gate functionality.
-2. **Platform parity** -- Skills, agents, commands, and hooks are identical across all 5 supported IDEs. Change one, propagate to all.
+2. **Platform parity** -- Skills, agents, commands, and hooks share the same content across Cursor, Claude Code, and Gemini. Codex and OpenCode have adapted configurations (no hooks, rules via AGENTS.md) but the same 17 skills and agent definitions. Change a skill, propagate to all 5 platforms.
 3. **Constraints over conventions** -- Architectural rules are enforced, not suggested. Agents must flag violations, not silently work around them.
 4. **Memory is durable** -- Session history, learned facts, and research survive across conversations, machines, and IDE switches.
 5. **Single source of truth** -- Task status lives in files, not in agent memory. Two agents opening the same project see the same state.

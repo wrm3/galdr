@@ -71,8 +71,14 @@ worktrees/
 # Research and temp (not tracked in public repo)
 research/
 
-# Temp folders (placeholder only, .gitkeep is tracked)
-temp_docs/*
-!temp_docs/.gitkeep
+# Temp scripts (placeholder only, .gitkeep is tracked)
 temp_scripts/*
 !temp_scripts/.gitkeep
+
+# Cursor continual-learning state (machine-specific, not source)
+.cursor/hooks/state/continual-learning.json
+.cursor/hooks/state/continual-learning-index.json
+
+# galdr live session logs (generated per-session, not starter content)
+.galdr/logs/*.log
+!.galdr/logs/.gitkeep

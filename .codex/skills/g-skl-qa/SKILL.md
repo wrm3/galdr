@@ -13,7 +13,7 @@ the galdr QA system uses:
 - **BUGS.md**: `.galdr/BUGS.md` (root) — centralized bug index; optional detail files in `.galdr/bugs/`
 - **Bug Tasks**: `.galdr/tasks/` - Bug fix task files
 - **Task Integration**: Links to TASKS.md for bug resolution tracking
-- **Milestone / subsystem context**: Links to `phases/` or task metadata for impact assessment (v3 uses sequential task IDs)
+- **Milestone / subsystem context**: Links to task metadata and subsystem specs for impact assessment (v3 uses sequential task IDs)
 
 ## Bug Tracking System
 
@@ -337,7 +337,7 @@ Document {fix_type} that was completed in chat
 
 ### Link to milestones / tasks
 - Bugs reference affected subsystems and tasks
-- Optional phase docs may list related bugs if the project uses `phases/`
+- Optional subsystem docs may list related bugs if the project uses subsystem specs
 - Impact assessment through subsystem and task linkage
 
 ### Link to Project Context
@@ -351,7 +351,7 @@ Document {fix_type} that was completed in chat
 - `.galdr/BUGS.md` - Bug tracking (root index)
 - `.galdr/bugs/` - Optional per-bug detail files (see `g-bug-report`)
 - `.galdr/tasks/` - Bug fix task files
-- `.galdr/phases/` - Optional milestone docs (if the project uses phase files)
+- `.galdr/subsystems/` — Per-subsystem spec files
 
 ### Auto-Creation
 Automatically create missing files:

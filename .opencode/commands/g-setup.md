@@ -1,12 +1,13 @@
 ---
-description: "Initialize the galdr vNext system with project type selection"
+description: "Initialize the galdr v3 system in a new or existing project"
 ---
 
 Initialize the galdr system: $ARGUMENTS
 
 ## What This Command Does
 
-Initializes or reinitializes the galdr vNext task management system in the current project.
+Initializes or reinitializes the galdr v3 task management system in the current project.
+Activates the **g-skl-setup** skill which handles the full initialization workflow.
 
 ---
 
@@ -20,62 +21,68 @@ Initializes or reinitializes the galdr vNext task management system in the curre
 >
 > (Default: delivery)"
 
-Set `Project Type` in `PROJECT_CONTEXT.md` based on their answer. This affects:
+Set `Project Type` in `PROJECT.md` based on their answer. This affects:
 - Whether `HYPOTHESIS.md` is created (research only)
-- Whether phase templates use milestone or experiment format
-- Whether SPRINT.md excludes unvalidated experiment phases
+- Whether sprint templates use milestone or experiment format
 
 ---
 
-## Step 2: Create Directory Structure
+## Step 2: Create Directory Structure (v3 Layout)
 
 Create these folders if they don't exist:
-- `.galdr/` - Main working directory
-- `.galdr/tasks/` - Individual task files
-- `.galdr/phases/` - Phase documentation
-- `.galdr/experiments/` - Research experiments (research projects only)
-- `.galdr/logs/` - Evidence files for task completion
-- `.galdr/templates/` - task_template.md, phase_template.md
-- `docs/` - Project documentation
-- `temp_scripts/` - Test scripts
+- `.galdr/` — Main working directory
+- `.galdr/tasks/` — Individual task files (sequential IDs)
+- `.galdr/prds/` — PRD files
+- `.galdr/bugs/` — Individual bug detail files
+- `.galdr/subsystems/` — Per-subsystem spec files
+- `.galdr/logs/` — Evidence and audit logs
+- `.galdr/reports/` — Cleanup and health reports
+- `.galdr/linking/` — Cross-project contracts
+- `docs/` — Project documentation
+- `temp_scripts/` — Scratch scripts (gitignored)
+
+**v3 does NOT use**: `phases/`, `tracking/`, `project/` subdirectories — these are legacy v2 paths.
 
 ---
 
-## Step 3: Create Core Files (vNext)
+## Step 3: Create Core Files (v3)
 
 Create these template files:
-- `.galdr/PRD.md` - Product Requirements Document
-- `.galdr/TASKS.md` - Master task checklist (with subsystem headers)
-- `.galdr/tracking/BUGS.md` - Bug tracking
-- `.galdr/project/PROJECT_CONTEXT.md` - Mission + health score + autonomous agent config
-- `.galdr/project/PROJECT_CONSTRAINTS.md` - Non-negotiable constraints (populate with user input)
-- `.galdr/SUBSYSTEMS.md` - Component registry
-- `.galdr/config/SPRINT.md` - Active sprint queue (cleanup-agent-generated placeholder)
-- `.galdr/reports/CLEANUP_REPORT.md` - Nightly report placeholder
-- `.galdr/experiments/SELF_EVOLUTION.md` - System evolution log
-- `.galdr/IDEA_BOARD.md` - Ideas parking lot (human + AI sections)
-- `.galdr/project/PROJECT_GOALS.md` - Strategic goals
-- `.galdr/templates/task_template.md` - Full vNext task YAML schema
-- `.galdr/templates/phase_template.md` - Phase schema
+- `.galdr/TASKS.md` — Master task checklist (sequential task IDs)
+- `.galdr/PLAN.md` — Master strategy and PRD index
+- `.galdr/PROJECT.md` — Mission, vision, goals, project linking
+- `.galdr/CONSTRAINTS.md` — Non-negotiable architectural constraints
+- `.galdr/BUGS.md` — Bug index (root level)
+- `.galdr/SUBSYSTEMS.md` — Component registry with mermaid graph
+- `.galdr/IDEA_BOARD.md` — Ideas parking lot
+- `.galdr/.identity` — Project and user identity
 
 **Research projects also get:**
-- `.galdr/experiments/HYPOTHESIS.md` - Hypothesis tracker
+- `.galdr/experiments/HYPOTHESIS.md` — Hypothesis tracker
+- `.galdr/experiments/EXPERIMENTS.md` — Experiment index
 
 ---
 
-## Step 4: Gather Architecture Constraints
+## Step 4: Generate .identity
+
+```
+project_id={new-uuid}
+project_name={project_name}
+user_id={user_id_from_appdata_or_ask}
+user_name={user_name}
+galdr_version=1.0.0
+vault_location={LOCAL}
+```
+
+---
+
+## Step 5: Gather Architecture Constraints
 
 Ask the user:
 > "Are there any non-negotiable technical constraints? (e.g., database technology, deployment target, public API stability, cost limits)
-> I'll document these in PROJECT_CONSTRAINTS.md so every agent session loads them automatically."
+> I'll document these in CONSTRAINTS.md so every agent session loads them automatically."
 
-Add each constraint as a `C-NNN` entry.
-
----
-
-## Step 5: Verify MCP Tools
-
-Check available MCP tools and note key ones in PROJECT_CONTEXT.md.
+Add each constraint as a `C-NNN` entry in `.galdr/CONSTRAINTS.md`.
 
 ---
 
@@ -84,34 +91,25 @@ Check available MCP tools and note key ones in PROJECT_CONTEXT.md.
 For existing projects:
 - Analyze current file structure
 - Identify existing components/subsystems
-- Document in SUBSYSTEMS.md
+- Create spec files in `.galdr/subsystems/`
+- Populate SUBSYSTEMS.md with index and mermaid graph
 
 ---
 
-## Phase-Based Task Organization
-- **Phase 0** (Task IDs: 1-99): Setup & Infrastructure
-- **Phase 1** (Task IDs: 100-199): Foundation
-- **Phase 2** (Task IDs: 200-299): Core Development
-- **Phase N** (Task IDs: N×100 to N×100+99): Additional phases
-
----
-
-## Task Status Indicators (vNext)
-- `[ ]` - Pending (no file created yet)
-- `[📝]` - Spec being written (TTL: 1 hour)
-- `[📋]` - Ready (task file created)
-- `[🔄]` - In Progress (claimed, has TTL)
-- `[🔍]` - Awaiting Verification (different agent required)
-- `[⏳]` - Resource-Gated
-- `[✅]` - Completed (verified by different agent)
-- `[❌]` - Failed/Cancelled
-- `[🌾]` - Harvested (approach superseded, kept as reference)
+## Task Status Indicators (v3)
+- `[ ]` — Pending (no task file yet)
+- `[📋]` — Ready (task file created, spec written)
+- `[🔄]` — In Progress (claimed by agent, has TTL)
+- `[🔍]` — Awaiting Verification (different agent required)
+- `[✅]` — Completed (verified by different agent)
+- `[❌]` — Failed/Cancelled
+- `[⏸️]` — Paused
 
 ---
 
 ## When to Use
 - Starting a new project
 - Adding galdr to an existing project
-- Reinitializing after major changes
+- Reinitializing after major structural changes
 
-Let me set up the galdr vNext system for you!
+Let me set up the galdr v3 system for you!

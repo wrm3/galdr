@@ -75,11 +75,10 @@ Phase: {N}
 
 ## Phase Completion Commit
 ```bash
-git add .galdr/phases/phaseN/ .galdr/TASKS.md .galdr/phases/phaseN_*.md
+git add .galdr/tasks/ .galdr/TASKS.md
 git commit -m "phase(N): Phase Name complete
 
 Tasks completed: task001, task002, task003
-Archived to: .galdr/phases/phaseN/
 Subsystems: api, database"
 
 git tag phase-N-complete

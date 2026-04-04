@@ -26,7 +26,7 @@ I'll generate a comprehensive PRD with:
 - Milestones & sequencing
 - User stories with acceptance criteria
 
-### 3. Create PROJECT_CONTEXT.md
+### 3. Create PROJECT.md
 - Project mission statement
 - Current phase and focus
 - Success criteria
@@ -39,16 +39,13 @@ I'll generate a comprehensive PRD with:
 - Dependencies between components
 - Ownership assignments
 
-### 5. Initial Phase Documents
-- Create phase files in `.galdr/phases/`
-- Link phases to PLAN.md
-- Set up task ID ranges
+### 5. Initial Subsystem Documents
+- Create subsystem spec files in `.galdr/subsystems/`
+- Link subsystems to PLAN.md and SUBSYSTEMS.md
 
-## Phase-Based Task Organization
-- **Phase 0** (Task IDs: 1-99): Setup & Infrastructure
-- **Phase 1** (Task IDs: 100-199): Foundation
-- **Phase 2** (Task IDs: 200-299): Core Development
-- **Phase N** (Task IDs: N×100 to N×100+99): Custom phases
+## Task Organization
+Tasks use sequential IDs (task001, task002, ...) with no phase-based ID ranges.
+Group tasks by subsystem in TASKS.md for clarity.
 
 ## Benefits
 - ✅ Prevents over-engineering

@@ -7,7 +7,7 @@ Activates the quality assurance system for bug tracking, quality management, and
 ## QA Features
 
 ### 1. Bug Tracking System
-I'll manage bugs in `.galdr/tracking/BUGS.md` with:
+I'll manage bugs in `.galdr/BUGS.md` with:
 - **Bug Classification**:
   - Critical: System crashes, data loss, security vulnerabilities
   - High: Major feature failures, >50% performance loss

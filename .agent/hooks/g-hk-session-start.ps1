@@ -90,6 +90,15 @@ Your last session had $sessionSize turns. Consider running **``@g-status``** to 
 
 $additionalContext = "${setupBanner}${reflectionBanner}galdr task management system is active. Check .galdr/TASKS.md for current tasks."
 
+# ── Append GUARDRAILS if present ──────────────────────────────────────────────
+$guardrailsFile = "GUARDRAILS.md"
+if (Test-Path $guardrailsFile) {
+    try {
+        $guardrails = Get-Content $guardrailsFile -Raw
+        $additionalContext = "${additionalContext}`n`n---`n`n${guardrails}"
+    } catch {}
+}
+
 # ── Response ──────────────────────────────────────────────────────────────────
 $response = @{
     continue           = $true

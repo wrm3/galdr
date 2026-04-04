@@ -31,7 +31,7 @@ Execute all 5 passes in order, collecting metrics for the report.
 
 ### Pass 2: Architectural Constraint Compliance
 
-1. Read `.galdr/project/PROJECT_CONSTRAINTS.md` (if exists)
+1. Read `.galdr/CONSTRAINTS.md` (if exists)
 2. Run `git log --since="7 days ago" --oneline` to get recent commits
 3. Check `.galdr/SUBSYSTEMS.md` for undeclared subsystem interactions
 4. Flag any new file patterns not matching declared subsystems
@@ -46,14 +46,14 @@ Execute all 5 passes in order, collecting metrics for the report.
 
 ### Pass 4: Goal Alignment
 
-1. Read `.galdr/project/PROJECT_GOALS.md` (if exists)
+1. Read `.galdr/PROJECT.md` goals section (if exists)
 2. For each active goal, check if recent tasks reference it
 3. Identify goals with no task activity in 14+ days
 4. Flag orphan tasks (tasks not aligned to any goal)
 
 ### Pass 5: Technical Debt Inventory
 
-1. Read `.galdr/tracking/BUGS.md` — count open bugs by severity
+1. Read `.galdr/BUGS.md` — count open bugs by severity
 2. Count follow-up tasks from TODO completion gate (tasks with `dependencies` pointing to completed tasks)
 3. Check `.galdr/config/WAKEUP_QUEUE.md` for stale entries (>7 days old)
 4. Estimate debt-to-feature ratio: (bug_fix + refactor tasks) / (feature tasks)

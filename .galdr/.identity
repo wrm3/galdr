@@ -1,6 +1,6 @@
-project_id=0563dc6b-f1d2-4dab-922c-f7443b35a866
-project_name=galdr
-user_id=04a71ece-8445-4864-8062-1b1f4c272a0a
-user_name=wrm3
+project_id={PROJECT_ID}
+project_name={project_name}
+user_id={USER_ID}
+user_name={user_name}
 galdr_version=1.0.0
 vault_location={LOCAL}

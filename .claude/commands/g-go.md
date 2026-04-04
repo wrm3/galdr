@@ -9,9 +9,9 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 ### 1. Load Context (Before Touching Anything)
 
 Read the following files to understand the project state:
-- `.galdr/project/PROJECT_CONTEXT.md` — mission and goals
+- `.galdr/PROJECT.md` — mission and goals
 - `.galdr/TASKS.md` — master task list
-- `.galdr/project/PROJECT_CONSTRAINTS.md` — guardrails (if exists)
+- `.galdr/CONSTRAINTS.md` — guardrails (if exists)
 - `git log --oneline -10` — recent changes
 
 ### 2. Build the Work Queue
@@ -97,34 +97,34 @@ After completing as many tasks as possible, present:
 | Log every decision you make autonomously | User needs to review what you decided |
 | Skip tasks you can't complete, don't fail the whole run | Maximize total output |
 | Commit after each completed task (if user allows) | Preserve progress incrementally |
-| Respect PROJECT_CONSTRAINTS.md | Don't violate project guardrails |
+| Respect CONSTRAINTS.md | Don't violate project guardrails |
 | Stop if a task would be destructive (schema drops, data loss) | Safety first — log it as a blocker |
 
 ## Usage Examples
 
 **Work everything available:**
 ```
-/g-go
+@g-go
 ```
 
 **Work only Phase 2 tasks:**
 ```
-/g-go phase 2
+@g-go phase 2
 ```
 
 **Work specific tasks:**
 ```
-/g-go tasks 201, 203, 207
+@g-go tasks 201, 203, 207
 ```
 
 **Work only critical/high priority:**
 ```
-/g-go critical and high only
+@g-go critical and high only
 ```
 
-## What Makes This Different From /g-sprint
+## What Makes This Different From @g-sprint
 
-| | /g-go | /g-sprint |
+| | @g-go | @g-sprint |
 |---|---|---|
 | Time limit | None (until done or blocked) | 2 hours |
 | Task source | TASKS.md backlog directly | SPRINT.md (pre-filtered) |
