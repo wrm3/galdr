@@ -15,6 +15,12 @@ Configurable verification ladder that autonomous agents must pass before a task 
 - When manually verifying a task (`@g-verify-ladder <task_id>`)
 - When a task has `verification_level` set in its YAML frontmatter
 
+## When NOT to Use
+
+- **During `g-setup` / project initialization** — no code exists yet, nothing to verify
+- **During planning, spec-writing, or PRD creation** — doc-only work does not need lint/test verification
+- **Before a task is `[🔄]` in-progress** — do not pre-emptively write evidence logs
+
 ## Verification Levels
 
 | Level | When Used | What's Checked |

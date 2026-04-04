@@ -1,10 +1,96 @@
+# galdr project Initializer Agent
+
+> **Specialized SubAgent for setting up the complete galdr task management system in new projects**
+
+## Purpose
+Autonomous agent that initializes the full galdr task management system in a new project, including folder structure, template files, PROJECT.md (v3 consolidated), and initial configuration based on project analysis.
+
+## Agent Configuration
+
+**Agent Name**: galdr-project-initializer
+**Model**: Claude Opus (complex multi-step setup)
+**Specialization**: Project initialization, structure creation, context gathering
+**Activation**: Manual invocation when setting up Galdr in a new project
+
+## When to Activate
+
+### Manual Activation
+- User says "set up galdr" or "initialize galdr"
+- User says "add galdr to this project"
+- User mentions "galdr setup" or "galdr init"
+- Starting work on a new project without `.galdr/` folder
+
+### Proactive Activation
+- Detect project without `.galdr/` folder
+- User creates first task without galdr structure
+- User asks about project organization
+
+## Initialization Process
+
+### Phase 1: Project Analysis (Gather Context)
+
+Before creating any files, analyze the existing project:
+
+```
+ANALYSIS CHECKLIST:
+□ What type of project is this? (web app, API, library, etc.)
+□ What languages/frameworks are used?
+□ Is there an existing README with project description?
+□ Are there existing task/todo files?
+□ What's the current folder structure?
+□ Is this a monorepo or single project?
+□ Are there existing subsystems identifiable?
+```
+
+**Questions to Ask User** (if not obvious):
+
+1. "What is the main goal/mission of this project?"
+2. "Who are the primary users?"
+3. "What are the key features or components?"
+4. "Are there any existing phases or milestones planned?"
+
+### Phase 2: Create Folder Structure
+
+Create the following structure:
+
+```
+.galdr/
+├── .identity                 # project_id, project_name, user_id, user_name, galdr_version
+├── .gitignore
+├── TASKS.md                  # Master task checklist (sequential task IDs)
+├── PLAN.md                   # Strategy and milestones
+├── PROJECT.md                # Mission, vision, goals, project linking
+├── CONSTRAINTS.md            # Rules agents must follow
+├── BUGS.md                   # Bug index
+├── SUBSYSTEMS.md             # Component registry + interconnection diagram
+├── IDEA_BOARD.md             # Ideas and improvement suggestions
+├── PRDS.md                   # PRD index
+├── prds/                     # Individual PRD files
+├── bugs/                     # Individual bug detail files (optional)
+├── reports/                  # Generated reports
+├── logs/                     # Evidence and audit logs
+├── subsystems/               # Per-subsystem spec files
+└── tasks/                    # Individual task files
+
+docs/                         # Project documentation (if not exists)
+```
+
+> **slim v3 — do NOT create**: `config/`, `experiments/`, `linking/`, `vault/`, `phases/`,
+> `tracking/`, `templates/`, `temp_scripts/` — these are full-version or legacy paths.
+
+### Phase 3: Generate Initial Files
+
+#### PROJECT.md Template (v3)
+
+```markdown
 ---
-description: Use when initializing galdr task management in a new project, creating .galdr/ folder structure, and setting up initial configuration based on project analysis.
-mode: subagent
-tools:
-  edit: true
-  bash: true
-  write: true
+project_id: "[UUID]"
+project_name: "[Project Name]"
+layer_hint: "application"
+links:
+  parents: []
+  siblings: []
+  children: []
 ---
 
 # PROJECT.md — [Project Name]
@@ -40,26 +126,54 @@ Parents / siblings / children projects (for broadcast & inbox). Empty if none.
 #### TASKS.md Template
 
 ```markdown
-# Tasks
+# {PROJECT_NAME} — Master Task List
 
-<!-- v3: sequential task IDs (1, 2, 3, …). Next ID = max existing + 1. -->
+**Project**: {project_name}
+**Type**: delivery | research | maintenance | exploration  *(set during @g-setup)*
+**Plan**: `PLAN.md`
+**Project overview**: `PROJECT.md`
+**Constraints**: `CONSTRAINTS.md`
+**Bugs**: `BUGS.md`
+**Subsystems**: `SUBSYSTEMS.md`
 
-- [ ] Initial project setup
-- [ ] Development environment configuration
+---
 
-<!-- Add tasks as they are created -->
+## Status Indicators
+<!-- DO NOT REMOVE THIS SECTION — agents depend on it for status parsing -->
+- `[ ]` = Pending (no task file yet) — CODING BLOCKED
+- `[📋]` = Task file created, ready to start
+- `[📝]` = Spec being written (TTL: 1 hour)
+- `[🔄]` = In Progress (claimed by agent, has TTL)
+- `[🔍]` = Awaiting Verification (impl done, reviewer pending — different agent required)
+- `[⏳]` = Resource-Gated (waiting on GPU/storage/API credits/external service)
+- `[✅]` = Completed (verified by different agent)
+- `[❌]` = Failed/Cancelled
+- `[⏸️]` = Paused
 
 ---
 
-## Legend
-- `[ ]` = Pending (no task file yet)
-- `[📋]` = Ready (task file created)
-- `[🔄]` = In Progress
-- `[✅]` = Completed
-- `[❌]` = Cancelled/Failed
+## Task backlog (sequential IDs)
+
+*v3 uses sequential task IDs in `tasks/task{id}_*.md`. Link PRDs from `PLAN.md`.*
+
+### Subsystem: {subsystem-name-1}
+- [ ] **Task 001**: {Task description} — {brief acceptance summary}
 
 ---
-*Managed by galdr task management system*
+
+## Bugs
+*(See `BUGS.md` and individual files under `bugs/` for full detail.)*
+
+---
+
+## Completed Tasks
+*(Tasks moved here when fully verified)*
+
+---
+
+**Last Updated**: {YYYY-MM-DD}
+**Open Tasks**: {n}
+**Overall Progress**: {completed}/{total} tasks
 ```
 
 #### PLAN.md Template
@@ -128,73 +242,30 @@ This document tracks the major components/modules of the project.
 #### BUGS.md Template
 
 ```markdown
-# Bug Tracking
+# BUGS.md — {project_name} Bug Tracker
 
-<!-- v3: optional per-bug files under bugs/; this file is the index -->
+## Status Indicators
+<!-- DO NOT REMOVE THIS SECTION — agents depend on it for status parsing -->
+- `[ ]` = Open (no bug file yet)
+- `[📋]` = Documented (bug file created)
+- `[🔄]` = Fix in progress
+- `[✅]` = Resolved
+- `[❌]` = Won't fix
 
-## Active Bugs
+## Bug Summary
 
-<!-- Bugs are added here as they are discovered -->
+| Status | ID | Bug | Severity | Subsystems |
+|--------|----|-----|----------|------------|
 
-## Bug Template
-
-When reporting a bug, include:
-- **ID**: BUG-XXX
-- **Title**: Brief description
-- **Severity**: Critical | High | Medium | Low
-- **Status**: Open | Investigating | Fixing | Testing | Closed
-- **Task Reference**: Link to task in TASKS.md
-- **Created**: Date
-- **Description**: What's wrong
-- **Steps to Reproduce**: How to trigger
-- **Expected**: What should happen
-- **Actual**: What actually happens
-
----
-
-## Resolved Bugs
-
-<!-- Completed bugs are moved here -->
+## Next Bug ID: BUG-001
+```
 
 ---
 *Managed by galdr task management system*
 ```
 
-#### Task Template (templates/task_template.md)
-
-```markdown
----
-id: {id}
-title: '{title}'
-type: feature | bug_fix | refactor | documentation
-status: pending | in_progress | completed | failed
-priority: critical | high | medium | low
-subsystems: []
-project_context: 'Brief connection to project goal'
-dependencies: []
-created_date: '{date}'
----
-
-# Task: {title}
-
-## Objective
-[Clear, actionable goal description]
-
-## Acceptance Criteria
-- [ ] [Specific, measurable outcome]
-- [ ] [Verification requirement]
-
-## Implementation Notes
-[Technical details, approach, constraints]
-
-## Verification
-- [ ] Functionality tested
-- [ ] Documentation updated
-- [ ] Code reviewed
-```
-
-#### v3 note (replaces v2 phase_template.md)
-Milestones and sequencing live in **PLAN.md**. Task IDs are **sequential** in `TASKS.md` / `.galdr/tasks/`. Legacy repos may still carry `templates/phase_template.md` until groomed off v2.
+#### v3 note
+Milestones and sequencing live in **PLAN.md**. Task IDs are **sequential** in `TASKS.md` / `.galdr/tasks/`. Legacy repos may still carry `templates/` until groomed off v2 — do not create `templates/` in new slim projects.
 
 ### Phase 4: Auto-Detect Subsystems
 

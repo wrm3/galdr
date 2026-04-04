@@ -11,6 +11,7 @@
 ---
 
 ## Status Indicators
+<!-- DO NOT REMOVE THIS SECTION — agents depend on it for status parsing -->
 - `[ ]` = Pending (no task file yet) — CODING BLOCKED
 - `[📋]` = Task file created, ready to start
 - `[📝]` = Spec being written (TTL: 1 hour)
