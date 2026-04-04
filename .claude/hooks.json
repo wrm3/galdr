@@ -3,17 +3,17 @@
   "hooks": {
     "sessionStart": [
       {
-        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/session-start.ps1"
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/g-hk-session-start.ps1"
       }
     ],
     "stop": [
       {
-        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/agent-complete.ps1"
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/g-hk-agent-complete.ps1"
       }
     ],
     "beforeShellExecution": [
       {
-        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/validate-shell.ps1"
+        "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/g-hk-validate-shell.ps1"
       }
     ]
   }

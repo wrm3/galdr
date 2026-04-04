@@ -1,7 +1,3 @@
----
-description: "Galdr Git Commit"
----
-
 Create a git commit: $ARGUMENTS
 
 ## What This Command Does

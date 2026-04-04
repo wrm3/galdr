@@ -1,7 +1,3 @@
----
-description: "Galdr Plan"
----
-
 Start project planning: $ARGUMENTS
 
 ## What This Command Does

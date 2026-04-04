@@ -1,7 +1,3 @@
----
-description: "Galdr Status"
----
-
 Generate project status overview: $ARGUMENTS
 
 ## What This Command Does

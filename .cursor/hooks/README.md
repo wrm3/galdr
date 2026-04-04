@@ -6,10 +6,10 @@ Hooks extend Cursor IDE behavior at key lifecycle events.
 
 | Hook | Event | Does |
 |------|-------|------|
-| `session-start.ps1` | Session start | Injects "galdr is active + check TASKS.md" into every session. Handles first-time user setup. Auto-heals `.galdr/.project_id`. |
-| `agent-complete.ps1` | Agent stop | Writes a session reminder for next session if 5+ turns occurred. |
-| `validate-shell.ps1` | Before shell | Blocks dangerous commands (`rm -rf /`, `format c:`, etc). |
-| `g-setup-user.ps1` | Called by session-start | Interactive first-time user identity setup. |
+| `g-hk-session-start.ps1` | Session start | Injects "galdr is active + check TASKS.md" into every session. Handles first-time user setup. Auto-heals `.galdr/.project_id`. |
+| `g-hk-agent-complete.ps1` | Agent stop | Writes a session reminder for next session if 5+ turns occurred. |
+| `g-hk-validate-shell.ps1` | Before shell | Blocks dangerous commands (`rm -rf /`, `format c:`, etc). |
+| `g-hk-setup-user.ps1` | Called by session-start | Interactive first-time user identity setup. |
 
 ## Corporate / Security-Restricted Environments
 

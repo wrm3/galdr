@@ -80,7 +80,7 @@ available = commands.list_available()
 history = commands.get_history()
 ```
 
-**Common Commands**: `@g-review`, `@g-status`, `@g-task-new`, `@g-git-commit`
+**Common Commands**: `@g-code-review`, `@g-status`, `@g-task-new`, `@g-git-commit`
 
 ## Hooks
 

@@ -1,7 +1,3 @@
----
-description: "Activate quality assurance system for bug tracking and management"
----
-
 Activate quality assurance system: $ARGUMENTS
 
 ## What This Command Does
