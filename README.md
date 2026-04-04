@@ -33,45 +33,45 @@ It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneousl
 
 | Component | Count | Examples |
 |-----------|-------|---------|
-| **Agents** | 41 | Task manager, code reviewer, QA engineer, planner, sprint runner, memory manager, infrastructure, workflow, multi-agent orchestrator |
-| **Skills** | 83 | Task management, code review, video production, 3D optimization, database standards, patent filing, startup ops, Kubernetes, CI/CD, web3, manim animation |
-| **Commands** | 39 | `@g-task-new`, `@g-review`, `@g-plan`, `@g-sprint`, `@g-harvest`, `@g-vault-search`, `@g-platform-crawl`, `@g-status` |
-| **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, server-side crawl, custom crawl targets, web UI URLs, health reports |
-| **Hooks** | 12 | Session start, agent complete, vault sync, log sanitization, shell validation, platform doc enrichment |
-| **Rules** | 9 | Always-apply rules for documentation, git workflow, error reporting, task completion gates |
+| **Agents** | 9 | Task manager, code reviewer, QA engineer, project (planning + grooming), infrastructure, ideas, verifier, project initializer |
+| **Skills** | 17 | Task management, bugs, ideas, plan, project, subsystems, medkit, code review, sprint, git, harvest, dependency graph, and more |
+| **Commands** | 25 | `@g-task-new`, `@g-code-review`, `@g-plan`, `@g-sprint`, `@g-medkit`, `@g-dependency-graph`, `@g-status`, `@g-bug-report` |
+| **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, server-side crawl, health reports |
+| **Hooks** | 4 | Session start, agent complete, user setup, shell validation |
+| **Rules** | 10 | Always-apply rules for documentation, git workflow, error reporting, task completion gates |
 | **IDE Platforms** | 5 | Cursor, Claude Code, Gemini, Codex, OpenCode |
 
 ## How It Works
 
 ```
 Your Project/
-├── .galdr/                  # Task management (per-project, gitignored)
+├── .galdr/                  # Task management (shared across all IDEs)
 │   ├── TASKS.md             # Master task checklist
-│   ├── PRD.md               # Product Requirements Document
-│   ├── SUBSYSTEMS.md        # Component registry + interconnection diagram
-│   ├── config/              # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md
-│   ├── project/             # PROJECT_CONTEXT.md, PROJECT_CONSTRAINTS.md, PROJECT_GOALS.md
-│   ├── experiments/         # HYPOTHESIS.md, SYSTEM_EXPERIMENTS.md
-│   ├── reports/             # CLEANUP_REPORT.md
-│   ├── tracking/            # BUGS.md, IDEA_BOARD.md, INBOX.md
-│   ├── subsystems/          # Per-subsystem spec files
+│   ├── BUGS.md              # Bug index
+│   ├── PLAN.md              # Strategy and milestones
+│   ├── PROJECT.md           # Vision, mission, goals (plain language)
+│   ├── CONSTRAINTS.md       # Architectural rules agents must follow
+│   ├── SUBSYSTEMS.md        # Component registry
+│   ├── IDEA_BOARD.md        # Captured ideas
 │   ├── tasks/               # Individual task specs (YAML + markdown)
-│   └── phases/              # Phase documentation and archives
+│   ├── bugs/                # Individual bug files
+│   └── prds/                # PRD files
 │
 ├── .cursor/                 # Cursor IDE configuration
-│   ├── agents/              # 41 specialized agent definitions
-│   ├── skills/              # 83 skill files with workflows and knowledge
-│   ├── commands/            # 39 @g-* commands
-│   ├── hooks/               # 12 automation hooks (PowerShell)
-│   └── rules/               # 9 always-apply rules
+│   ├── agents/              # 9 galdr system agents (g-agnt-*)
+│   ├── skills/              # 17 skills (g-skl-*)
+│   ├── commands/            # 25 @g-* commands
+│   ├── hooks/               # 4 automation hooks (PowerShell)
+│   └── rules/               # 10 always-apply rules (g-rl-*)
 │
 ├── .claude/                 # Claude Code (identical to .cursor/)
 ├── .agent/                  # Gemini (identical, adapted format)
 ├── .codex/                  # Codex (skills subset)
-├── .opencode/               # OpenCode (minimal)
+├── .opencode/               # OpenCode (agents + commands)
 │
-├── AGENTS.md                # Learned workspace facts (read by all IDEs)
-└── CLAUDE.md                # Claude-specific context + same facts
+├── AGENTS.md                # Project context (read by all IDEs)
+├── CLAUDE.md                # Claude Code project instructions
+└── GEMINI.md                # Gemini project instructions
 ```
 
 When you open your project in any supported IDE, the agents automatically have access to your tasks, constraints, memory, and skills. No configuration needed beyond the initial install.
@@ -123,7 +123,7 @@ Create tasks with structured specs, track status across phases, and let agents p
 ```
 @g-task-new "Add user authentication with JWT"
 @g-status
-@g-sprint          # Agent autonomously works through the backlog
+@g-go          # Agent autonomously works through the backlog
 ```
 
 Tasks use YAML frontmatter for metadata (priority, dependencies, subsystems) and markdown for specs and acceptance criteria. Status syncs between individual task files and the master `TASKS.md` checklist.
@@ -144,7 +144,7 @@ Vault notes use standardized YAML frontmatter for indexing and freshness trackin
 Not a linter -- a structured review covering security, performance, maintainability, and architectural alignment.
 
 ```
-@g-review src/auth/
+@g-code-review src/auth/
 ```
 
 Generates a severity-classified report with specific file/line references and actionable recommendations.
@@ -166,7 +166,7 @@ If an agent's action would violate a constraint, it must flag the conflict and g
 Projects can declare parent/child/sibling relationships. Parents can broadcast tasks to children. Children can request actions from parents. Siblings can sync shared contracts.
 
 ```
-@g-project-linking             # Project linking (PROJECT_TOPOLOGY.md)
+@g-topology                    # View/edit project relationships
 @g-broadcast "Update API v2"   # Push task to child projects
 @g-request "Need auth service" # Request from parent
 ```
