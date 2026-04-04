@@ -1,102 +1,79 @@
-# galdr — Codex Installation
+# galdr — Codex Setup
 
 ## Quick Install
 
-Tell Codex to fetch and follow these instructions:
+Clone or copy the galdr system files into your project root, then tell Codex:
 
 ```
-Fetch and follow instructions from: https://raw.githubusercontent.com/galdr/galdr/main/.codex/INSTALL.md
+Read AGENTS.md and initialize the galdr task management system.
 ```
+
+Codex reads `AGENTS.md` natively — that file contains all agent definitions, skills, conventions, and enforcement rules.
+
+---
 
 ## What Gets Installed
 
 galdr gives your Codex environment:
-- **19 specialized agents** — task management, QA, verification, planning, code review
-- **78 on-demand skills** — explicit workflows for common development tasks
+- **8 specialized agents** — task management, QA, verification, planning, code review, infrastructure, ideas
+- **17 on-demand skills** — explicit workflows for common development tasks
 - **`.galdr/` task system** — persistent file-based task tracking that survives sessions
-- **MCP server integration** — RAG, Oracle, MediaWiki, video analysis, vault tools
 
-## Automated Bootstrap (Preferred)
-
-If the galdr MCP server is running, use:
-
-```
-Call the galdr_install MCP tool with the path to your project directory.
-```
-
-This creates all `.galdr/` files, `.codex/config.toml`, and registers skills automatically.
+---
 
 ## Manual Bootstrap
 
 ### Step 1: Create .galdr/ Task System
 
+Tell Codex to run `/g-setup`, or if that's unavailable, ask it to create:
+
 ```
 Create a .galdr/ folder with these files:
 - TASKS.md (master task checklist)
-- PLAN.md (product requirements)
-- BUGS.md (bug tracking)
-- PROJECT_CONTEXT.md (project mission and goals)
-- PROJECT_GOALS.md (strategic goals with metrics)
+- PLAN.md (product requirements and milestones)
+- BUGS.md (bug tracking index)
+- PROJECT.md (project mission and goals)
+- CONSTRAINTS.md (non-negotiable architectural rules)
 - SUBSYSTEMS.md (component registry)
-- PROJECT_CONSTRAINTS.md (non-negotiable constraints)
-- PROJECT_TOPOLOGY.md (cross-project relationships)
-- INBOX.md (cross-project coordination queue)
-- tasks/ (individual task files)
-- phases/ (phase documentation)
-- linking/ (shared API contracts)
+- IDEA_BOARD.md (idea capture)
+- tasks/ (individual task spec files)
+- bugs/ (individual bug detail files)
+- prds/ (PRD files)
+- subsystems/ (per-subsystem spec files)
+- linking/ (cross-project coordination)
+- logs/ (agent audit and shell logs)
+- reports/ (cleanup and health reports)
+- config/ (sprint and heartbeat config)
 ```
 
-### Step 2: Create .codex/config.toml
+### Step 2: Review .codex/config.toml
 
-Create `.codex/config.toml` in your project root:
+The `.codex/config.toml` in this repo is pre-configured. Verify it matches your environment:
 
 ```toml
-#:schema https://developers.openai.com/codex/config-schema.json
-
-model = "gpt-5-codex"
+model = "codex-1"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
-web_search = "cached"
-model_reasoning_effort = "high"
-
-[windows]
-sandbox = "elevated"
-
-[sandbox_workspace_write]
-network_access = true
-
-[features]
-multi_agent = true
-shell_tool = true
-
-# MCP Server (if running galdr Docker)
-[mcp_servers.galdr]
-url = "http://localhost:8082/sse"
-tool_timeout_sec = 600
-enabled = true
 ```
 
-### Step 3: Read AGENTS.md
-
-Codex natively reads `AGENTS.md` from the project root. This file contains:
-- All agent definitions and their responsibilities
-- Available skills and commands
-- Task management conventions
-- Project structure documentation
-
-### Step 4: Verify Setup
+### Step 3: Verify Setup
 
 ```
 Read .galdr/TASKS.md and confirm the galdr system is active.
 Display the session context summary.
 ```
 
+---
+
 ## Key Conventions
 
 - **Task files**: `.galdr/tasks/taskNNN_name.md` — always created before starting work
-- **Task status**: `[ ]` pending -> `[📋]` ready -> `[🔄]` in-progress -> `[✅]` done
-- **Phase numbering**: Phase 0 = tasks 1-99, Phase 1 = tasks 100-199, etc.
+- **Task status**: `[ ]` pending → `[📋]` ready → `[🔄]` in-progress → `[🔍]` awaiting-verification → `[✅]` done
+- **Bug files**: `.galdr/bugs/bugNNN_name.md` — logged via `g-bug-report`
 - **Never skip the file**: No task is complete without a task file in `.galdr/tasks/`
+- **No phases**: galdr v3 uses sequential task IDs, not phase-based numbering
+
+---
 
 ## Enforcement Reminders for Codex
 
@@ -105,26 +82,29 @@ When working on tasks:
 - Create the task file BEFORE writing any code
 - Update TASKS.md and task file atomically (both in same response)
 - Offer a git commit after every task completion
-- Any error or warning mentioned -> log it in `.galdr/tracking/BUGS.md`
+- Any error or warning mentioned → log it in `.galdr/BUGS.md`
 - Never read or write `.galdr/` files without following the galdr skill workflows
+
+---
 
 ## Codex-Specific Notes
 
 ### Rules
-Codex uses `.codex/rules/*.rules` (Starlark format) for command execution policies.
-These are NOT the same as galdr's behavioral rules — galdr rules are delivered via AGENTS.md.
+Codex has no native rules folder. All galdr behavioral rules are delivered via `AGENTS.md` in the project root. Read it at session start.
 
 ### Skills
 Skills are registered in `.codex/config.toml` under `[[skills.config]]` entries.
 Each skill is a folder containing `SKILL.md` with workflow instructions.
+galdr ships 17 core skills — see `.codex/skills/g-skl-*/SKILL.md`.
 
 ### Agents
 Agent roles are defined in `.codex/config.toml` under `[agents]`.
 Multi-agent support requires `features.multi_agent = true`.
 
-### MCP
-MCP servers are configured in `.codex/config.toml` under `[mcp_servers]` (TOML format).
-the galdr MCP server provides RAG search, Oracle queries, vault operations, and more.
+### No Hooks
+Codex does not support hooks. Session-start context comes from `AGENTS.md`.
+
+---
 
 ## Full Documentation
 

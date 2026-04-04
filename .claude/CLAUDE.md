@@ -1,51 +1,48 @@
-# Claude Code Project Rules
+# Claude Code — galdr System Instructions
 
-Detailed rules are in `.claude/rules/`. This file contains Claude Code-specific operational rules not covered there.
-
----
-
-## Rate Limit Graceful Shutdown (CRITICAL)
-
-**At ~85% daily rate limit usage, STOP accepting new tasks and wind down gracefully.**
-
-1. **No New Tasks**: Finish only what is actively in-progress
-2. **Wrap Up**: Complete in-progress edits, update TASKS.md atomically, stage completed work
-3. **Handoff Report** before stopping:
-   ```
-   ## Graceful Shutdown - Rate Limit Approaching
-   ### Completed This Session: [tasks with status]
-   ### Left In-Progress: [task ID, what was done, what remains, files touched]
-   ### Not Started: [task IDs planned but not begun]
-   ### Files Modified: [all files changed]
-   ### Git Status: [committed/uncommitted]
-   ```
-4. Clearly state you're stopping due to rate limits
-
-**WHY**: Other AIs (Cursor, Gemini) coordinate with this agent. Clean shutdown prevents sync issues.
+@AGENTS.md
 
 ---
 
-## Multi-Agent Concurrency (TTL-Based Locking)
+## Claude Code-Specific galdr Guidance
 
-Multiple AI agents may work the task backlog simultaneously. To prevent duplicate work:
+### Command Prefix
+Use `/g-` prefix for all galdr commands:
+- `/g-setup` — initialize galdr
+- `/g-task-new` — create a task
+- `/g-status` — project overview
+- `/g-medkit` — health check and repair
 
-**When picking up a task:**
-1. Skip any task marked `[📝]` or `[🔄]` in TASKS.md
-2. Picking a `[ ]` task to spec → immediately mark `[📝]`
-3. Picking a `[📋]` task to code → immediately mark `[🔄]`
-4. Write `status_changed` timestamp in task file YAML
+See `docs/COMMANDS.md` for the full command list.
 
-**Stale task recovery (TTL expiry):**
-- `[📝]` older than **1 hour** → abandoned spec, treat as `[ ]`
-- `[🔄]` older than **2 hours** → abandoned coding, treat as `[📋]`
-- No `status_changed` timestamp → assume stale, available for pickup
+### Rules
+Rules live in `.claude/rules/g-rl-*.md`. They load at every session. Do not edit them unless updating the galdr system itself.
 
-This is self-healing: dead/rate-limited agents don't create permanent locks.
+### Agents
+Invoke specialized agents with `@agent-name` syntax:
+- `@g-agnt-task-manager` — task lifecycle
+- `@g-agnt-qa-engineer` — bug tracking
+- `@g-agnt-code-reviewer` — code review
+- `@g-agnt-project` — planning and PRDs
 
----
+### Hooks
+Claude Code hooks live in `.claude/hooks/`. They fire on session start, agent complete, and before shell execution. Do not edit hook files unless updating the galdr system.
 
-## This Project's Default Stack
-- **Backend**: FastAPI + PostgreSQL + Redis
-- **Frontend**: React + TypeScript + Tailwind + Vite
-- **Desktop**: Electron
-- **Voice**: Edge-TTS + Whisper
+### Skills
+Skills are in `.claude/skills/g-skl-*/SKILL.md`. Invoke them by mentioning their purpose — Claude discovers and loads them automatically.
+
+### Multi-Agent Sessions
+When multiple agents are working simultaneously:
+- Skip tasks marked `[🔄]` (in-progress) — they are claimed
+- `[🔄]` older than **2 hours** without a `status_changed` update is stale and available for pickup
+- Always write `status_changed` timestamp to the task file when claiming a task
+
+### Rate Limit Graceful Shutdown
+At ~85% daily rate limit, stop accepting new tasks and produce a handoff report:
+```
+## Shutdown — Rate Limit Approaching
+### Completed This Session: [tasks]
+### Left In-Progress: [task ID, what was done, what remains]
+### Files Modified: [list]
+### Git Status: [committed/uncommitted]
+```
