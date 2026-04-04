@@ -9,21 +9,20 @@ Initialize the galdr system: $ARGUMENTS
 Initializes or reinitializes the galdr v3 task management system in the current project.
 Activates the **g-skl-setup** skill which handles the full initialization workflow.
 
+> **This is the slim galdr version.** Experiments, linking, vault, config, and phases
+> are full-version features only and must not be created here.
+
 ---
 
-## Step 1: Project Type Selection (MANDATORY FIRST QUESTION)
+## Step 1: Check for Existing Installation
 
-**Ask the user:**
-
-> "What type of project is this?
-> 1. **delivery** — building a defined product with features and milestones
-> 2. **research** — exploring unknown solutions, running experiments, testing hypotheses
->
-> (Default: delivery)"
-
-Set `Project Type` in `PROJECT.md` based on their answer. This affects:
-- Whether `HYPOTHESIS.md` is created (research only)
-- Whether sprint templates use milestone or experiment format
+```
+□ .galdr/TASKS.md exists AND > 20 lines?
+□ .galdr/tasks/ has > 5 files?
+□ PROJECT.md has non-template content?
+→ YES: EXISTING project → ask: Merge / Skip / Reset (DESTRUCTIVE)
+→ NO: FRESH install → proceed
+```
 
 ---
 
@@ -39,11 +38,11 @@ Create these folders if they don't exist:
 - `.galdr/reports/` — Cleanup and health reports
 - `docs/` — Project documentation
 
-**slim v3 does NOT create**: `config/`, `experiments/`, `linking/`, `vault/`, `phases/`, `tracking/`, `project/`, `temp_scripts/` — these are full-version or legacy paths.
+**Do NOT create**: `config/`, `experiments/`, `linking/`, `vault/`, `phases/`, `tracking/`, `project/`, `temp_scripts/` — these are full-version or legacy paths.
 
 ---
 
-## Step 3: Create Core Files (v3)
+## Step 3: Create Core Files (slim v3)
 
 Create these template files:
 - `.galdr/TASKS.md` — Master task checklist (sequential task IDs)
@@ -53,9 +52,8 @@ Create these template files:
 - `.galdr/BUGS.md` — Bug index (root level)
 - `.galdr/SUBSYSTEMS.md` — Component registry with mermaid graph
 - `.galdr/IDEA_BOARD.md` — Ideas parking lot
+- `.galdr/PRDS.md` — PRD index
 - `.galdr/.identity` — Project and user identity
-
-**Research projects** get the same slim structure — the `delivery` vs `research` type is recorded in `PROJECT.md` and affects how TASKS.md is formatted (milestone vs experiment log), but does NOT create extra folders.
 
 ---
 
