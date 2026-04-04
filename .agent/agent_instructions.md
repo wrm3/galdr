@@ -40,12 +40,9 @@ This is the most confusing structural difference. In Cursor and Claude Code, spe
 
 **Why this difference exists**: Antigravity's agent model is workflow-first. The IDE is built around planning and executing workflows, not just calling pre-defined agents. A "workflow" in Gemini is a slash-command that can include `// turbo` annotations for auto-execution steps.
 
-**Design note**: The `g-` prefix on workflows was intentionally kept consistent with commands on other platforms (e.g., `g-setup.md` in `workflows/` maps to `@g-setup` in Cursor). A `g-wkflw-` prefix was considered but rejected because:
-- The folder name `workflows/` already disambiguates
-- Cross-platform name parity (same `g-setup`, `g-sprint` names) aids mental mapping
-- The `g-` prefix alone follows the same convention as `g-*` commands everywhere else
+**Design note**: The `g-wkflw-` prefix on workflows makes them immediately distinguishable when reading references inside skills, agents, and rules — you see `g-wkflw-setup` and know it's a Gemini workflow without checking the folder. This is consistent with the galdr naming convention (agents = `g-agnt-`, skills = `g-skl-`, rules = `g-rl-`, hooks = `g-hk-`).
 
-If you prefer the sub-prefix for clarity, rename to `g-wkflw-*.md` — Gemini will still discover them.
+If you see `/g-wkflw-setup` in documentation, that is the Gemini-specific invocation. The equivalent `@g-setup` in Cursor and `/g-setup` in Claude/OpenCode/Codex reference the commands in their respective platforms — the workflow content is the same, but the file is named `g-wkflw-setup.md` in `.agent/workflows/` to distinguish it.
 
 ### GEMINI.md Auto-Loading
 `GEMINI.md` in the project root is Antigravity's project instruction file (equivalent to `CLAUDE.md`). It supplements `AGENTS.md` with Gemini-specific configuration.
@@ -103,7 +100,7 @@ MCP servers go in `mcp_config.json` at the project root (not inside `.agent/`):
 
 | Component | Prefix | Location |
 |-----------|--------|----------|
-| Workflows (≈agents) | `g-` | `.agent/workflows/g-*.md` |
+| Workflows (≈agents) | `g-wkflw-` | `.agent/workflows/g-wkflw-*.md` |
 | Skills | `g-skl-` | `.agent/skills/g-skl-*/SKILL.md` |
 | Commands | `g-` | `.agent/commands/g-*.md` |
 | Rules | `g-rl-` | `.agent/rules/g-rl-*.md` |

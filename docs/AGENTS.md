@@ -8,14 +8,15 @@ These agents are the core of the galdr system. Activate them explicitly for stru
 
 | Agent | File | Description | Best For |
 |-------|------|-------------|----------|
+| Agent | File | Description | Best For |
+|-------|------|-------------|----------|
 | `g-agnt-task-manager` | `g-agnt-task-manager.md` | Task lifecycle management | Creating, updating, completing tasks |
-| `g-agnt-planner` | `g-agnt-planner.md` | PRD and plan management | Project planning, PRD creation |
+| `g-agnt-project` | `g-agnt-project.md` | Project init, grooming, planning, PRDs | Project planning, PRD creation |
 | `g-agnt-qa-engineer` | `g-agnt-qa-engineer.md` | Bug tracking, quality assurance | Bug reports, QA workflows |
 | `g-agnt-code-reviewer` | `g-agnt-code-reviewer.md` | Code quality and security review | Pull request review, audits |
 | `g-agnt-infrastructure` | `g-agnt-infrastructure.md` | Project structure, scope | File organization, boundaries |
 | `g-agnt-ideas-goals` | `g-agnt-ideas-goals.md` | Idea capture and goal management | Brainstorming, goal setting |
 | `g-agnt-verifier` | `g-agnt-verifier.md` | Task verification | Checking completed work |
-| `g-agnt-project-manager` | `g-agnt-project-manager.md` | Project health and grooming | galdr file sync, structure repair |
 | `g-agnt-project-initializer` | `g-agnt-project-initializer.md` | New project setup | First-time galdr install |
 
 ## Development Persona Agents
@@ -74,7 +75,8 @@ These agents adopt development roles. Use them for actual coding work.
 |------|---------|---------|
 | galdr system agents | `g-agnt-{name}.md` | `g-agnt-task-manager.md` |
 | Skills | `g-skl-{name}/SKILL.md` | `g-skl-code-review/SKILL.md` |
-| Commands | `g-{name}.md` | `g-code-review.md` |
+| Commands (Cursor/Claude/OpenCode) | `g-{name}.md` | `g-code-review.md` |
+| Workflows (Gemini `.agent/workflows/`) | `g-wkflw-{name}.md` | `g-wkflw-code-review.md` |
 | Rules | `g-rl-{nnn}-{name}.mdc` | `g-rl-00-always.mdc` |
 | Hooks | `g-hk-{name}.ps1` | `g-hk-session-start.ps1` |
 

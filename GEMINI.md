@@ -23,24 +23,24 @@
 └── workflows/   # /slash-command automations
 ```
 
-### Invoking Commands
+### Invoking Workflows
 
-Use `/g-command-name` syntax in Gemini:
+Use `/g-wkflw-name` syntax in Gemini for workflows, `/g-name` for commands:
 
-| Command | Description |
-|---------|-------------|
-| `/g-setup` | Initialize galdr |
-| `/g-status` | Project status overview |
-| `/g-task-new` | Create a new task |
-| `/g-task-update` | Update task status |
-| `/g-bug-report` | Report a bug |
-| `/g-code-review` | Code review |
-| `/g-plan` | Create or update project plan |
-| `/g-medkit` | Health check and repair `.galdr/` |
-| `/g-git-commit` | Structured git commits |
-| `/g-idea-capture` | Capture an idea |
+| Workflow | Description |
+|----------|-------------|
+| `/g-wkflw-setup` | Initialize galdr |
+| `/g-wkflw-status` | Project status overview |
+| `/g-wkflw-task-new` | Create a new task |
+| `/g-wkflw-task-update` | Update task status |
+| `/g-wkflw-bug-report` | Report a bug |
+| `/g-wkflw-code-review` | Code review |
+| `/g-wkflw-plan` | Create or update project plan |
+| `/g-wkflw-medkit` | Health check and repair `.galdr/` |
+| `/g-wkflw-git-commit` | Structured git commits |
+| `/g-wkflw-idea-capture` | Capture an idea |
 
-See `docs/COMMANDS.md` for the full list.
+See `docs/COMMANDS.md` for the full list. Workflows (`g-wkflw-`) live in `.agent/workflows/`; commands (`g-`) live in `.agent/commands/`.
 
 ---
 
