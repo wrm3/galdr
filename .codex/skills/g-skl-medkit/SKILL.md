@@ -41,7 +41,7 @@ Default is **dry-run** on UPGRADE and REPAIR. MAINTAIN always applies immediatel
 
 ---
 
-## Phase 1: Folder Structure (UPGRADE + REPAIR only)
+## Step 1: Folder Structure (UPGRADE + REPAIR only)
 
 Verify every required `.galdr/` folder exists. Create missing ones silently.
 
@@ -58,19 +58,19 @@ Report any folders created.
 
 ---
 
-## Phase 2: Root File Audit (UPGRADE + REPAIR only)
+## Step 2: Root File Audit (UPGRADE + REPAIR only)
 
-Check each required root file. Create from template if missing. For existing files, run Phase 3 health checks.
+Check each required root file. Create from template if missing. For existing files, run Step 3 health checks.
 
 | File | If Missing | Health Check |
 |---|---|---|
-| `TASKS.md` | Create empty template | Phase 3 → Task Sync |
-| `BUGS.md` | Create empty template | Phase 3 → Bug Sync |
+| `TASKS.md` | Create empty template | Step 3 → Task Sync |
+| `BUGS.md` | Create empty template | Step 3 → Bug Sync |
 | `PLAN.md` | Create empty template | Has `## Current Focus` and `## Deliverable Index`? |
 | `PRDS.md` | Create empty template | Has `## PRD Index` table? |
-| `PROJECT.md` | Create empty template | Phase 3 → Goals Check |
+| `PROJECT.md` | Create empty template | Step 3 → Goals Check |
 | `CONSTRAINTS.md` | Create header-only stub | Has `## Architectural Constraints`? |
-| `SUBSYSTEMS.md` | Create empty template | Phase 3 → Subsystem Sync |
+| `SUBSYSTEMS.md` | Create empty template | Step 3 → Subsystem Sync |
 | `IDEA_BOARD.md` | Create empty template | Has `## Active Ideas` section? |
 
 **Empty templates:**
@@ -118,7 +118,7 @@ Check each required root file. Create from template if missing. For existing fil
 
 ---
 
-## Phase 3: Per-File Deep Health (UPGRADE + REPAIR only)
+## Step 3: Per-File Deep Health (UPGRADE + REPAIR only)
 
 ### 3a. .identity Integrity
 Verify all fields present and valid:
@@ -174,7 +174,7 @@ For each `subsystems/*.md`:
 
 ---
 
-## Phase 4: Placeholder Sweep (UPGRADE + REPAIR only)
+## Step 4: Placeholder Sweep (UPGRADE + REPAIR only)
 
 Scan ALL `.galdr/**/*.md` for unfilled template patterns:
 ```
@@ -190,7 +190,7 @@ YYYY-MM-DD      (literal string, not an actual date)
 
 ---
 
-## Phase 5: Platform Parity Audit (ALL modes)
+## Step 5: Platform Parity Audit (ALL modes)
 
 Compare file lists between `.cursor/rules/`, `.claude/rules/`, `.agent/rules/`:
 - Read `PARITY_EXCLUDES.md` (in this skill's folder) first — skip excluded files
@@ -198,7 +198,7 @@ Compare file lists between `.cursor/rules/`, `.claude/rules/`, `.agent/rules/`:
 
 ---
 
-## Phase 6: Routine Maintenance (ALL modes)
+## Step 6: Routine Maintenance (ALL modes)
 
 ### TTL Check
 For each `in-progress` task: is `now > claim_expires_at`?
@@ -234,7 +234,7 @@ Activate **g-tasks → SPRINT PLAN** → write result to `.galdr/config/SPRINT.m
 
 ---
 
-## Phase 7: Version Bump (UPGRADE mode only, apply confirmed)
+## Step 7: Version Bump (UPGRADE mode only, apply confirmed)
 
 Write new `galdr_version` to `.galdr/.identity`.
 
@@ -251,7 +251,7 @@ Append to `.galdr/reports/UPGRADE_LOG.md`:
 
 ---
 
-## Phase 8: Report
+## Step 8: Report
 
 Print to console AND write to `.galdr/reports/{YYYYMMDD_HHMMSS}_MEDKIT_REPORT.md`:
 

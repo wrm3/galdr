@@ -17,50 +17,36 @@ description: Own and manage PROJECT.md (mission, goals, project linking) and CON
 ```markdown
 # PROJECT.md — {project_name}
 
-## Mission
-[One sentence: what this project does and why it exists]
+## Vision
+[2-3 sentences: what the world looks like when this succeeds. Plain language — readable by a manager, customer, or exec without technical background. No acronyms, no stack names.]
 
-## Current Focus
-[Active development area — updated each phase/sprint]
+## Mission
+[One paragraph: what this project does, who it's for, and what problem it solves. If you can't explain it without saying "microservices", rewrite it.]
 
 ## Goals
+Business-readable outcomes. No developer jargon.
 
-### Vision
-[1-2 sentences: what success looks like]
+- **G-01**: [A concrete outcome users or the business will experience. e.g. "Customers can track their order status without calling support."]
+- **G-02**: [Another outcome. e.g. "The team can ship fixes without a scheduled maintenance window."]
 
-### Primary Goals
-| ID | Goal | Target / Metric | Status |
-|---|---|---|---|
-| G-01 | [Goal name] | [Measurable outcome] | active |
-| G-02 | [Goal name] | [Measurable outcome] | active |
-
-### Secondary Goals
-- **[Goal name]**: [How it supports primary goals]
-
-### Non-Goals (Explicitly Out of Scope)
-- [Things we are NOT building]
-
-### Success Metrics
-- [Quantifiable targets]
-
-### Goal Log
-| Date | Change | Reason |
-|---|---|---|
-| YYYY-MM-DD | Initial creation | Project setup |
+## Non-Goals (Explicitly Out of Scope)
+- [e.g. "This project will not replace the billing system."]
 
 ## Project Linking
-<!-- Cross-project relationships — see g-project-linking -->
-relationships: none
-parents: []
-children: []
-siblings: []
+No parent, sibling, or child projects configured yet.
+Use `@g-topology` to manage relationships.
+
+## Key References
+- **Plan**: `PLAN.md` | **Constraints**: `CONSTRAINTS.md` | **PRDs**: `prds/` | **Tasks**: `TASKS.md`
 ```
 
 **Gather goals** (ask if not clear from context):
-- "What is the primary outcome this project must achieve?"
-- "What does success look like in 3-6 months?"
+- "What outcome will users experience when this is done?"
+- "What does success look like in plain terms, without technical details?"
 - "What are we explicitly NOT building?"
-- "How will we measure success?"
+- "How will a non-technical person know this worked?"
+
+**Goal quality check** — goals should pass the "manager test": can someone without a CS degree read this and know whether it was achieved? If not, rewrite it.
 
 **Goal change protocol**: never delete — mark old goals as `complete` or `retired` + add Goal Log entry.
 

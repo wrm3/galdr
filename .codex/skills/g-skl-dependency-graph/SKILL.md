@@ -1,6 +1,6 @@
 ---
 name: g-skl-dependency-graph
-description: Generate and update .galdr/DEPENDENCY_GRAPH.md from task file dependencies. Auto-triggered when tasks are created or updated with dependency changes. Also callable via @g-cleanup.
+description: Generate and update .galdr/DEPENDENCY_GRAPH.md from task file dependencies. Auto-triggered when tasks are created or updated with dependency changes. Also callable via @g-dependency-graph.
 ---
 # galdr-dependency-graph
 
@@ -17,7 +17,6 @@ Read all `.galdr/tasks/task*.md` files. For each, extract from YAML frontmatter:
 - `id`
 - `title`
 - `status`
-- `phase`
 - `subsystem` (or `subsystems`)
 - `priority`
 - `dependencies` (array of task IDs)
@@ -118,15 +117,15 @@ graph TD
 
 ---
 
-*Auto-regenerated on task dependency changes. Manual: `@g-cleanup`*
+*Auto-regenerated on task dependency changes. Manual: `@g-dependency-graph`*
 ```
 
 ## Integration Points
 
 This skill is triggered by:
-1. **galdr-task-new** — after creating a task with non-empty `dependencies`
-2. **galdr-task-update** — after updating a task's `dependencies` field
-3. **galdr-cleanup** — Step 8 of nightly cleanup
-4. **galdr-workflow** — Mode C dependency diagram
+1. **g-skl-tasks** — after creating a task with non-empty `dependencies`
+2. **g-skl-tasks** — after updating a task's `dependencies` field
+3. **g-skl-medkit** — Phase 6 routine maintenance
+4. **`@g-dependency-graph`** command — direct invocation
 
 The graph is always regenerated from scratch (not incrementally) to avoid drift.
