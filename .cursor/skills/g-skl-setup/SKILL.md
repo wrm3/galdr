@@ -7,6 +7,19 @@ description: Initialize galdr in a project — folder structure and template fil
 ## When to Use
 First-time setup of galdr in a project. @g-setup command.
 
+## Slim vs Full — Know Which You Are Installing
+
+**This skill creates the SLIM layout.** Do not create the folders marked "full only" below.
+
+| Folder | Slim | Full (galdr_full only) |
+|--------|------|------------------------|
+| `tasks/`, `bugs/`, `prds/`, `subsystems/`, `reports/`, `logs/` | ✅ | ✅ |
+| `config/` (HEARTBEAT.md, SPRINT.md, AGENT_CONFIG.md) | ❌ | ✅ |
+| `experiments/` (EXPERIMENTS.md, HYPOTHESIS.md, SELF_EVOLUTION.md) | ❌ | ✅ |
+| `linking/` (README.md, INBOX.md) | ❌ | ✅ |
+| `vault/` | ❌ | ✅ |
+| `phases/` (legacy v2) | ❌ | ✅ |
+
 ## Steps
 
 1. **Detect if existing** (check before creating anything):
@@ -24,50 +37,43 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/phases/`, `.galdr/prds/`, `.galdr/bugs/`, `   - **Research-type projects:** when creating `   - Files: Use g-project (CREATE PROJECT.MD) and g-plan (CREATE PLAN.MD) for all file generation
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/subsystems/`, `.galdr/reports/`, `.galdr/logs/`
+   - **Research-type projects:** when creating `TASKS.md`, add a research log section below the task list
+   - Files: Use g-project (CREATE PROJECT.MD) and g-plan (CREATE PLAN.MD) for all file generation
 
 4. **Generate .identity**:
    ```bash
    python -c "import uuid; print(uuid.uuid4())" > .galdr/.identity
    ```
 
-5. **Verify structure** (v3 layout):
+5. **Verify structure** (slim v3 layout — ground truth from G:\galdr\.galdr):
    ```
    .galdr/ ✅
+   ├── .identity ✅
+   ├── .gitignore ✅
    ├── TASKS.md ✅
    ├── PLAN.md ✅                 ← master strategy (above PRDs)
-   ├── PROJECT.md ✅             ← mission, goals, **Project Linking**
+   ├── PROJECT.md ✅             ← mission, goals, Project Linking
    ├── CONSTRAINTS.md ✅         ← non-negotiable constraints
    ├── BUGS.md ✅                ← bug index (root)
    ├── SUBSYSTEMS.md ✅
-   ├── .identity ✅
-   ├── prds/ ✅                  ← one or more PRD files
+   ├── IDEA_BOARD.md ✅
+   ├── PRDS.md ✅                ← PRD index
+   ├── prds/ ✅                  ← individual PRD files
    ├── bugs/ ✅                  ← optional per-bug detail files
-   ├── config/ ✅
-   │   ├── HEARTBEAT.md ✅
-   │   ├── SPRINT.md ✅
-   │   └── AGENT_CONFIG.md ✅
-   ├── experiments/ ✅
-   │   ├── EXPERIMENTS.md ✅      ← experiment index / active list
-   │   ├── HYPOTHESIS.md ✅
-   │   └── SELF_EVOLUTION.md ✅   ← galdr meta-evolution (not SYSTEM_EXPERIMENTS.md)
    ├── reports/ ✅
-   │   └── CLEANUP_REPORT.md ✅
-   ├──  ✅
-   │   ├── IDEA_BOARD.md ✅
-   │   └── INBOX.md ✅           ← cross-project message queue
+   ├── logs/ ✅
    ├── subsystems/ ✅            ← per-subsystem spec files
-   ├── linking/ ✅             ← shared contract specs
-   │   └── README.md ✅
-   ├── tasks/ ✅
-   └── phases/ ✅                ← optional phase milestone files
+   └── tasks/ ✅
    docs/ ✅
-   temp_scripts/ ✅
    ```
 
-6. **Create cross-project scaffolding** (if not already present from galdr_install):
-   - `.galdr/PROJECT.md` — include a **Project Linking** section (parents, children, siblings); starts with `relationships: none` or equivalent
-   - `   - `
+   > **NOT in slim:** `config/`, `experiments/`, `linking/`, `vault/`, `phases/`
+   > These belong in `galdr_full` only. Do not create them here.
+
+6. **Create PROJECT.MD scaffolding**:
+   - `.galdr/PROJECT.md` — include a **Project Linking** section (parents, children, siblings); starts with `relationships: none`
+
 7. **Subsystem Discovery** (run after folder creation):
    Scan the project to identify subsystems. For each, create a spec file in `.galdr/subsystems/`:
    

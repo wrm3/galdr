@@ -7,20 +7,28 @@ alwaysApply: true
 # Session Start Protocol
 
 ## .galdr/ Folder Layout (v3)
+
+**SLIM layout** (galdr base — what g-skl-setup creates):
 ```
 .galdr/
 ├── .identity             # project_id, project_name, user_id, user_name, galdr_version, vault_location
-├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md
-├── prds/       # One or more PRD markdown files
+├── .gitignore
+├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, IDEA_BOARD.md, PRDS.md
+├── prds/       # Individual PRD files
 ├── bugs/       # Individual bug detail files (optional; index in BUGS.md)
-├── config/     # HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md, AGENT_CONFIG.md
-├── experiments/ # EXPERIMENTS.md, SELF_EVOLUTION.md, HYPOTHESIS.md, EXPERIMENT_TEMPLATE.md, EXP-NNN.md
-├── reports/    # CLEANUP_REPORT.md
-├── IDEA_BOARD.md     # idea capture
+├── reports/
+├── logs/
 ├── subsystems/ # Per-subsystem spec files (subsystem_name.md)
-├── tasks/      # Individual task files (sequential task IDs)
-├── phases/     # Legacy v2 only — phase defs / archives; omit on greenfield v3
-├── linking/, vault/, logs/
+└── tasks/      # Individual task files (sequential task IDs)
+```
+
+**FULL layout additions** (galdr_full only — do NOT create in slim projects):
+```
+├── config/      # HEARTBEAT.md, SPRINT.md, AGENT_CONFIG.md
+├── experiments/ # EXPERIMENTS.md, SELF_EVOLUTION.md, HYPOTHESIS.md, EXP-NNN.md
+├── linking/     # README.md, INBOX.md — cross-project coordination
+├── vault/       # encrypted/sensitive context
+└── phases/      # Legacy v2 only — phase defs / archives
 ```
 
 ## Display at Session Start (when .galdr/ exists)
