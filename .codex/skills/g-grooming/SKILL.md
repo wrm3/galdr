@@ -1,85 +1,121 @@
 ---
 name: g-grooming
-description: Step-by-step workflow for initializing blank .galdr/ files, fixing template placeholders, healing sync mismatches, and validating completeness. Called by galdr-project-manager agent or directly via @g-grooming.
+description: Day-to-day .galdr/ health — fix placeholder text, heal TASKS.md sync drift, validate YAML frontmatter, check Goals, and report. For structural migration or version bumps use g-upgrade instead.
 ---
-# galdr-grooming
+# g-grooming
 
-## When to Use
-Called by `g-project-manager` in GROOM mode, or directly via `@g-grooming`.
-Use when: fixing broken `.galdr/` files, filling placeholders, healing sync, health check.
+**Files Touched**: `.galdr/**/*.md` (reads and patches, never creates new files)
+
+**Activate for**: `@g-grooming`, "fix galdr files", "placeholders", "sync is broken", "groom project". Called by `g-project-manager` in GROOM mode.
+
+**Does NOT**: create missing folders or root files (use `g-upgrade`), bump `galdr_version` (use `g-upgrade`), do first-time setup (use `g-setup`).
+
+---
 
 ## Step 1: Detect Mode
+
 ```
 □ Does .galdr/ exist with 5+ real (non-template) files?
-  → YES: proceed with GROOM steps below
-  → NO: invoke g-setup
+  → YES: run GROOM steps below
+  → NO: stop — invoke g-setup first
+□ Is user requesting a version migration or structural change?
+  → YES: stop — invoke g-upgrade instead
 ```
+
+---
 
 ## Step 2: Template Placeholder Audit
-Scan all `.galdr/**/*.md` (root, config/, docs/, tracking/) for these patterns (auto-fill or flag for user):
+
+Scan all `.galdr/**/*.md` for unfilled template patterns:
+
 ```
-{project_name}  {Project Name}  {PROJECT_NAME}
-{Goal name}     {Measurable outcome}  {Target}
-{Phase Name}    {subsystem-name-1}    {subsystem-name-2}
-[Brief mission from PROJECT.md]
-[Phase and focus area]
-YYYY-MM-DD   (as literal unfilled date)
+{project_name}    {Project Name}    {PROJECT_NAME}
+{Goal name}       {Measurable outcome}    {Target}
+{subsystem-name-1}    {subsystem-name-2}
+YYYY-MM-DD        (literal string, not an actual date)
 [Your name here]  [Developer]
+[Brief mission from PROJECT.md]
 ```
-Fill from `.galdr/PROJECT.md` where possible. Collect unknowns, ask user once at end.
+
+- Auto-fill `{project_name}` from `.galdr/.identity` `project_name` field
+- Collect all remaining unknowns → ask user **once** at the end (batch, not per-file interrupt)
+
+---
 
 ## Step 3: .identity Check
+
 ```
-□ Does .galdr/.identity exist with valid UUID?
-  → NO: python -c "import uuid; print(uuid.uuid4())" → write to .galdr/.identity
-  → Note: Required for memory hooks — missing = silent capture failure
+□ Does .galdr/.identity exist?
+  → NO: STOP — run g-setup (never auto-create .identity mid-groom)
+□ Does it have a valid project_id (UUID format)?
+  → NO: STOP — run g-setup
+□ Missing other fields (project_name, user_id, user_name, galdr_version, vault_location)?
+  → Fill with defaults, note in report
 ```
 
-## Step 4: TASKS.md ↔ Task File Sync
-Search paths (in order):
-1. `.galdr/tasks/task{id}_*.md` — active tasks
-2. `.galdr/
-Status:
-- ✅ ACTIVE = found in tasks/
-- 📦 ARCHIVED = found in phases/phase*/
-- ⚠️ PHANTOM = not found in either (in TASKS.md but no file)
-- ⚠️ ORPHAN = file exists but not in TASKS.md
+---
 
-Auto-fix mismatches: file is source of truth — fix TASKS.md.
-Phantoms/orphans: report and offer fix.
+## Step 4: TASKS.md ↔ tasks/ Sync
 
-## Step 5: YAML Frontmatter Validation
-Required fields: `id, title, status, priority, phase`
-vNext fields: `blast_radius, requires_verification, ai_safe`
+Activate **g-tasks → SYNC CHECK operation**. Collect results.
 
-Missing required → add with sensible defaults
-Missing vNext → add: `blast_radius: "low"`, `requires_verification: false`, `ai_safe: true`, `tags: [legacy-upgraded]`
+- Status mismatches → auto-fix TASKS.md (file is source of truth)
+- Phantoms and orphans → report and offer fix options (do not auto-fix)
 
-## Step 6: PROJECT.md Goals health
+---
+
+## Step 5: Task File YAML Validation
+
+For each `.galdr/tasks/taskNNN_*.md`:
+
+**Required fields** — add with defaults if missing:
+- `id, title, type, status, priority, subsystems, created_date`
+
+**Recommended fields** — add if missing:
+- `blast_radius: low`
+- `requires_verification: false`
+- `ai_safe: true`
+
+**Stale legacy fields** — flag but do NOT auto-remove (use g-upgrade for migrations):
+- `phase:` field → flag as legacy
+
+---
+
+## Step 6: PROJECT.md Goals Health
+
 ```
-□ `.galdr/PROJECT.md` exists with a Goals section? → NO: generate from mission vision + success criteria
-□ Contains {Goal name} or {Measurable outcome}? → treat as missing, regenerate
-□ Has at least G-01 and G-02? → if not, flag for user
+□ .galdr/PROJECT.md exists with a ## Goals section?
+  → NO: offer to run g-project CREATE/UPDATE PROJECT.MD
+□ Contains {Goal name} or {Measurable outcome} placeholder?
+  → Treat as unfilled, flag for user
+□ Has at least G-01?
+  → If not, flag for user
 ```
+
+---
 
 ## Step 7: SUBSYSTEMS.md Staleness
-Collect all unique values from `subsystems:` fields across all task files.
+
+Collect all unique `subsystems:` values across all task files.
 Compare to SUBSYSTEMS.md entries.
-Missing entries → add stub rows with `status: active`.
+Missing entries → add stub rows with `status: active` and note in report.
+
+---
 
 ## Step 8: Grooming Report
+
 ```
 ═══════════════════════════════════
 GALDR GROOMING REPORT — {date}
 ═══════════════════════════════════
-✅ .identity: valid UUID present
+✅ .identity:        valid
 ✅ TASKS.md ↔ files: 12/12 synced
-⚠️  Placeholders filled: 3 (PROJECT.md Goals)
-⚠️  Legacy YAML upgraded: 2 task files
-❌ Phase sync: phase3_*.md missing — created stub
-✅ SUBSYSTEMS.md: 4 subsystems, all current
+⚠️  Placeholders:    3 filled, 1 needs user input
+⚠️  YAML upgraded:   2 task files (blast_radius added)
+✅ SUBSYSTEMS.md:    4 subsystems, all current
+✅ PROJECT.md:       Goals present
 
-ACTIONS TAKEN: [list each change]
+ACTIONS TAKEN: [list each change made]
 MANUAL REVIEW NEEDED: [list items needing user input]
 ═══════════════════════════════════
 ```
