@@ -253,7 +253,7 @@ Append to `.galdr/reports/UPGRADE_LOG.md`:
 
 ## Phase 8: Report
 
-Print to console AND write to `.galdr/reports/MEDKIT_REPORT_{date}.md`:
+Print to console AND write to `.galdr/reports/{YYYYMMDD_HHMMSS}_MEDKIT_REPORT.md`:
 
 ```
 ╔══════════════════════════════════════════╗
