@@ -1,69 +1,126 @@
 # galdr Skills Reference
 
-Skills provide specialized capabilities and domain knowledge for AI agents.
+Skills are the engine behind every command and agent. Each skill owns a specific domain and provides detailed, step-by-step workflows.
 
-## Task Management
+## Naming Convention
+
+All galdr skills use the `g-skl-{name}` folder prefix. The entry point is always `SKILL.md` inside that folder.
+
+---
+
+## Core galdr Skills (File-Centric Architecture)
+
+Each skill "owns" specific `.galdr/` files. Only its owner skill should write to those files.
+
+| Skill | Owns | Description |
+|-------|------|-------------|
+| `g-skl-tasks` | `TASKS.md`, `tasks/` | Task creation, status updates, sync check, complexity scoring, sprint planning |
+| `g-skl-bugs` | `BUGS.md`, `bugs/` | Bug reporting, bug fixes, quality metrics |
+| `g-skl-ideas` | `IDEA_BOARD.md` | Idea capture, review, promotion to tasks, proactive scanning |
+| `g-skl-plan` | `PLAN.md`, `PRDS.md`, `prds/` | Plan creation, PRD writing, phase management |
+| `g-skl-project` | `PROJECT.md`, `CONSTRAINTS.md` | Project identity, goals, architectural constraints |
+| `g-skl-subsystems` | `SUBSYSTEMS.md`, `subsystems/` | Subsystem discovery, spec creation, activity logging, sync |
+| `g-skl-medkit` | `.galdr/` (all files) | Health check, structural repair, version migration, routine maintenance |
+| `g-skl-setup` | `.galdr/.identity` (initial) | First-time galdr initialization |
+
+---
+
+## Workflow Skills
+
 | Skill | Description |
 |-------|-------------|
-| `g-task-management` | Task lifecycle and status management |
-| `g-planning` | PRD creation, phase management |
-| `g-qa` | Bug tracking and quality assurance |
-| `g-code-reviewer` | Comprehensive code reviews |
-| `g-ideas-goals` | Idea board and project goals |
+| `g-skl-code-review` | Security, quality, performance review. Scales from quick scan to full architecture audit. |
+| `g-skl-status` | Project status — session context, active tasks, goals, ideas |
+| `g-skl-sprint` | Autonomous 2-hour sprint execution |
+| `g-skl-git-commit` | Well-structured commits following galdr conventions |
+| `g-skl-harvest` | Analyze external sources and propose selective improvements |
+| `g-skl-report` | Project health report generation |
+| `g-skl-swot-review` | Automated SWOT analysis for the current project phase |
+| `g-skl-verify-ladder` | Multi-level verification gates for completed tasks |
 
-## Cross-Project Coordination
+---
+
+## Cross-Project Skills
+
 | Skill | Description |
 |-------|-------------|
-| `g-project-linking` | View/edit project linking (PROJECT_TOPOLOGY.md) |
-| `g-inbox` | Review cross-project coordination queue |
-| `g-broadcast` | Push tasks to child projects |
-| `g-request` | Request action from parent project |
-| `g-peer-sync` | Sync contracts with sibling projects |
-| `g-graph` | Display project ecosystem graph |
+| `g-skl-broadcast` | Push tasks to child projects with cascade depth |
+| `g-skl-peer-sync` | Sync shared contracts with sibling projects |
+| `g-skl-request` | Child project requests parent action |
+| `g-skl-inbox` | Review and action cross-project coordination queue |
+| `g-skl-graph` | Assemble and display the project ecosystem graph (3 hops) |
+| `g-skl-topology` | View or edit cross-project topology declarations |
 
-## Video & 3D Production
+---
+
+## Development Skills
+
+| Skill | Description |
+|-------|-------------|
+| `database-standards` | Oracle, MySQL, PostgreSQL naming and coding conventions |
+| `github-integration` | GitHub repos, issues, PRs, Actions, gh CLI |
+| `mcp-builder` | MCP server development with FastMCP |
+| `cicd-pipelines` | CI/CD for GitHub Actions, GitLab CI, Jenkins |
+| `kubernetes-operations` | K8s cluster management, kubectl, Helm |
+| `portainer-management` | Container management via Portainer |
+| `cloud-engineering` | AWS, GCP, Azure architecture and IaC |
+| `ai-ml-development` | Model training, RLHF, RAG, MLOps |
+| `web3-blockchain` | EVM, Solana, Solidity, DeFi, NFTs |
+| `research-methodology` | Deep multi-source research and synthesis |
+
+---
+
+## Video & 3D Skills
+
 | Skill | Description |
 |-------|-------------|
 | `remotion-video` | Programmatic video creation in React |
 | `manim-animation` | Mathematical animations (3Blue1Brown style) |
 | `storyboard-creation` | Film/video storyboarding |
-| `ai-video-generation` | AI video with 40+ models |
+| `ai-video-generation` | AI video with 40+ models (Veo, Wan, Seedance, etc.) |
 | `ai-avatar-lipsync` | AI avatars and talking head videos |
 | `animation-principles` | Disney's 12 principles for interactive 3D |
 | `algorithmic-art` | Generative art with p5.js |
-| `explainer-video` | Explainer video production |
+| `explainer-video` | Explainer video production workflow |
+| `3d-performance` | 3D web scene optimization (LOD, culling, draw calls) |
+| `asset-optimization` | GLB/GLTF compression pipeline |
 
-## Development Tools
+---
+
+## Business & Startup Skills
+
 | Skill | Description |
 |-------|-------------|
-| `database-standards` | Oracle, MySQL, PostgreSQL conventions |
-| `github-integration` | GitHub workflows and automation |
-| `mcp-builder` | MCP server development |
-| `cicd-pipelines` | CI/CD for GitHub Actions, GitLab, Jenkins |
-| `kubernetes-operations` | K8s cluster management |
-| `portainer-management` | Container management |
+| `startup-business-formation` | Delaware C-Corp, entity choice, equity, 83(b) |
+| `startup-vc-fundraising` | VC fundraising, pitch decks, term sheets |
+| `startup-product-development` | MVP, roadmaps, PMF, build vs buy |
+| `startup-resource-access` | Cloud credits, accelerators, grants |
+| `business-operations` | HR, payroll, compensation, finance |
+| `nonprofit-formation` | 501(c)(3), tax-exempt formation |
+| `patent-filing-ai` | AI/ML patents, provisional and utility |
 
-## Business & Startup
+---
+
+## IDE & Config Skills
+
 | Skill | Description |
 |-------|-------------|
-| `startup-business-formation` | Entity formation, legal structure |
-| `startup-vc-fundraising` | VC fundraising, pitch decks |
-| `startup-product-development` | MVP, product roadmap |
-| `startup-resource-access` | Cloud credits, lab space |
-| `business-operations` | HR, compensation, finance |
-| `nonprofit-formation` | 501(c)(3), tax-exempt entities |
-| `patent-filing-ai` | AI/ML patent guidance |
+| `cursor-project-config` | Maintain .cursor/ IDE configuration |
+| `claude-code-project-config` | Maintain .claude/ project configuration |
+| `cursor-cli` | Cursor CLI (`agent`) modes and API |
+| `claude-cli` | Claude Code CLI flags and sessions |
+| `gemini-cli` | Gemini CLI reference |
+| `skill-creator` | Author new skills following galdr conventions |
+| `agent-creator` | Create new agent definitions |
+| `project-setup` | Scaffold new repositories |
 
-## AI & ML
+---
+
+## Knowledge & Vault Skills
+
 | Skill | Description |
 |-------|-------------|
-| `ai-ml-development` | Model training, deployment, MLOps |
-
-## Research & Knowledge
-| Skill | Description |
-|-------|-------------|
-| `research-methodology` | Structured research workflows |
-| `g-harvest` | Harvest ideas from external sources |
-| `g-vault` | File-based knowledge store |
-| `g-knowledge-refresh` | Vault freshness and maintenance |
-| `youtube-video-analysis` | YouTube video processing |
+| `g-skl-vault` | Read/write vault notes across projects |
+| `g-skl-knowledge-refresh` | Audit vault freshness, re-fetch expired sources |
+| `g-skl-platform-crawl` | Crawl docs and web with crawl4ai |
+| `youtube-video-analysis` | YouTube metadata, transcript, vision analysis |

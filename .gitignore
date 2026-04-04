@@ -1,32 +1,28 @@
 # galdr - Public Repository .gitignore
-# Managed by galdr v1.0.0 — https://github.com/wrm3/galdr
-#
-# IMPORTANT: These files are gitignored but NOT cursorignored.
-# The AI agents read them from the filesystem and must obey the rules within.
-# Git just doesn't track them because they contain personal/machine-specific content.
+# Managed by galdr v1.0.0 - https://github.com/wrm3/galdr
 
-
-# galdr project data (live project state, not template)
-/.galdr/
-
-# galdr template (root-level copy, identical to templates/.galdr_template/)
-/.galdr_template/
-
-# Root-level docs that get personalized per-user
-/AGENTS.md
-/CLAUDE.md
-/GEMINI.md
-/GUARDRAILS.md
-
-# Cursor/IDE machine-specific
-/.mcp.json
-/.cursorignore
 
 # ============================================================
 # Environment and secrets
 # ============================================================
 .env
 *.env.local
+
+# Machine-specific MCP config
+.mcp.json
+
+
+# ============================================================
+# .galdr/ — task management data
+# ============================================================
+# The .galdr/ folder contains project-specific task tracking data.
+# In the SOURCE REPO (this repo), .galdr/ is local only and not committed.
+# Consumer projects may choose to commit .galdr/ selectively.
+.galdr/
+
+# galdr template (root-level copy)
+.galdr_template/
+
 
 # ============================================================
 # Generated / runtime (not source)
@@ -70,11 +66,6 @@ desktop.ini
 # Docker volumes
 postgres_data/
 
-# Research and temp (not tracked in public repo)
-research/
-temp_scripts/
-temp_docs/
-
 # Logs
 *.log
 logs/
@@ -86,6 +77,14 @@ logs/
 worktrees/
 
 # Scripts (host-side automation, may contain local paths)
-scripts/
+# Force-add individual scripts with: git add -f scripts/filename.ps1
+/scripts/
 
+# Research and temp (not tracked in public repo)
 research/
+
+# Temp folders (placeholder only, .gitkeep is tracked)
+temp_docs/*
+!temp_docs/.gitkeep
+temp_scripts/*
+!temp_scripts/.gitkeep
