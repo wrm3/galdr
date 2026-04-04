@@ -3,7 +3,6 @@ name: g-skl-verify-ladder
 description: >-
   Multi-level verification gates for autonomous task completion. Configurable
   levels from minimal (lint) to thorough (tests + acceptance + hallucination guard).
-  Integrates with g-sprint for automatic post-implementation verification.
 ---
 
 # g-verify-ladder
@@ -12,7 +11,7 @@ Configurable verification ladder that autonomous agents must pass before a task 
 
 ## When to Use
 
-- After implementing a task autonomously (g-sprint integration)
+- After implementing a task autonomously
 - When manually verifying a task (`@g-verify-ladder <task_id>`)
 - When a task has `verification_level` set in its YAML frontmatter
 
@@ -139,7 +138,6 @@ attempts: N
 
 | System | How |
 |--------|-----|
-| g-sprint | Runs verification ladder after task implementation |
 | g-verifier | Manual level triggers existing verification workflow |
 | Heartbeat | Verification results feed into KPI metrics |
 | WAKEUP_QUEUE | Failed thorough/high tasks create wakeup entries |

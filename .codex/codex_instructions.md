@@ -71,7 +71,7 @@ Unlike Cursor/Claude/Gemini where skills are auto-discovered by folder scanning,
 - `g-skl-bugs`, `g-skl-code-review`, `g-skl-dependency-graph`
 - `g-skl-git-commit`, `g-skl-ideas`, `g-skl-medkit`
 - `g-skl-plan`, `g-skl-project`, `g-skl-qa`, `g-skl-review`
-- `g-skl-setup`, `g-skl-sprint`, `g-skl-status`
+- `g-skl-setup`, `g-skl-status`
 - `g-skl-subsystems`, `g-skl-swot-review`, `g-skl-tasks`, `g-skl-verify-ladder`
 
 ### Multi-Agent Support

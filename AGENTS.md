@@ -78,7 +78,7 @@ Commands use `@g-` in Cursor, `/g-` in Claude Code.
 | `g-medkit` | Health check, repair, or upgrade `.galdr/` |
 | `g-dependency-graph` | Generate task dependency graph |
 | `g-git-commit` | Create structured commit messages |
-| `g-sprint` / `g-go` | Run an autonomous sprint |
+| `g-go` | Run autonomously through the backlog |
 | `g-broadcast` | Push task to child projects |
 | `g-inbox` | Review cross-project coordination |
 | `g-harvest` | Harvest improvements from external sources |

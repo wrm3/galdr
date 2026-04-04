@@ -34,7 +34,7 @@ It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneousl
 |-----------|-------|---------|
 | **Agents** | 9 | Task manager, code reviewer, QA engineer, project (planning + grooming), infrastructure, ideas, verifier, project initializer |
 | **Skills** | 17 | Task management, bugs, ideas, plan, project, subsystems, medkit, code review, sprint, git, harvest, dependency graph, and more |
-| **Commands** | 25 | `@g-task-new`, `@g-code-review`, `@g-plan`, `@g-sprint`, `@g-medkit`, `@g-dependency-graph`, `@g-status`, `@g-bug-report` |
+| **Commands** | 24 | `@g-task-new`, `@g-code-review`, `@g-plan`, `@g-go`, `@g-medkit`, `@g-dependency-graph`, `@g-status`, `@g-bug-report` |
 | **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, server-side crawl, health reports |
 | **Hooks** | 4 | Session start, agent complete, user setup, shell validation |
 | **Rules** | 10 | Always-apply rules for documentation, git workflow, error reporting, task completion gates |

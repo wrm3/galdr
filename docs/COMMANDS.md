@@ -80,8 +80,7 @@ All commands are thin wrappers — they activate the underlying skill. See `docs
 | Command | Activates Skill | Description |
 |---------|----------------|-------------|
 | `g-git-commit` | `g-skl-git-commit` | Create well-structured commits |
-| `g-go` | `g-skl-sprint` | Run an autonomous sprint |
-| `g-sprint` | `g-skl-sprint` | Sprint planning and execution |
+| `g-go` | `g-skl-tasks` → AUTONOMOUS RUN | Work through the task backlog autonomously |
 | `g-review` | **Deprecated** → use `g-code-review` | (redirects to g-skl-code-review) |
 
 ---

@@ -72,10 +72,6 @@ path = ".codex/skills/g-skl-setup"
 enabled = true
 
 [[skills.config]]
-path = ".codex/skills/g-skl-sprint"
-enabled = true
-
-[[skills.config]]
 path = ".codex/skills/g-skl-status"
 enabled = true
 

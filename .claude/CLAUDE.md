@@ -22,8 +22,7 @@ Use `/g-` for all galdr commands. See `docs/COMMANDS.md` for the full reference.
 | `/g-qa` | Quality assurance activation |
 | `/g-code-review` | Comprehensive code review |
 | `/g-plan` | Create or update project plan |
-| `/g-sprint` | Run a 2-hour autonomous sprint |
-| `/g-go` | Run backlog autonomously |
+| `/g-go` | Work through the task backlog autonomously |
 | `/g-git-commit` | Structured git commit |
 | `/g-idea-capture` | Capture an idea |
 | `/g-idea-review` | Review and promote ideas |

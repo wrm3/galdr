@@ -122,15 +122,4 @@ After completing as many tasks as possible, present:
 @g-go critical and high only
 ```
 
-## What Makes This Different From @g-sprint
-
-| | @g-go | @g-sprint |
-|---|---|---|
-| Time limit | None (until done or blocked) | 2 hours |
-| Task source | TASKS.md backlog directly | SPRINT.md (pre-filtered) |
-| Questions | Saved until end | N/A (ai_safe tasks only) |
-| Verification | Self-completes tasks | Submits for separate verification |
-| Claim protocol | No git-based claiming | Atomic git claim with TTL |
-| Best for | Solo developer sessions | Multi-agent parallel work |
-
 Let's get to work.
