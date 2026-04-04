@@ -27,7 +27,7 @@ Set `Project Type` in `PROJECT.md` based on their answer. This affects:
 
 ---
 
-## Step 2: Create Directory Structure (v3 Layout)
+## Step 2: Create Directory Structure (slim v3 Layout)
 
 Create these folders if they don't exist:
 - `.galdr/` — Main working directory
@@ -37,11 +37,9 @@ Create these folders if they don't exist:
 - `.galdr/subsystems/` — Per-subsystem spec files
 - `.galdr/logs/` — Evidence and audit logs
 - `.galdr/reports/` — Cleanup and health reports
-- `.galdr/linking/` — Cross-project contracts
 - `docs/` — Project documentation
-- `temp_scripts/` — Scratch scripts (gitignored)
 
-**v3 does NOT use**: `phases/`, `tracking/`, `project/` subdirectories — these are legacy v2 paths.
+**slim v3 does NOT create**: `config/`, `experiments/`, `linking/`, `vault/`, `phases/`, `tracking/`, `project/`, `temp_scripts/` — these are full-version or legacy paths.
 
 ---
 
@@ -57,9 +55,7 @@ Create these template files:
 - `.galdr/IDEA_BOARD.md` — Ideas parking lot
 - `.galdr/.identity` — Project and user identity
 
-**Research projects also get:**
-- `.galdr/experiments/HYPOTHESIS.md` — Hypothesis tracker
-- `.galdr/experiments/EXPERIMENTS.md` — Experiment index
+**Research projects** get the same slim structure — the `delivery` vs `research` type is recorded in `PROJECT.md` and affects how TASKS.md is formatted (milestone vs experiment log), but does NOT create extra folders.
 
 ---
 
