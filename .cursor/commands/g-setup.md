@@ -55,6 +55,11 @@ Create these template files:
 - `.galdr/PRDS.md` — PRD index
 - `.galdr/.identity` — Project and user identity
 
+> **PRD FOLLOW-THROUGH RULE**: If PLAN.md is written with any PRD entries in its
+> Deliverable Index, you MUST create those PRD files under `prds/` AND add them to
+> `PRDS.md` in the same response. Do not defer. A PLAN.md that references PRD-001
+> through PRD-009 with no corresponding files is a broken state.
+
 ---
 
 ## Step 4: Generate .identity

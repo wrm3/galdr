@@ -40,6 +40,13 @@ description: Own and manage PLAN.md (master strategy) and prds/ (individual PRD 
 {Record major direction changes with dates}
 ```
 
+> **MANDATORY FOLLOW-THROUGH**: If you add any PRD rows to the Deliverable Index,
+> you MUST in the same response:
+> 1. Create each referenced PRD file at `.galdr/prds/prdNNN_descriptive_name.md` (use the CREATE PRD operation below)
+> 2. Add each PRD to `PRDS.md` index
+>
+> Do NOT leave PLAN.md referencing PRDs that don't have files. "Draft or refine as needed" is NOT acceptable during initial setup — create them now.
+
 ---
 
 ## Operation: CREATE PRD
