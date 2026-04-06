@@ -7,7 +7,7 @@ Hooks extend Cursor IDE behavior at key lifecycle events.
 | Hook | Event | Does |
 |------|-------|------|
 | `g-hk-session-start.ps1` | Session start | Injects "galdr is active + check TASKS.md" into every session. Handles first-time user setup. Auto-heals `.galdr/.project_id`. |
-| `g-hk-agent-complete.ps1` | Agent stop | Writes a session reminder for next session if 5+ turns occurred. |
+| `g-hk-agent-complete.ps1` | Agent stop | Writes a local chat transcript to `.galdr/logs/` and a session reminder for next session if 5+ turns occurred. |
 | `g-hk-validate-shell.ps1` | Before shell | Blocks dangerous commands (`rm -rf /`, `format c:`, etc). |
 | `g-hk-setup-user.ps1` | Called by session-start | Interactive first-time user identity setup. |
 
@@ -28,7 +28,8 @@ Replace `hooks.json` with an empty hooks object:
 ```
 
 galdr works without hooks — you just won't get the auto-injected context reminder
-at session start. Add `@g-setup` or check `.galdr/TASKS.md` manually instead.
+or the local Cursor chat transcripts in `.galdr/logs/`. Add `@g-setup` or check
+`.galdr/TASKS.md` manually instead.
 
 ## What Was Removed (available in galdr_full)
 
@@ -40,3 +41,14 @@ The following hooks require the Docker MCP backend and are not included in galdr
 - `sync-client.ps1` — WebSocket sync to MCP server
 - `file-index-rebuild.ps1` — PostgreSQL file index
 - `audit.ps1` — Tool call logging (also a SentinelOne trigger)
+
+## Local Chat Logging In galdr Slim
+
+galdr slim now keeps a local copy of Cursor chat history without Docker MCP.
+
+- The `stop` hook calls `.cursor/hooks/g-hk-cursor-chat-logger.py`
+- The logger reads Cursor's local `state.vscdb`
+- It writes a human-readable transcript to `.galdr/logs/*_cursor_chat.log`
+
+This is intentionally limited to chat history only. Tool-call auditing and memory
+ingestion remain full-version features.

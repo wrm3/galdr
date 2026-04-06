@@ -11,6 +11,7 @@
 # Machine-specific MCP config (generated per-install, not source)
 /.mcp.json
 
+research/
 
 # ============================================================
 # Generated / runtime (not source)
