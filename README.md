@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="logo/Galdr_Logo_Big.jpg" alt="galdr banner" width="800">
 </p>
 
@@ -12,6 +12,29 @@
   <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
   <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
 </p>
+---
+
+## Part of the Galdr Ecosystem
+
+**galdr** (this repo) is the foundation — the simplest, most portable entry point into a growing suite of AI development tools. Clone it, drop it into any project, and start working immediately. No server required.
+
+This is the first in a series of projects being built around the same agent infrastructure:
+
+| Project | What it does | Status |
+|---------|-------------|--------|
+| **galdr** *(you are here)* | Slim, file-based task + agent framework. Works standalone. | ✅ Public |
+| `galdr_full` | Extended version with advanced agent orchestration | 🔧 In development |
+| `galdr_mcp` | Docker backend — RAG, vault, session memory, video analysis | 🔧 In development |
+| `galdr_forge` | Full production platform with subscriber infrastructure | 🔧 In development |
+| `galdr_agent` | Dedicated local AI coding agent (Gemma 4 BASE, runs offline) | 🚧 Coming soon |
+| `galdr_cli` | Terminal-native agent CLI, akin to Claude Code | 🚧 Coming soon |
+| `galdr_ide` | VS Code extension integration, akin to Roo-Code / Kilo-Code | 🚧 Coming soon |
+| `galdr_desktop` | Standalone desktop application | 🚧 Coming soon |
+| `galdr_vault` | Centralized, team-shareable knowledge vault | 🚧 Coming soon |
+| `galdr_master_control` | Ecosystem orchestration hub — manages all galdr projects | 🚧 Coming soon |
+
+**Follow this repo to stay up to date as the ecosystem expands.**
+
 ---
 
 ## Why galdr?
@@ -32,8 +55,8 @@ It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneousl
 
 | Component | Count | Examples |
 |-----------|-------|---------|
-| **Agents** | 9 | Task manager, code reviewer, QA engineer, project (planning + grooming), infrastructure, ideas, verifier, project initializer |
-| **Skills** | 17 | Task management, bugs, ideas, plan, project, subsystems, medkit, code review, sprint, git, harvest, dependency graph, and more |
+| **Agents** | 8 | Task manager, code reviewer, QA engineer, project, infrastructure, ideas, verifier, project initializer |
+| **Skills** | 16 | Task management, bugs, ideas, plan, project, subsystems, medkit, code review, swot review, git commit, verify ladder, dependency graph, and more |
 | **Commands** | 24 | `@g-task-new`, `@g-code-review`, `@g-plan`, `@g-go`, `@g-medkit`, `@g-dependency-graph`, `@g-status`, `@g-bug-report` |
 | **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, server-side crawl, health reports |
 | **Hooks** | 4 | Session start, agent complete, user setup, shell validation |
@@ -57,9 +80,9 @@ Your Project/
 │   └── prds/                # PRD files
 │
 ├── .cursor/                 # Cursor IDE configuration
-│   ├── agents/              # 9 galdr system agents (g-agnt-*)
-│   ├── skills/              # 17 skills (g-skl-*)
-│   ├── commands/            # 25 @g-* commands
+│   ├── agents/              # 8 galdr system agents (g-agnt-*)
+│   ├── skills/              # 16 skills (g-skl-*)
+│   ├── commands/            # 24 @g-* commands
 │   ├── hooks/               # 4 automation hooks (PowerShell)
 │   └── rules/               # 10 always-apply rules (g-rl-*)
 │
@@ -162,15 +185,11 @@ Define rules that agents **cannot** silently ignore. Constraints are loaded at e
 
 If an agent's action would violate a constraint, it must flag the conflict and get explicit approval before proceeding.
 
-### Cross-Project Topology
+### Cross-Project Topology *(coming in `galdr_master_control`)*
 
 Projects can declare parent/child/sibling relationships. Parents can broadcast tasks to children. Children can request actions from parents. Siblings can sync shared contracts.
 
-```
-@g-topology                    # View/edit project relationships
-@g-broadcast "Update API v2"   # Push task to child projects
-@g-request "Need auth service" # Request from parent
-```
+This feature is planned for the `galdr_master_control` orchestration hub — the ecosystem-wide coordinator currently in development.
 
 ### Platform Documentation Crawling
 
