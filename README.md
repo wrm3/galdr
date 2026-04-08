@@ -214,10 +214,11 @@ Every project gets a file-based knowledge store. All notes use a standardized YA
 
 Open the vault folder directly in **Obsidian** for graph view, tag search, and backlinks over everything your agents have ever learned. The `_INDEX.md` MOC hub files (auto-generated for directories with 10+ notes) create the graph connections.
 
-**Vault configuration** — edit `.galdr/.vault_location`:
+**Vault configuration** — set `vault_location` in `.galdr/.identity`:
+
 ```
-{LOCAL}              # Default: .galdr/vault/ inside this project
-/path/to/shared      # Shared vault: multiple projects contribute to one knowledge base
+vault_location={LOCAL}                # Default: .galdr/vault/ inside this project
+vault_location=/path/to/shared        # Shared vault: multiple projects contribute to one knowledge base
 ```
 
 **What the vault stores:**
@@ -436,11 +437,11 @@ galdr_version=1.1.0
 
 ### Vault Location
 
-Edit `.galdr/.vault_location` to control where knowledge is stored:
+`vault_location` in `.galdr/.identity` controls where knowledge is stored:
 
 ```
-{LOCAL}                    # Default: .galdr/vault/ inside this project
-/path/to/shared/vault      # Shared vault: multiple projects write here
+vault_location={LOCAL}                  # Default: .galdr/vault/ inside this project
+vault_location=/path/to/shared/vault    # Shared vault: multiple projects write here
 ```
 
 A shared vault is opt-in. One-off or client projects should use `{LOCAL}` to keep knowledge isolated.
