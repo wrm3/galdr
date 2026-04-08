@@ -1,20 +1,31 @@
-# PLAN.md — {project_name} Master Plan
+# PLAN.md — {PROJECT_NAME}
 
-## Current Focus
-{Describe current development focus}
+## Current Phase
 
-## Deliverable Index
+**Phase 1**: {Phase name} — {Brief description}
 
-| PRD | Title | Status | Tasks | Notes |
-|-----|-------|--------|-------|-------|
+---
 
-## Build Order
+## Milestones
 
-### Active Work
-{List active PRDs and their priority}
+| Milestone | Status | Target | PRD |
+|-----------|--------|--------|-----|
+| M-01: {Name} | pending | {YYYY-MM-DD} | — |
 
-### Completed
-{List completed PRDs}
+---
 
-## Phase History
-{Record major direction changes}
+## Phases
+
+### Phase 1: {Phase Name}
+
+**Goal**: {What this phase achieves}
+
+**Deliverables**:
+- [ ] {Deliverable 1}
+- [ ] {Deliverable 2}
+
+---
+
+## Completed Phases
+
+*(Phases moved here when all milestones verified)*

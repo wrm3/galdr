@@ -143,7 +143,7 @@ For each BUGS.md row: check if `bugs/bugNNN_*.md` exists.
 Same phantom/orphan pattern as bugs.
 
 ### 3e. SUBSYSTEMS.md ↔ subsystems/ Sync
-Activate **g-subsystems → SYNC CHECK**. Add stub entries for subsystems referenced in tasks but missing from registry.
+Activate **g-subsystems → SYNC CHECK**. (Full cross-task scan also runs in Step 6 for all modes — this pass focuses on SUBSYSTEMS.md ↔ spec file parity during structural repair.)
 
 ### 3f. PROJECT.md Goals Health
 ```
@@ -199,6 +199,14 @@ Compare file lists between `.cursor/rules/`, `.claude/rules/`, `.agent/rules/`:
 ---
 
 ## Step 6: Routine Maintenance (ALL modes)
+
+### Subsystem Sync Check
+Collect all `subsystems:` values from every file in `tasks/`. Compare against SUBSYSTEMS.md index:
+- Referenced in a task but **not listed** in SUBSYSTEMS.md → create stub spec at `subsystems/{name}.md` + add `planned` row to SUBSYSTEMS.md index. Report as "stub added".
+- Listed in SUBSYSTEMS.md but **no spec file** exists at `subsystems/{name}.md` → create stub spec. Report as "spec created".
+- Cross-reference with `bugs/` YAML `subsystems:` fields as well.
+
+Report: `Subsystems: N synced | M stubs added | K spec files created`
 
 ### TTL Check
 For each `in-progress` task: is `now > claim_expires_at`?
@@ -280,6 +288,7 @@ PLACEHOLDERS
   Needs user:  1 (G-01 target in PROJECT.md)
 
 MAINTENANCE
+  Subsystems: 4 synced  | 1 stub added
   Health score: 87/100 (Healthy)
   TTL resets: 0
   Backlog: regenerated

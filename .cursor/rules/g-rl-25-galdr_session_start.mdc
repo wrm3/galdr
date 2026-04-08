@@ -19,6 +19,7 @@ alwaysApply: true
 ├── reports/
 ├── logs/
 ├── subsystems/ # Per-subsystem spec files (subsystem_name.md)
+├── specifications_collection/  # Incoming specs, PRDs, wireframes from stakeholders (README.md index)
 └── tasks/      # Individual task files (sequential task IDs)
 ```
 
@@ -39,8 +40,15 @@ Goals: G-01: [name] | G-02: [name] (from PROJECT.md)
 Plan focus: [current milestone or theme from PLAN.md]
 Ideas: [N] active (from IDEA_BOARD.md)
 Subsystems: [N] registered (from SUBSYSTEMS.md + subsystems/)
+Specs: [N] in specifications_collection/ (newest: YYYY-MM-DD) [or "none"]
+⚠️ Unreviewed: {spec_filename}  ← only if spec mtime > date of last [✅] task
+🧠 Learned Facts: [N] project facts | [M] global facts  (run /g-learn review to see them)
 Experiments: [summary from experiments/EXPERIMENTS.md if it has active entries]
+🛡️ Constraints: [N] active — run @g-constraint-check before completing any task
 ```
+
+Learned fact counts: count `-` bullet points in `.galdr/learned-facts.md` (skip headers and empties).
+Global fact count: count bullets in `{vault_location}/projects/{project_name}/memory.md` if it exists.
 
 ## Subsystem Awareness (MANDATORY)
 At session start, read `.galdr/SUBSYSTEMS.md` for the registry and interconnection graph.
@@ -49,6 +57,12 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 
 ## Sync Validation (Run When User Mentions Tasks/Phases/Status)
 
+**Step 0: Constraints Load**
+- Read `.galdr/CONSTRAINTS.md`
+- Count active constraints from the `## Constraint Index` table (Status = active)
+- Display the LIST output from `g-skl-constraints` (compact one-liner per constraint)
+- If any constraint definition block is missing the `**Enforcement**:` field → flag: `⚠️ C-{ID} has no enforcement definition`
+
 **Step 1: Goals Check**
 - PROJECT.md missing goals content or has `{Goal name}` placeholders → auto-generate from PROJECT.md mission / PLAN.md
 
@@ -56,6 +70,11 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 - Compare TASKS.md entries to `.galdr/tasks/` (v3 source of truth; sequential task IDs)
 - Legacy v2: completed tasks may still be under `.galdr/phases/phase*/` until migrated
 - Phantom = in TASKS.md but no matching `tasks/task{id}_*.md` (and not found in legacy archive if applicable)
+- **Re-work Surface**: for each `[📋]`/pending task, check if its `## Status History` table has a FAIL row as the last entry (a row where the `To` column is `pending` and `Message` starts with `FAIL:`). If so, surface:
+  ```
+  ⚠️ Re-work: Task {id} previously failed verification on {Timestamp}: {Message}
+  ```
+  This alerts the implementing agent that prior attempts failed and what to watch for.
 
 **Step 3: Plan / PRD / Legacy Phase Sync**
 - Verify `.galdr/PLAN.md` and `.galdr/prds/` exist for delivery projects
@@ -73,8 +92,11 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 **Step 6: Cross-Project INBOX Check** (if `.galdr/linking/INBOX.md` exists)
 - Read `.galdr/linking/INBOX.md`
 - If any `[CONFLICT]` items exist → surface immediately as `⚠️ WARNING` before any other work
+  - **Agent MUST acknowledge and resolve/defer CONFLICT items before proceeding** — conflicts gate all session work
+  - Run `@g-pcac-read` to review and resolve; do not skip or defer conflicts silently
 - Otherwise: count open items by type (requests/broadcasts/syncs) and note in session context
 - Format: `INBOX: N open (N requests, N broadcasts, N syncs)` or `INBOX: clear`
+- `g-hk-pcac-inbox-check.ps1` runs this check automatically at session start
 
 **Step 7: Cascade Forward Check** (if `.galdr/PROJECT.md` **Project Linking** section lists children with cascade)
 - Scan `.galdr/tasks/` for any task with `cascade_depth_remaining > 0` AND `cascade_forwarded: false`
@@ -88,6 +110,13 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 - For each active experiment: read EXP file, check if any stage is `[🔄]` for >48h without update
 - Stale experiments → flag: `⚠️ EXP-NNN has a running stage with no update for >48h`
 - Display active experiment summary: `EXP-NNN (Stage M/N — status)`
+
+**Step 9: Documentation Staleness Check** (if vault is configured and `research/platforms/_index.yaml` exists)
+- Read `.galdr/.identity` → get `vault_location`
+- Read `{vault_location}/research/platforms/_index.yaml`
+- Count entries where `next_refresh` field is earlier than today's date
+- If any stale entries found → display: `📚 N documentation note(s) overdue for refresh — run @g-ingest-docs REFRESH_STALE`
+- Skip silently if `_index.yaml` does not exist or vault is not configured
 
 **Fix issues BEFORE proceeding with user request.**
 

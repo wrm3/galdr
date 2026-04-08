@@ -1,16 +1,17 @@
-# PRDS.md - {project_name} Product Requirements
+# PRDS.md — {PROJECT_NAME}
 
-## Overview
-Each PRD is a focused requirements document for a feature, subsystem, or milestone.
-Individual PRD files live in `prds/prdNNN_name.md`.
+## Active PRDs
 
-## PRD Index
+| ID | Title | Status | Tasks |
+|----|-------|--------|-------|
 
-| ID | Title | Status | Subsystems | Notes |
-|----|-------|--------|------------|-------|
+*(No PRDs yet — use `@g-plan` to create the first PRD)*
 
-<!-- Status values: draft | active | completed | cancelled -->
+## Completed / Archived PRDs
+
+| ID | Title | Outcome |
+|----|-------|---------|
 
 ---
 
-**Last Updated**: {YYYY-MM-DD}
+*PRD files live in `prds/prdNNN_*.md`. Each PRD defines requirements for a major feature or phase.*

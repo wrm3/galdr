@@ -31,6 +31,10 @@ Use `/g-` for all galdr commands. See `docs/COMMANDS.md` for the full reference.
 | `/g-dependency-graph` | Generate task dependency graph |
 | `/g-report` | Project report |
 | `/g-goal-update` | Update project goals |
+| `/g-vault-ingest` | Ingest or refresh vault knowledge |
+| `/g-vault-search` | Search the file-first vault |
+| `/g-vault-lint` | Lint vault structure and freshness |
+| `/g-vault-status` | Show vault status and recent activity |
 
 ### Agents
 Invoke specialized agents with `@agent-name` syntax:
@@ -51,6 +55,17 @@ Rules live in `.claude/rules/g-rl-*.md` and load at every session. Do not edit t
 
 ### Skills
 Skills are in `.claude/skills/g-skl-*/SKILL.md`. They load when you invoke a command or when Claude determines they're relevant. All 17 core galdr skills are present.
+
+### Vault
+The galdr vault is file-first and Obsidian-compatible.
+
+- Default vault path: `.galdr/vault/`
+- Shared override: `vault_location` in `.galdr/.identity`
+- Raw repo mirror override: `repos_location` in `.galdr/.identity`
+- Raw mirrored repos stay outside the indexed vault
+- Curated repo notes belong in `research/github/`
+
+Use `g-skl-vault` for ingest/search and `g-skl-knowledge-refresh` for lint/freshness. Read `VAULT_SCHEMA.md` before structural vault edits.
 
 ### Hooks
 Claude Code hooks live in `.claude/hooks/`. They fire on session start, agent complete, and before shell execution. Session start injects `.galdr/` context and `GUARDRAILS.md`.

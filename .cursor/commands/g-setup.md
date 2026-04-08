@@ -1,7 +1,3 @@
----
-description: "Initialize the galdr v3 system in a new or existing project"
----
-
 Initialize the galdr system: $ARGUMENTS
 
 ## What This Command Does

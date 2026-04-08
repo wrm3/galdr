@@ -31,6 +31,20 @@ Scan the project to identify subsystems:
 
 ## Operation: CREATE SUBSYSTEM SPEC
 
+**Naming Convention** (validate before creating):
+- 2–6 hyphenated words
+- Lead with a domain cluster prefix when applicable: `ai-agents-*`, `knowledge-vault-*`
+- Describe *what it does or enables* — not just what it is
+- Memorable and evocative for developers browsing the project
+- Reads naturally as a bullet-point in a README feature list
+
+**Bad**: `planning`, `ideas`, `commands`, `verification`, `hooks-system`  
+**Good**: `project-planning-and-roadmaps`, `idea-white-board`, `command-library`, `adversarial-code-review`, `cross-platform-portable-history-logging`
+
+Ask: *"Would a curious developer reading this name want to click into it?"*
+
+If proposed name fails the convention → suggest a compliant alternative and wait for confirmation before creating.
+
 Create `.galdr/subsystems/{name}.md`:
 
 ```yaml

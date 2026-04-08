@@ -1,4 +1,4 @@
-# BUGS.md — {project_name} Bug Tracker
+# BUGS.md — {PROJECT_NAME} Bug Tracker
 
 ## Status Indicators
 <!-- DO NOT REMOVE THIS SECTION — agents depend on it for status parsing -->
@@ -12,5 +12,7 @@
 
 | Status | ID | Bug | Severity | Subsystems |
 |--------|----|-----|----------|------------|
+
+*(No bugs yet — use `@g-bug-report` to file the first bug)*
 
 ## Next Bug ID: BUG-001

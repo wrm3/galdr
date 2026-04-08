@@ -1,3 +1,9 @@
+---
+description: "Git workflow conventions — commit message format and branch standards"
+globs:
+alwaysApply: false
+---
+
 # Git Workflow
 
 ## Commit Message Format
@@ -67,3 +73,39 @@ $msg = "feat(api): implement auth`n`nTask: #103`nPhase: 1"
 git commit -m $msg
 ```
 
+## Pre-Commit Sanity Check
+
+Before every commit, run or rely on the **pre-commit sanity check** defined in `g-skl-git-commit` (PRE-COMMIT CHECKLIST section) and `/g-git-sanity`:
+
+| Severity | Check | Action |
+|----------|-------|--------|
+| BLOCK | Secrets / API keys in staged diff | Fix before committing |
+| BLOCK | `.env` file staged with values | Fix before committing |
+| WARN | Staged files > 5 MB | Use Git LFS or .gitignore |
+| WARN | `.galdr/TASKS.md` / `tasks/` sync drift | Run `/g-task-sync-check` |
+
+### Optional Automation (opt-in hook)
+
+```powershell
+git config core.hooksPath .cursor/hooks
+git config --unset core.hooksPath
+```
+
+Hook file: `.cursor/hooks/g-hk-pre-commit.ps1`
+
+## Pre-Push Gate (regular vs release)
+
+Before `git push`, run **`scripts/galdr_push_gate.ps1`** or `/g-git-push`:
+
+| Mode | Trigger | CHANGELOG / docs |
+|------|---------|------------------|
+| **regular** | Default; interactive **N**; hook without `GALDR_RELEASE_PUSH` | No changelog requirement — status and unpushed summary only (**never blocks**) |
+| **release** | `-Release`; or `GALDR_RELEASE_PUSH=1`; interactive **Y** | **Versioned** `## [x.y.z]` heading must exist in `CHANGELOG.md` (Keep a Changelog — not only `## [Unreleased]`). Override: `GALDR_PUSH_GATE_OVERRIDE=1` |
+
+Release mode also reminds you to re-read **README.md** and prints **version** lines from `pyproject.toml` / `package.json` if present (`g-rl-26`).
+
+Shared scripts: `scripts/galdr_push_gate.ps1`; `scripts/galdr_git_sanity_common.ps1` (secret patterns for `g-hk-pre-commit.ps1`).
+
+### Optional pre-push hook
+
+Same opt-in `core.hooksPath` as pre-commit. Hook: `.cursor/hooks/g-hk-pre-push.ps1` — in hook mode, **release** checks run only when `GALDR_RELEASE_PUSH=1`.

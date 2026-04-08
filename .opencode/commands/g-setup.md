@@ -1,7 +1,3 @@
----
-description: "Initialize the galdr v3 system in a new or existing project"
----
-
 Initialize the galdr system: $ARGUMENTS
 
 ## What This Command Does
@@ -112,3 +108,4 @@ For existing projects:
 - Reinitializing after major structural changes
 
 Let me set up the galdr v3 system for you!
+

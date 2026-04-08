@@ -82,7 +82,7 @@ the fuller hook stack, not the slim default.
 
 1. Create a new `.ps1` file in `.cursor/hooks/` named `g-hk-{your-name}.ps1`
 2. Add the hook entry to `.cursor/hooks.json`
-3. For cross-IDE parity, copy to `.claude/hooks/`, `.agent/hooks/`, `.codex/hooks/`
+3. For reusable parity in the live project tree, copy to `.claude/hooks/`, `.agent/hooks/`, and `.codex/hooks/`; if the hook is part of the shipped framework, mirror the same behavior into the matching template IDE trees as well.
 
 ---
 

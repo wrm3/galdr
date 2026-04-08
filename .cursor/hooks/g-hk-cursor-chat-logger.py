@@ -286,10 +286,9 @@ def write_chat_log(
 
     now = dt.datetime.now()
     date_part = now.strftime("%Y-%m-%d")
-    time_part = now.strftime("%H%M%S")
     short_id = sanitize_for_filename(conversation_id)
     platform_slug = sanitize_for_filename(platform)
-    file_path = logs_dir / f"{date_part}_{time_part}_{short_id}_{platform_slug}_chat.log"
+    file_path = logs_dir / f"{date_part}_{short_id}_{platform_slug}_chat.log"
 
     lines = [
         f"timestamp: {now.isoformat()}",

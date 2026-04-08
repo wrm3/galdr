@@ -1,10 +1,11 @@
 ---
 name: g-skl-project
-description: Own and manage PROJECT.md (mission, goals, project linking) and CONSTRAINTS.md (non-negotiable architectural rules). Single source of truth for project identity and guardrails.
+description: Own and manage PROJECT.md (mission, goals, project linking). Single source of truth for project identity. Constraints operations delegated to g-skl-constraints.
 ---
 # g-project
 
-**Files Owned**: `.galdr/PROJECT.md`, `.galdr/CONSTRAINTS.md`
+**Files Owned**: `.galdr/PROJECT.md`  
+**Constraint operations**: delegated to `g-skl-constraints` (see `g-skl-constraints/SKILL.md`)
 
 **Activate for**: "update goals", "define constraints", "what's the mission", "project linking", "add constraint", "update PROJECT.md", setup/planning steps that need project context.
 
@@ -52,42 +53,13 @@ Use `@g-topology` to manage relationships.
 
 ---
 
-## Operation: CREATE / UPDATE CONSTRAINTS.MD
+## Constraint Operations → Delegated to g-skl-constraints
 
-`CONSTRAINTS.md` holds architectural rules that agents must never violate. Each constraint has a rationale, violation examples, and enforcement note.
+**`CONSTRAINTS.md` is fully owned by `g-skl-constraints`** as of T041 (2026-04-07).
 
-```markdown
-# CONSTRAINTS.md — {project_name}
+For any constraint operation — add, update, check, list — use `@g-constraints` or read `g-skl-constraints/SKILL.md`.
 
-## Architectural Constraints
-
-### C-001: [Constraint Name]
-**Status**: active
-**Rationale**: [Why this rule exists]
-**Applies to**: [What code/files/actions this governs]
-
-**Rules**:
-- [Specific rule 1]
-- [Specific rule 2]
-
-**Violation Examples**:
-- [What NOT to do]
-
-**Enforcement**: [How violations are detected — g-cleanup parity audit, g-grooming check, etc.]
-
----
-
-## Constraint Log
-| Date | Constraint | Change | Author |
-|---|---|---|---|
-| YYYY-MM-DD | C-001 | Initial creation | user |
-```
-
-**When to add a constraint**:
-- A pattern keeps being violated and needs a rule
-- An architectural decision has been finalized
-- A past mistake should never recur
-- User says "that should never happen" / "always do X"
+`g-skl-project` no longer writes to `CONSTRAINTS.md`.
 
 ---
 
@@ -109,3 +81,20 @@ When creating tasks or making architecture decisions, briefly check:
 - "This aligns with G-{ID}" ✅
 - "This conflicts with Non-Goal: [X]" ⚠️ — flag for user
 - "This violates C-{ID}" 🚫 — stop and explain
+
+---
+
+## Operation: SPECIFICATIONS REVIEW
+
+When `@g-status` or `@g-project` is run, or when explicitly asked to review specs:
+
+1. **Check `specifications_collection/`** exists in `.galdr/`
+2. **List all spec files** — note dates and source
+3. **Find last `[✅]` task date** from TASKS.md (most recently completed)
+4. **Flag unreviewed**: any spec file with a date **newer** than the last completed task:
+   ```
+   ⚠️ Unreviewed spec: 2026-04-07_api_contract_v2.md (newer than last completed task 2026-04-06)
+   ```
+5. **Surface in context**: "Specs: {N} in specifications_collection/ (newest: {date})"
+
+This step is read-only — agents surface specs, they do not modify them.

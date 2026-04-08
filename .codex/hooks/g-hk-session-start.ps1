@@ -88,7 +88,80 @@ Your last session had $sessionSize turns. Consider running **``@g-status``** to 
     }
 }
 
-$additionalContext = "${setupBanner}${reflectionBanner}galdr task management system is active. Check .galdr/TASKS.md for current tasks."
+. "$PSScriptRoot\g-hk-vault-resolve.ps1"
+
+$vaultNoteCount = @(
+    Get-ChildItem -Path $VaultPath -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch "\\.obsidian(\|\\)" }
+).Count
+
+$recentVaultActivity = "none yet"
+$vaultLogPath = Join-Path $VaultPath "log.md"
+if (Test-Path $vaultLogPath) {
+    $recentLogLine = Get-Content $vaultLogPath | Where-Object { $_ -match "^## " } | Select-Object -Last 1
+    if ($recentLogLine) {
+        $recentVaultActivity = $recentLogLine -replace "^##\s*", ""
+    }
+}
+
+$vaultBanner = @"
+## Vault Context
+- Vault path: `$VaultPath`
+- Repos path: `$ReposPath`
+- Notes: $vaultNoteCount
+- Recent activity: $recentVaultActivity
+"@
+
+# ── Stale documentation check ──────────────────────────────────────────────
+$staleDocBanner = ""
+try {
+    $indexPath = Join-Path $VaultPath "research/platforms/_index.yaml"
+    if (Test-Path $indexPath) {
+        $today = Get-Date
+        $staleCount = 0
+        $lines = Get-Content $indexPath -ErrorAction SilentlyContinue
+        foreach ($line in $lines) {
+            if ($line -match 'next_refresh:\s*(\d{4}-\d{2}-\d{2})') {
+                $refreshDate = [DateTime]::ParseExact($Matches[1], "yyyy-MM-dd", $null)
+                if ($refreshDate -lt $today) { $staleCount++ }
+            }
+        }
+        if ($staleCount -gt 0) {
+            $staleDocBanner = "- 📚 $staleCount documentation note(s) overdue for refresh — run ``@g-ingest-docs REFRESH_STALE```n"
+        }
+    }
+} catch {}
+
+if ($staleDocBanner) { $vaultBanner += $staleDocBanner }
+
+if ($VaultMessages.Count -gt 0) {
+    $vaultBanner += "`n"
+    foreach ($message in $VaultMessages) {
+        $vaultBanner += "- Notice: $message`n"
+    }
+}
+
+$vaultBanner += "`n---`n"
+
+# ── Cross-project INBOX check ─────────────────────────────────────────────────
+$inboxBanner = ""
+try {
+    $inboxOutput = & "$PSScriptRoot\g-hk-pcac-inbox-check.ps1" -ProjectRoot (Get-Location).Path 2>$null
+    if ($inboxOutput -and $inboxOutput.Trim() -ne "") {
+        $inboxBanner = "$inboxOutput`n---`n"
+    }
+} catch {}
+
+$additionalContext = "${setupBanner}${reflectionBanner}${vaultBanner}${inboxBanner}galdr task management system is active. Check .galdr/TASKS.md for current tasks."
+
+# ── Append GUARDRAILS if present ──────────────────────────────────────────────
+$guardrailsFile = "GUARDRAILS.md"
+if (Test-Path $guardrailsFile) {
+    try {
+        $guardrails = Get-Content $guardrailsFile -Raw
+        $additionalContext = "${additionalContext}`n`n---`n`n${guardrails}"
+    } catch {}
+}
 
 # ── Response ──────────────────────────────────────────────────────────────────
 $response = @{

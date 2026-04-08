@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img src="logo/Galdr_Logo_Big.jpg" alt="galdr banner" width="800">
 </p>
 
@@ -8,65 +8,44 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.0.0-green.svg" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.1.0-green.svg" alt="Version"></a>
   <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
+  <a href="https://github.com/wrm3/galdr/releases"><img src="https://img.shields.io/github/v/release/wrm3/galdr?label=release" alt="Latest Release"></a>
   <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
 </p>
----
-
-## Part of the Galdr Ecosystem
-
-**galdr** (this repo) is the foundation — the simplest, most portable entry point into a growing suite of AI development tools. Clone it, drop it into any project, and start working immediately. No server required.
-
-This is the first in a series of projects being built around the same agent infrastructure:
-
-| Project | What it does | Status |
-|---------|-------------|--------|
-| **galdr** *(you are here)* | Slim, file-based task + agent framework. Works standalone. | ✅ Public |
-| `galdr_full` | Extended version with advanced agent orchestration | 🔧 In development |
-| `galdr_mcp` | Docker backend — RAG, vault, session memory, video analysis | 🔧 In development |
-| `galdr_forge` | Full production platform with subscriber infrastructure | 🔧 In development |
-| `galdr_agent` | Dedicated local AI coding agent (Gemma 4 BASE, runs offline) | 🚧 Coming soon |
-| `galdr_cli` | Terminal-native agent CLI, akin to Claude Code | 🚧 Coming soon |
-| `galdr_ide` | VS Code extension integration, akin to Roo-Code / Kilo-Code | 🚧 Coming soon |
-| `galdr_desktop` | Standalone desktop application | 🚧 Coming soon |
-| `galdr_vault` | Centralized, team-shareable knowledge vault | 🚧 Coming soon |
-| `galdr_master_control` | Ecosystem orchestration hub — manages all galdr projects | 🚧 Coming soon |
-
-**Follow this repo to stay up to date as the ecosystem expands.**
 
 ---
 
 ## Why galdr?
 
-AI coding agents are powerful but forgetful. Every new chat starts from zero -- no memory of your preferences, no awareness of your project's architecture, no record of what was tried before. You end up repeating yourself, re-explaining constraints, and watching agents make the same mistakes across sessions.
+AI coding agents are powerful — but they forget everything the moment you close the chat. No memory of the architectural decision you made last Tuesday. No awareness of the constraint you established in session 3. No record that the same bug appeared and was solved twice before. You end up repeating yourself, re-explaining your project structure, and watching agents confidently make mistakes that were already documented.
 
-**galdr fixes this.** It's a file-based framework that wraps around your AI IDE and gives agents:
+**galdr fixes this.** It wraps around your AI IDE and gives agents:
 
-- **Persistent memory** that survives across sessions and machines
-- **Task tracking** so agents know what's been done, what's in progress, and what's next
-- **Architectural constraints** that agents must follow (and can't silently ignore)
-- **A knowledge vault** for cross-project research, decisions, and learned facts
-- **Specialized skills** so agents know *how* to do things like code review, sprint planning, or video analysis -- not just that they should
+- **Persistent memory** — decisions, constraints, and learned facts that survive across sessions and machines
+- **Task tracking** — agents know what has been done, what is in progress, and what comes next
+- **Architectural constraints** — rules agents must respect and cannot silently ignore
+- **A knowledge vault** — research, session summaries, and platform docs indexed for offline retrieval
+- **Specialized skills** — agents know *how* to do things like code review, sprint planning, and vault ingestion, not just that they should
 
-It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneously. Same skills, same agents, same task data -- regardless of which IDE you open.
+It works with **Cursor, Claude Code, Gemini, Codex, and OpenCode** simultaneously. Same tasks, same constraints, same memory — regardless of which IDE you open.
 
 ## What's Included
 
 | Component | Count | Examples |
 |-----------|-------|---------|
-| **Agents** | 8 | Task manager, code reviewer, QA engineer, project, infrastructure, ideas, verifier, project initializer |
-| **Skills** | 16 | Task management, bugs, ideas, plan, project, subsystems, medkit, code review, swot review, git commit, verify ladder, dependency graph, and more |
-| **Commands** | 24 | `@g-task-new`, `@g-code-review`, `@g-plan`, `@g-go`, `@g-medkit`, `@g-dependency-graph`, `@g-status`, `@g-bug-report` |
-| **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, server-side crawl, health reports |
-| **Hooks** | 4 | Session start, agent complete, user setup, shell validation |
-| **Rules** | 10 | Always-apply rules for documentation, git workflow, error reporting, task completion gates |
+| **Agents** | 9 | Task manager, code reviewer, QA engineer, project planner, infrastructure, ideas, verifier, project initializer, PCAC coordinator |
+| **Skills** | 39 | Tasks, bugs, plan, project, subsystems, vault, code review, medkit, constraints, git, harvest, crawl, ingest-docs, ingest-url, ingest-youtube, learn, and more |
+| **Commands** | 52 | `@g-task-new`, `@g-go-code`, `@g-go-verify`, `@g-plan`, `@g-medkit`, `@g-status`, `@g-bug-report`, `@g-git-commit` |
+| **MCP Tools** | 42 | RAG search, Oracle SQL, MediaWiki, vault indexing, session memory, video analysis, platform crawling, health reports |
+| **Hooks** | 12 | Session start, agent complete, pre-commit, pre-push, user setup, shell validation |
+| **Rules** | 12 | Always-apply: documentation standards, git workflow, error reporting, task completion gates, TODO lifecycle |
 | **IDE Platforms** | 5 | Cursor, Claude Code, Gemini, Codex, OpenCode |
 
 ## How It Works
 
 ```
-Your Project/
+your-project/
 ├── .galdr/                  # Task management (shared across all IDEs)
 │   ├── TASKS.md             # Master task checklist
 │   ├── BUGS.md              # Bug index
@@ -74,17 +53,16 @@ Your Project/
 │   ├── PROJECT.md           # Vision, mission, goals (plain language)
 │   ├── CONSTRAINTS.md       # Architectural rules agents must follow
 │   ├── SUBSYSTEMS.md        # Component registry
-│   ├── IDEA_BOARD.md        # Captured ideas
 │   ├── tasks/               # Individual task specs (YAML + markdown)
 │   ├── bugs/                # Individual bug files
 │   └── prds/                # PRD files
 │
 ├── .cursor/                 # Cursor IDE configuration
-│   ├── agents/              # 8 galdr system agents (g-agnt-*)
-│   ├── skills/              # 16 skills (g-skl-*)
-│   ├── commands/            # 24 @g-* commands
-│   ├── hooks/               # 4 automation hooks (PowerShell)
-│   └── rules/               # 10 always-apply rules (g-rl-*)
+│   ├── agents/              # 9 galdr system agents
+│   ├── skills/              # 39 skills (g-skl-*)
+│   ├── commands/            # 52 @g-* commands
+│   ├── hooks/               # 12 automation hooks (PowerShell)
+│   └── rules/               # 12 always-apply rules (g-rl-*)
 │
 ├── .claude/                 # Claude Code (identical to .cursor/)
 ├── .agent/                  # Gemini (identical, adapted format)
@@ -100,45 +78,71 @@ When you open your project in any supported IDE, the agents automatically have a
 
 ## Quick Start
 
-### Option A: Install via MCP Tool
+### Option A: Clone and Copy (Recommended for solo developers)
 
-If someone in your team already runs the galdr Docker server:
+```bash
+# Clone the galdr template
+git clone https://github.com/wrm3/galdr.git
+
+# Copy framework into your project
+cd your-project
+cp -r ../galdr/.cursor .cursor
+cp -r ../galdr/.claude .claude
+cp -r ../galdr/.agent .agent
+cp -r ../galdr/.codex .codex
+cp -r ../galdr/.opencode .opencode
+cp -r ../galdr/.galdr .galdr
+cp ../galdr/AGENTS.md AGENTS.md
+cp ../galdr/CLAUDE.md CLAUDE.md
+cp ../galdr/GEMINI.md GEMINI.md
+```
+
+On Windows, use `robocopy` or File Explorer to copy the folders. Each project gets its own `.galdr/` directory — do not share task data between projects.
+
+Then open your project in Cursor (or any supported IDE) and run:
+
+```
+@g-setup
+```
+
+### Option B: Install via MCP Tool (for team deployments)
+
+If someone on your team already runs the galdr Docker server:
 
 1. Add the MCP server URL to your IDE config (`.cursor/mcp.json` or `.claude/settings.local.json`)
 2. Ask your agent: *"Run galdr_install on this project"*
 3. Done. Your project now has `.galdr/`, agents, skills, commands, and hooks.
 
-### Option B: Clone and Deploy
-
-```bash
-git clone https://github.com/wrm3/galdr.git
-cd galdr
-cp .env.example .env          # Edit with your API keys
-cd docker && docker compose up -d
-```
-
-Then use the `galdr_install` MCP tool to deploy the framework into any project.
-
-### Option C: Clone and Use Directly (Recommended)
-
-Clone once, copy into every project:
-
-```bash
-git clone https://github.com/wrm3/galdr.git
-cd your-project
-
-# Copy the platform configs (not symlinks — each project has its own .galdr/ data)
-cp -r ~/galdr/.cursor .cursor
-cp -r ~/galdr/.claude .claude
-cp -r ~/galdr/.agent .agent
-cp -r ~/galdr/.codex .codex
-cp -r ~/galdr/.opencode .opencode
-cp -r ~/galdr/.galdr .galdr    # Project-specific task data
-```
-
-On Windows, use `robocopy` or file explorer to copy the folders.
-
 ## Key Features
+
+### Adversarial Code Review — Two-Phase Quality Gate
+
+galdr enforces a strict separation between **implementation** and **verification** — intentionally designed so the same agent that wrote the code can never mark it done.
+
+```
+# Phase 1 — in your current session:
+@g-go-code          # Implement tasks. Every completed item is marked [🔍] (Awaiting Verification).
+                    # Runs full AC gate before handing off. Never marks [✅].
+
+# Phase 2 — in a NEW agent session (different window or invocation):
+@g-go-verify        # Adversarial review only. Checks every acceptance criterion against actual files.
+                    # Marks [✅] on pass, returns to [📋] on fail with documented failure reason.
+```
+
+**Why two sessions?** An agent that implements and verifies its own work has an inherent blind spot — it knows what it intended to write, which masks gaps between intent and reality. A fresh agent reads only what actually exists on disk.
+
+**What `@g-go-code` enforces before marking `[🔍]`:**
+- All acceptance criteria verified against actual files (not intent)
+- Every `TODO` or stub annotated with `TODO[TASK-X→TASK-Y]` and a follow-up task created
+- Pre-existing bugs discovered during implementation logged to `BUGS.md`
+- `CHANGELOG.md` and `README.md` updated if user-facing behavior changed
+
+**What `@g-go-verify` checks:**
+- Each acceptance criterion independently confirmed against files on disk
+- Any bug found during review is logged, not silently ignored
+- `[✅]` is only set after all criteria pass — no partial credit
+
+**Circuit breaker:** If a task fails verification 3 times in a row, it is automatically escalated to `[🚨]` Requires-User-Attention status. Automated agents skip it and it stays visible in the backlog until a human reviews and resets it.
 
 ### Task Management
 
@@ -147,10 +151,45 @@ Create tasks with structured specs, track status across phases, and let agents p
 ```
 @g-task-new "Add user authentication with JWT"
 @g-status
-@g-go          # Agent autonomously works through the backlog
 ```
 
-Tasks use YAML frontmatter for metadata (priority, dependencies, subsystems) and markdown for specs and acceptance criteria. Status syncs between individual task files and the master `TASKS.md` checklist.
+Tasks use YAML frontmatter for metadata (priority, dependencies, subsystems) and markdown for specs and acceptance criteria. Every status change is recorded in a Status History table, creating a full audit trail.
+
+| Status | Meaning |
+|--------|---------|
+| `[ ]` | Pending — not yet started |
+| `[📋]` | Ready — task spec created, ready to implement |
+| `[🔄]` | Active — being implemented |
+| `[🔍]` | Awaiting Verification — implementation complete, pending independent review |
+| `[✅]` | Complete — all criteria verified by a separate agent session |
+| `[🚨]` | Requires Human — failed verification 3+ times, circuit breaker engaged |
+
+### Skills (`g-skl-*`)
+
+All galdr skills use the `g-skl-*` prefix. Use them directly or let agents invoke them:
+
+| Skill | Purpose |
+|-------|---------|
+| `g-skl-tasks` | Task lifecycle (create, update, sync, sprint plan) |
+| `g-skl-bugs` | Bug tracking and quality reports |
+| `g-skl-plan` | PLAN.md and PRD management |
+| `g-skl-project` | PROJECT.md and mission |
+| `g-skl-constraints` | CONSTRAINTS.md (add, check, list — enforced at session start) |
+| `g-skl-subsystems` | Subsystem registry and spec files |
+| `g-skl-vault` | Vault ingest, search, and Obsidian compatibility |
+| `g-skl-medkit` | `.galdr/` health check, repair, and migration |
+| `g-skl-code-review` | Code review (security, performance, quality) |
+| `g-skl-learn` | Continual learning — agents write insights to vault memory files |
+| `g-skl-crawl` | Native web crawler (crawl4ai — no Docker needed) |
+| `g-skl-ingest-docs` | Platform doc crawling with freshness tracking |
+| `g-skl-ingest-url` | One-time URL capture into vault |
+| `g-skl-ingest-youtube` | YouTube transcript ingestion into vault |
+| `g-skl-harvest` | Analyze external repos for adoptable patterns |
+| `g-skl-pcac-order` | Push tasks to child projects |
+| `g-skl-pcac-ask` | Request action from parent project |
+| `g-skl-pcac-sync` | Sync shared contracts with siblings |
+| `g-skl-pcac-read` | Review and action cross-project INBOX |
+| `g-skl-pcac-move` | Transfer files between topology projects |
 
 ### Knowledge Vault
 
@@ -161,21 +200,20 @@ A file-based knowledge store that persists across sessions, projects, and machin
 - **Architectural decisions** extracted from conversations via continual learning
 - **Platform documentation** crawled and indexed for offline reference
 
-Vault notes use standardized YAML frontmatter for indexing and freshness tracking. Projects can share a vault (team knowledge) or keep one isolated (client work).
+Vault notes use standardized YAML frontmatter (type, topics, date, source) for indexing and freshness tracking. Projects can share a vault (team knowledge) or keep one isolated (client work).
 
-### Code Review
-
-Not a linter -- a structured review covering security, performance, maintainability, and architectural alignment.
+The vault is **Obsidian-compatible** — open the vault folder directly in Obsidian for graph view, tag browsing, and search.
 
 ```
-@g-code-review src/auth/
+@g-knowledge-refresh           # Check what docs are stale
+@g-platform-crawl              # Crawl platform docs (Cursor, Claude, Gemini)
+@g-ingest-url https://...      # Capture a URL into the vault
+@g-ingest-youtube <url>        # Extract and save YouTube transcript
 ```
-
-Generates a severity-classified report with specific file/line references and actionable recommendations.
 
 ### Architectural Constraints
 
-Define rules that agents **cannot** silently ignore. Constraints are loaded at every session start and enforced across all agent interactions.
+Define rules that agents **cannot** silently ignore. Constraints load at every session start and are checked before any task is marked complete.
 
 ```markdown
 ### C-004: UV for Python Virtual Environments
@@ -183,71 +221,69 @@ Define rules that agents **cannot** silently ignore. Constraints are loaded at e
 **What this means**: Use `uv venv`, `uv pip install`, `uv run`. Never bare `pip` or `python -m venv`.
 ```
 
-If an agent's action would violate a constraint, it must flag the conflict and get explicit approval before proceeding.
-
-### Cross-Project Topology *(coming in `galdr_master_control`)*
-
-Projects can declare parent/child/sibling relationships. Parents can broadcast tasks to children. Children can request actions from parents. Siblings can sync shared contracts.
-
-This feature is planned for the `galdr_master_control` orchestration hub — the ecosystem-wide coordinator currently in development.
-
-### Platform Documentation Crawling
-
-Automated crawling of IDE and platform docs using crawl4ai (free, open-source). Keeps your agents current on Cursor, Claude Code, Gemini, and other platform APIs.
-
 ```
-@g-platform-crawl --target cursor
-@g-knowledge-refresh           # Check what's stale
+@g-constraint-add "Never use synchronous database calls in async routes"
+@g-constraint-check                # Run compliance check now
 ```
 
-Crawling can run locally (personal use) or server-side (team sharing). Custom targets let you crawl internal docs (Confluence, company wikis) — one person crawls, everyone benefits.
+### Code Review
 
-### WebSocket Sync & Web UI
-
-For team deployments, galdr syncs `.galdr/` files and vault content to the server via WebSocket. This enables:
-
-- **Task dashboards** at `/projects/{project_id}/tasks` — view task status in a browser
-- **Session history** at `/users/{user_id}/sessions` — review past agent conversations
-- **Cross-machine vault sync** — research and crawled docs propagate across your machines
-- **Server-side crawling** — Docker runs crawl4ai and broadcasts results to all connected clients
+Not a linter — a structured review covering security, performance, maintainability, and architectural alignment.
 
 ```
-# Agent returns the URL instead of dumping data into the chat
-get_project_url(project_id="abc-123", page="tasks")
+@g-code-review src/auth/
 ```
 
-### Continual Learning
+Generates a severity-classified report with specific file/line references and actionable recommendations.
 
-Agents automatically extract durable facts from conversation transcripts and persist them in `AGENTS.md`. This means agents remember your preferences, project conventions, and past decisions across sessions — without you repeating yourself.
+### Cross-Project Topology (PCAC)
 
-### User Identity & Memory Segregation
+Projects can declare parent/child/sibling relationships. Parents broadcast tasks to children. Children request actions from parents. Siblings sync shared contracts.
 
-Each user gets a unique `user_id` stored on their machine. All memory queries (sessions, captures, search) are filtered by `user_id`, ensuring privacy in shared server deployments. Multiple machines share the same identity.
+```
+@g-pcac-status                   # View topology role + open INBOX items
+@g-pcac-order "Update API v2"    # Push task to child projects
+@g-pcac-ask "Need auth service"  # Request from parent
+@g-pcac-sync                     # Sync shared contracts with siblings
+```
+
+### Git Quality Gates
+
+galdr hooks into your git workflow to prevent bad commits from reaching the remote:
+
+```
+@g-git-sanity     # Pre-commit check: staged secrets, large files, .galdr sync drift
+@g-git-commit     # Conventional commit with task reference
+@g-git-push       # Pre-push gate: regular push vs release validation
+```
 
 ## MCP Server
 
-The Docker-based MCP server provides tools that require infrastructure (database, embeddings, external APIs):
+The optional Docker-based MCP server provides tools that require infrastructure (database, embeddings, external APIs). The file-first architecture means everything works without it — MCP tools are enhancements, not gates.
 
 | Category | Tools |
 |----------|-------|
 | **Memory** | `memory_search`, `memory_capture_session`, `memory_context`, `memory_ingest_session`, `memory_sessions`, `memory_capture_insight`, `memory_search_combined`, `memory_setup_user` |
 | **Vault** | `vault_search`, `vault_search_all`, `vault_sync`, `vault_read`, `vault_list`, `vault_export_sessions` |
 | **Install** | `galdr_install`, `galdr_plan_reset`, `galdr_health_report`, `galdr_validate_task`, `galdr_server_status` |
-| **Crawling** | `platform_docs_search`, `platform_crawl_trigger`, `platform_crawl_status`, `crawl_add_target`, `crawl_list_targets`, `crawl_remove_target`, `check_crawl_freshness`, `update_crawl_registry` |
+| **Crawling** | `platform_docs_search`, `platform_crawl_trigger`, `platform_crawl_status`, `crawl_add_target`, `crawl_list_targets`, `check_crawl_freshness` |
 | **Oracle** | `oracle_query`, `oracle_execute` |
 | **MediaWiki** | `mediawiki_page`, `mediawiki_search` |
-| **Video** | `video_analyze`, `video_batch_process`, `video_extract_frames`, `video_extract_transcript`, `video_extract_metadata`, `video_get_playlist`, `video_check_new` |
-| **Web UI** | `get_project_url`, `get_service_url` |
-| **Utility** | `md_to_html`, `config_reload` |
+| **Video** | `video_analyze`, `video_batch_process`, `video_extract_frames`, `video_extract_transcript`, `video_extract_metadata`, `video_get_playlist` |
+| **Utility** | `md_to_html`, `config_reload`, `get_service_url` |
 
 ### Docker Services
 
-| Service | Port | Profile | Description |
-|---------|------|---------|-------------|
-| galdr (MCP) | 8092 | default | Main MCP server (streamable-http) |
-| PostgreSQL | 5433 | default | RAG database with pgvector |
-| pgAdmin | 8083 | `admin` | Database management UI |
-| MediaWiki | 8880 | `mediawiki` | Private knowledge base |
+| Service | Port | Description |
+|---------|------|-------------|
+| galdr (MCP) | 8092 | Main MCP server (streamable-http) |
+| PostgreSQL | 5433 | RAG database with pgvector |
+| pgAdmin | 8083 | Database management UI (optional) |
+| MediaWiki | 8880 | Private knowledge base (optional) |
+
+```bash
+cd docker && docker compose up -d
+```
 
 ## Configuration
 
@@ -263,12 +299,9 @@ POSTGRES_PASSWORD=your_password_here
 
 # API Keys (for embeddings and research tools)
 OPENAI_API_KEY=your-key-here
-
-# Task visualizer — set to your local clone path
-GALDR_PROJECT_HOST_PATH=/path/to/your/galdr
 ```
 
-### Vault Configuration
+### Vault Location
 
 Edit `.galdr/.vault_location` to control where knowledge is stored:
 
@@ -279,15 +312,16 @@ Edit `.galdr/.vault_location` to control where knowledge is stored:
 
 ## Design Principles
 
-1. **File-first** -- Every feature works without Docker or MCP. Agents read/write `.galdr/` files directly. MCP tools enhance but never gate functionality.
-2. **Platform parity** -- Skills, agents, commands, and hooks share the same content across Cursor, Claude Code, and Gemini. Codex and OpenCode have adapted configurations (no hooks, rules via AGENTS.md) but the same 17 skills and agent definitions. Change a skill, propagate to all 5 platforms.
-3. **Constraints over conventions** -- Architectural rules are enforced, not suggested. Agents must flag violations, not silently work around them.
-4. **Memory is durable** -- Session history, learned facts, and research survive across conversations, machines, and IDE switches.
-5. **Single source of truth** -- Task status lives in files, not in agent memory. Two agents opening the same project see the same state.
+1. **File-first** — Every feature works without Docker or MCP. Agents read and write `.galdr/` files directly. MCP tools enhance but never gate functionality.
+2. **Platform parity** — Reusable framework content stays aligned across all 10 IDE targets (5 root + 5 template). Cursor, Claude Code, Gemini, Codex, and OpenCode all get the same skills, agents, commands, and rules.
+3. **Constraints over conventions** — Architectural rules are enforced, not suggested. Agents flag violations before proceeding, not after.
+4. **Memory is durable** — Session history, learned facts, and research survive across conversations, machines, and IDE switches.
+5. **Single source of truth** — Task status lives in files, not in agent memory. Two agents opening the same project see the same state.
+6. **Adversarial quality** — The agent that implements code never verifies it. Independent verification is the only path to `[✅]`.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on reporting bugs, requesting features, and contributing code.
 
 ## License
 
@@ -295,4 +329,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-**galdr** -- *Norse for "song magic." Because the best code is indistinguishable from incantation.*
+**galdr** — *Norse for "song magic." Because the best code is indistinguishable from incantation.*

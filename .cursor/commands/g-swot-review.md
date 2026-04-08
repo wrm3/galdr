@@ -1,8 +1,6 @@
----
-description: "Run SWOT analysis on current phase — progress, quality, goals, debt"
----
+Run SWOT analysis on current project phase: $ARGUMENTS
 
-# g-swot-review
+
 
 Run a structured SWOT analysis on the current project phase.
 

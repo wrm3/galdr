@@ -15,6 +15,14 @@ logs/
 # Temp/scratch files
 *.tmp
 
+# GitHub repo tracking files — user-specific, belong in vault when vault_location is configured (T034)
+repos/
+repos.txt
+repo_tracker.json
+
+# linking/ is deliberately source-controlled (topology config, not secrets)
+# INBOX.md, link_topology.md, peers/ are all tracked
+
 # v2 subfolder structure (all are working files, not source code)
 # config/, docs/, tracking/, subsystems/ are created by galdr_install
 # and contain project-specific data that should not be committed in the source repo

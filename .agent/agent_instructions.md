@@ -2,7 +2,7 @@
 
 **Platform**: Google Antigravity (Gemini-powered AI-first IDE)
 **Config Folder**: `.agent/`
-**galdr Version**: 1.0.0
+**galdr Version**: 1.1.0
 **Official Docs**: https://antigravity.google/docs
 **Version**: Public Preview (Nov 2025+)
 

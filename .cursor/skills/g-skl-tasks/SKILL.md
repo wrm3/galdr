@@ -1,4 +1,4 @@
----
+﻿---
 name: g-skl-tasks
 description: Own and manage all task data — TASKS.md index, tasks/ individual files, status transitions, sync validation, complexity scoring, and sprint planning. Single source of truth for everything task-related.
 ---
@@ -61,13 +61,27 @@ completed_date: ''
 - [ ] No lint errors
 - [ ] Acceptance criteria tested
 - [ ] Docs updated if needed
+
+## Status History
+
+| Timestamp | From | To | Message |
+|-----------|------|----|---------|
+| YYYY-MM-DD | — | pending | Task created |
 ```
 
-4. **Add to TASKS.md** (atomic — same response):
+4. **Subsystem guard** (subsystem integrity check — do before TASKS.md):
+   - For each name in the task's `subsystems:` field:
+     - Read `.galdr/SUBSYSTEMS.md` — is the name listed?
+     - **If NOT listed**: create a stub spec at `.galdr/subsystems/{name}.md` using the CREATE SUBSYSTEM SPEC template from `g-skl-subsystems`, set `status: planned`. Add a `planned` entry row to SUBSYSTEMS.md index. This keeps the registry in sync from the moment the task is specced.
+     - **If listed as `planned`**: no action — it's already tracked.
+     - **If listed as `active`**: no action — read its spec before modifying.
+   - ⚠️ Never leave a task referencing a subsystem that has no SUBSYSTEMS.md entry.
+
+5. **Add to TASKS.md** (atomic — same response):
    - Find the subsystem section (or create one)
    - Add: `- [📋] **Task NNN**: Title — brief acceptance summary`
 
-5. **Confirm**:
+6. **Confirm**:
    ```
    ✅ Task NNN created
    File: .galdr/tasks/taskNNN_name.md
@@ -97,6 +111,36 @@ completed_date: ''
 | Pause | `status: paused` | `[⏸️]` |
 | Fail/cancel | `status: failed` | `[❌]` |
 
+2a. **Before → `[🔍]` (AC gate)**: Walk every `- [ ]` acceptance criterion in the task file.
+   - Each criterion confirmed met in actual files/code? → proceed to mark `[🔍]`
+   - Any unmet → **do not mark `[🔍]`**; resolve the gap or log as a Blocker
+   - Partial work is not `[🔍]`-eligible; task stays `[🔄]` until all ACs pass
+   - **Stub/TODO scan**: search files modified for this task for bare stubs without `[TASK-X→TASK-Y]` annotation (`# TODO`, `pass`, `raise NotImplementedError`, etc.) — each unannotated stub is an unmet criterion; annotate per `g-rl-34` before marking `[🔍]`
+   - **Bug-discovery gate**: any pre-existing bug encountered must have a `BUG[BUG-{id}]` comment and a `.galdr/bugs/` entry before `[🔍]`; bugs introduced by this task must be fixed inline (see `g-rl-35`)
+   - **Status History append** (REQUIRED before `[🔍]`): append a row to `## Status History` at the bottom of the task file:
+     ```
+     | YYYY-MM-DD | {previous_status} | awaiting-verification | Implementation complete; {brief summary of what was done} |
+     ```
+
+2b. **Before → `[✅]` (docs check)**: After all ACs verified, check user-facing impact:
+   - Does this task add/remove/change user-facing behavior? (skills, commands, agents, hooks, rules, conventions)
+   - **YES** → append entry to `CHANGELOG.md` under `[Unreleased]`; update `README.md` if a relevant section exists
+   - **NO** (internal refactor, task housekeeping, bug fix with no interface change) → skip
+   - See `g-rl-26-readme-changelog.mdc` for qualifying criteria and format
+
+2c. **When returning to `[📋]` / `pending` after a FAIL (g-go-verify or agent rejection)**:
+   - **Status History append is REQUIRED** — message must name the specific failing ACs:
+     ```
+     | YYYY-MM-DD | awaiting-verification | pending | FAIL: {AC-NNN, AC-NNN} not met — {brief reason} |
+     ```
+   - Message must not be empty; "FAIL" alone is not acceptable
+   - **🚨 STUCK LOOP CHECK** — before writing `[📋]`, count `FAIL:` rows in the Status History:
+     ```
+     Count all rows where the Message column contains "FAIL:"
+     If count ≥ 3 → mark [🚨] (requires-user-attention) instead of [📋]
+     ```
+     When marking `[🚨]`, append a `## [🚨] Requires User Attention` block to the task file (see template below) and log in the session summary. **Agents must NEVER autonomously reset `[🚨]` back to `[📋]` — only a human can do this.**
+
 3. **For in-progress** — also set:
 ```yaml
 claimed_by: "{agent_id}"
@@ -106,6 +150,12 @@ claim_expires_at: "YYYY-MM-DDTHH:MM:SSZ"
 ```
 
 4. **For completed** — also set `completed_date: "YYYY-MM-DD"` and update subsystem Activity Logs (see g-subsystems)
+
+   **Broadcast completion ping** (if applicable):
+   If the task has `delegation_type: broadcast` and `task_source` is set in its YAML frontmatter:
+   - Prompt: "This task was received as a broadcast from [task_source]. Notify the source project of completion? [y/n] (default: y)"
+   - If yes: invoke `g-skl-pcac-notify` with routing `--project [task_source_path]`, subject "Broadcast task completed: [title]", subtype `broadcast_completion`; include original task title and completion date in the detail
+   - If no or source path unknown: skip silently — completion pings are always optional
 
 5. **Confirm**:
    ```
@@ -180,3 +230,22 @@ When complexity score ≥7:
 | `[✅]` | `completed` | Verified complete |
 | `[❌]` | `failed` | Failed or cancelled |
 | `[⏸️]` | `paused` | Paused |
+| `[🚨]` | `requires-user-attention` | Stuck ≥3 FAIL cycles — **agents must not retry; human-only resolution** |
+
+### [🚨] Stuck Note Template
+
+When triggering `[🚨]`, append this block to the task/bug file:
+
+```markdown
+## [🚨] Requires User Attention
+
+This item has failed verification **{N} times**. Automated agents will not retry it.
+
+**Last failure reason**: {last FAIL row message}
+
+**Human actions available**:
+- Revise acceptance criteria → add "Human reset: AC revised" to Status History → reset to `[📋]`
+- Split into simpler sub-tasks → mark this `[❌]`
+- Cancel → mark `[❌]` with reason
+- Override as complete → mark `[✅]` with manual sign-off note
+```

@@ -1,7 +1,7 @@
-# {PROJECT_NAME} — Master Task List
+# TASKS.md — {PROJECT_NAME}
 
 **Project**: {project_name}
-**Type**: delivery | research | maintenance | exploration  *(set during @g-setup)*
+**Type**: {feature | maintenance | research}
 **Plan**: `PLAN.md`
 **Project overview**: `PROJECT.md`
 **Constraints**: `CONSTRAINTS.md`
@@ -26,15 +26,11 @@
 
 ## Task backlog (sequential IDs)
 
-*v3 uses sequential task IDs in `tasks/task{id}_*.md`. Link PRDs from `PLAN.md`.*
+*Use sequential task IDs in `tasks/taskNNN_*.md`. Link PRDs from `PLAN.md`.*
 
-### Subsystem: {subsystem-name-1}
-- [ ] **Task 001**: {Task description} — {brief acceptance summary}
-- [ ] **Task 002**: {Task description} — {brief acceptance summary}
+### {Subsystem or category name}
 
-### Subsystem: {subsystem-name-2}
-- [ ] **Task 010**: {Task description}
-- [ ] **Task 011**: {Task description}
+*(No tasks yet — use `@g-task-new` to create the first task)*
 
 ---
 
@@ -49,5 +45,6 @@
 ---
 
 **Last Updated**: {YYYY-MM-DD}
-**Open Tasks**: {n}
-**Overall Progress**: {completed}/{total} tasks
+**Open Tasks**: 0
+**Bugs**: 0 open
+**Overall Progress**: 0 completed / 0 total

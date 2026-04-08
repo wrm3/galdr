@@ -8,27 +8,40 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 
 ### 1. Load Context (Before Touching Anything)
 
-Read the following files to understand the project state:
-- `.galdr/project/PROJECT_CONTEXT.md` — mission and goals
+Read the following files **in this order** to understand the project state:
+- `.galdr/PROJECT.md` — mission, goals, ecosystem context
+- `.galdr/PLAN.md` — current project milestones and development focus
+- `.galdr/PRDS.md` — PRD index (understand delivery intent)
+- `.galdr/SUBSYSTEMS.md` — subsystem registry (understand scope before touching files)
+- `.galdr/BUGS.md` — open bugs (**read before TASKS** — never implement a fix that re-introduces a known bug)
 - `.galdr/TASKS.md` — master task list
-- `.galdr/project/PROJECT_CONSTRAINTS.md` — guardrails (if exists)
+- `.galdr/CONSTRAINTS.md` — guardrails (if exists)
 - `git log --oneline -10` — recent changes
 
 ### 2. Build the Work Queue
 
-From TASKS.md, identify all **workable** tasks:
+**Bugs come before tasks.** If BUGS.md has any open bugs with status `Open` or `In Progress`, those enter the queue first — before any pending tasks. A known broken thing should not be skipped in favor of new work.
+
+Work queue construction order:
+
+**Tier 1 — Open bugs (from BUGS.md + individual bug files in `bugs/`):**
+- Severity: Critical bugs first, then High, Medium, Low
+- Only bugs with no external blocker (e.g. not waiting on an API key or upstream fix)
+
+**Tier 2 — Pending tasks (from TASKS.md):**
 - Status is `[ ]` (pending) or `[📋]` (ready)
 - No unmet dependencies (prerequisite tasks are `[✅]`)
 - Not explicitly marked as `ai_safe: false`
 - Not blocked by human input
+- Priority: Critical → High → Medium → Low
 
-**Priority order:**
-1. Critical priority, unblocked
-2. High priority, unblocked
-3. Medium priority, unblocked
-4. Low priority, unblocked
+If `$ARGUMENTS` restricts the queue, supported filters:
+- Task IDs: `@g-go tasks 7, 9, 12`
+- Bug IDs: `@g-go bugs BUG-003, BUG-007`
+- Subsystem: `@g-go subsystem vault-hooks-automation`
+- Tier only: `@g-go bugs-only` / `@g-go tasks-only`
+- Combined: `@g-go subsystem cross-project bugs-only`
 
-If `$ARGUMENTS` specifies task IDs or a phase, restrict the queue to those.
 
 ### 3. Work Through Tasks Sequentially
 
@@ -97,7 +110,7 @@ After completing as many tasks as possible, present:
 | Log every decision you make autonomously | User needs to review what you decided |
 | Skip tasks you can't complete, don't fail the whole run | Maximize total output |
 | Commit after each completed task (if user allows) | Preserve progress incrementally |
-| Respect PROJECT_CONSTRAINTS.md | Don't violate project guardrails |
+| Respect CONSTRAINTS.md | Don't violate project guardrails |
 | Stop if a task would be destructive (schema drops, data loss) | Safety first — log it as a blocker |
 
 ## Usage Examples
@@ -107,14 +120,24 @@ After completing as many tasks as possible, present:
 @g-go
 ```
 
-**Work only Phase 2 tasks:**
-```
-@g-go phase 2
-```
-
 **Work specific tasks:**
 ```
-@g-go tasks 201, 203, 207
+@g-go tasks 7, 9, 12
+```
+
+**Work specific bugs:**
+```
+@g-go bugs BUG-003, BUG-007
+```
+
+**Work a specific subsystem (bugs + tasks):**
+```
+@g-go subsystem vault-hooks-automation
+```
+
+**Bugs only:**
+```
+@g-go bugs-only
 ```
 
 **Work only critical/high priority:**

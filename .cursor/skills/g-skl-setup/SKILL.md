@@ -37,7 +37,12 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/subsystems/`, `.galdr/reports/`, `.galdr/logs/`
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/subsystems/`, `.galdr/reports/`, `.galdr/logs/`, `.galdr/specifications_collection/`
+   - Create `.galdr/specifications_collection/README.md` with the index template (see template in `template_full/.galdr/specifications_collection/README.md`)
+   - Create `.galdr/learned-facts.md` from the template in `template_full/.galdr/learned-facts.md`
+   - If `.galdr/.identity` contains `vault_location`, create `{vault_location}/log.md` as a seed file (one header line — `append_log()` will populate it on first ingest)
+   - If `.galdr/.identity` contains `vault_location`, create `{vault_location}/projects/{project_name}/` directory; this is where `repos.txt` and `repo_tracker.json` will live when `github_sync.py` runs
+   - If `.galdr/.identity` contains `vault_location` **and** `{vault_location}/obsidian_setup.md` does not already exist, copy `template_full/.galdr/vault/obsidian_setup.md` (or the installed equivalent at `{skill_root}/reference/obsidian_setup.md`) to `{vault_location}/obsidian_setup.md`. This seeds the one-page Obsidian setup guide so vault users can find it immediately.
    - **Research-type projects:** when creating `TASKS.md`, add a research log section below the task list
    - Files: Use g-project (CREATE PROJECT.MD) and g-plan (CREATE PLAN.MD) for all file generation
 
@@ -59,11 +64,13 @@ First-time setup of galdr in a project. @g-setup command.
    ├── SUBSYSTEMS.md ✅
    ├── IDEA_BOARD.md ✅
    ├── PRDS.md ✅                ← PRD index
+   ├── learned-facts.md ✅       ← agent-captured learning (updated via /g-learn)
    ├── prds/ ✅                  ← individual PRD files
    ├── bugs/ ✅                  ← optional per-bug detail files
    ├── reports/ ✅
    ├── logs/ ✅
    ├── subsystems/ ✅            ← per-subsystem spec files
+   ├── specifications_collection/ ✅  ← incoming specs from stakeholders
    └── tasks/ ✅
    docs/ ✅
    ```
@@ -111,3 +118,4 @@ First-time setup of galdr in a project. @g-setup command.
    - Create first task with @g-tasks (CREATE) (sequential task IDs)
    - Draft or refine `.galdr/PLAN.md` and PRDs under `prds/` as needed
    - Declare cross-project relationships in **Project Linking** (`@g-project (Project Linking section)`) when ready
+   - **Optional**: Install domain-specific skill packs from `skill_packs/` directory — run `.\skill_packs\{pack}\install.ps1` for infrastructure, ai-ml-dev, startup-tools, and other packs

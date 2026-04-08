@@ -1,8 +1,6 @@
----
-description: "Run SWOT analysis on current phase — progress, quality, goals, debt"
----
+Run SWOT analysis on current project phase: $ARGUMENTS
 
-# g-swot-review
+
 
 Run a structured SWOT analysis on the current project phase.
 
@@ -12,3 +10,4 @@ Run a structured SWOT analysis on the current project phase.
 2. Execute all 5 analysis passes as described in the skill
 3. Write report to `.galdr/logs/swot/YYYY-MM-DD_swot_review.md`
 4. Display summary to user
+
