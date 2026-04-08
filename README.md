@@ -53,7 +53,8 @@ You finish a feature and ask the same agent to verify it. It passes everything �
 | Component | Count | What it covers |
 |-----------|-------|----------------|
 | **Agents** | 9 | Task manager, code reviewer, QA engineer, project planner, infrastructure, ideas, verifier, project initializer, PCAC coordinator |
-| **Skills** | 39 | Tasks, bugs, plan, project, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, PCAC (5 skills), medkit, and more |
+| **Skill Packs** | 6 | Core task management, multi-project coordination (PCAC), knowledge vault, code quality, git/workflow, IDE CLI |
+| **Skills** | 39 | 39 individual skills across 6 packs — tasks, bugs, plan, project, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, PCAC (8 skills), medkit, and more |
 | **Commands** | 52 | Full `@g-*` command surface — task management, code quality, vault, multi-repo, ideas, constraints, and maintenance |
 | **Hooks** | 12 | Session start, agent complete, pre-commit, pre-push, PCAC inbox check, vault operations |
 | **Rules** | 12 | Always-apply: documentation, git workflow, error reporting, task completion gates, TODO/stub lifecycle, bug discovery |
@@ -257,9 +258,13 @@ Constraints live in `CONSTRAINTS.md` with enforcement definitions. They load at 
 
 ---
 
-### Skills (`g-skl-*`)
+### Skill Packs
 
-Skills are detailed instruction documents that tell agents not just *what* to do but exactly *how* to do it — including operations, file formats, edge cases, and cross-references.
+Skills are detailed instruction documents that tell agents not just *what* to do but exactly *how* to do it — including operations, file formats, edge cases, and cross-references. They ship in thematic packs, each owning a specific part of the system.
+
+**📋 Core Task Management Pack**
+
+The foundation. Owns every file in `.galdr/` and manages the full lifecycle of tasks, bugs, plans, goals, constraints, and subsystems.
 
 | Skill | What it owns |
 |-------|-------------|
@@ -269,31 +274,72 @@ Skills are detailed instruction documents that tell agents not just *what* to do
 | `g-skl-project` | PROJECT.md — mission, goals, project identity |
 | `g-skl-constraints` | CONSTRAINTS.md — ADD, UPDATE, CHECK, LIST |
 | `g-skl-subsystems` | SUBSYSTEMS.md, subsystems/ — component registry |
-| `g-skl-vault` | Vault operations, Obsidian compliance, MOC rebuild |
+| `g-skl-ideas` | IDEA_BOARD.md — capture, review, farm |
+| `g-skl-status` | Session context, active tasks, phase progress |
 | `g-skl-medkit` | `.galdr/` health check, repair, and version migration |
-| `g-skl-code-review` | Security, performance, quality, architectural alignment |
-| `g-skl-learn` | Continual learning — agents write insights to vault memory |
-| `g-skl-crawl` | Native crawl4ai web crawler (no Docker required) |
-| `g-skl-ingest-docs` | Platform docs with schedule-aware freshness tracking |
-| `g-skl-ingest-url` | One-time URL capture with deduplication |
-| `g-skl-ingest-youtube` | YouTube transcripts via yt-dlp |
-| `g-skl-harvest` | Analyze external repos for adoptable patterns |
-| `g-skl-knowledge-refresh` | Audit vault freshness, rebuild MOC hubs |
-| `g-skl-pcac-order` | Broadcast tasks to child projects |
+| `g-skl-setup` | Initialize galdr in a new project |
+
+**🔗 Multi-Project Coordination Pack (PCAC)**
+
+The full parent/child/sibling coordination system. Eight skills covering every direction of cross-project communication.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-pcac-adopt` | Register a child project (bidirectional topology) |
+| `g-skl-pcac-claim` | Register a parent project (bidirectional topology) |
+| `g-skl-pcac-order` | Broadcast tasks to child projects with cascade depth |
 | `g-skl-pcac-ask` | Request action from parent project |
 | `g-skl-pcac-sync` | Sync shared contracts with sibling projects |
 | `g-skl-pcac-read` | Review and action cross-project INBOX |
 | `g-skl-pcac-notify` | Send lightweight FYI notifications across topology |
 | `g-skl-pcac-move` | Transfer files/folders between topology projects |
-| `g-skl-pcac-adopt` | Register a child project (bidirectional topology) |
-| `g-skl-pcac-claim` | Register a parent project (bidirectional topology) |
-| `g-skl-git-commit` | Conventional commits with task references |
-| `g-skl-swot-review` | Automated SWOT analysis for current project phase |
+
+**🧠 Knowledge Vault Pack**
+
+Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All output is Obsidian-compatible.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-vault` | Vault operations, Obsidian compliance, MOC rebuild |
+| `g-skl-learn` | Continual learning — agents write insights to vault memory |
+| `g-skl-crawl` | Native crawl4ai web crawler (no Docker required) |
+| `g-skl-ingest-docs` | Platform docs with schedule-aware freshness tracking |
+| `g-skl-ingest-url` | One-time URL capture with deduplication |
+| `g-skl-ingest-youtube` | YouTube transcripts via yt-dlp (offline, no API needed) |
+| `g-skl-harvest` | Analyze external repos for adoptable patterns |
+| `g-skl-knowledge-refresh` | Audit vault freshness, rebuild MOC hubs |
+
+**🔍 Code Quality Pack**
+
+Structured review, configurable verification gates, SWOT analysis, and automated dependency visualization.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-code-review` | Security, performance, quality, architectural alignment |
+| `g-skl-review` | Quick-scan review with severity ratings |
 | `g-skl-verify-ladder` | Configurable verification gates (lint → full AC check) |
+| `g-skl-swot-review` | Automated SWOT analysis for current project phase |
 | `g-skl-dependency-graph` | Auto-generate DEPENDENCY_GRAPH.md from task dependencies |
+| `g-skl-qa` | QA activation mode — bug tracking and quality reporting |
+
+**🛠️ Git & Workflow Pack**
+
+Commit discipline, pre-commit gates, and conventional commit format with task references.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-git-commit` | Conventional commits with task references and agent footers |
+
+**💻 IDE CLI Pack**
+
+Headless, multi-agent, and terminal-first usage of each supported IDE from the command line.
+
+| Skill | What it does |
+|-------|-------------|
 | `g-skl-cursor-cli` | Cursor CLI (agent mode, Cloud Agent, API mode) |
 | `g-skl-claude-cli` | Claude Code CLI (headless, MCP config, multi-agent) |
 | `g-skl-gemini-cli` | Gemini CLI (checkpointing, extensions, memory patterns) |
+| `g-skl-opencode-cli` | OpenCode CLI (stub — docs pending stable release) |
 
 ---
 
