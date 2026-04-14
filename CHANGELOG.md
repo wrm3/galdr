@@ -14,6 +14,39 @@ galdr uses [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.2.0] - 2026-04-14
+
+### Added
+
+- **Feature pipeline** (`g-skl-features`, `FEATURES.md`, `.galdr/features/`): structured staging layer between idea capture and task creation. Features move through `staging → specced → committed → shipped`. Only reach the TASKS.md backlog when explicitly promoted via `@g-feat-promote`. Prevents backlog pollution and keeps implementation intent explicit.
+- **Reverse-spec skill** (`g-skl-reverse-spec`, `@g-reverse-spec`): deep 5-pass analysis of any external repository. Produces a structured harvest report in `research/harvests/{slug}/` with skeleton, module map, feature scan, deep dives, and synthesis passes. Human reviews and marks features `[✅] approved` before APPLY writes to `.galdr/features/`.
+- **Harvest intake skill** (`g-skl-harvest-intake`, `@g-harvest-intake`): processes approved harvest output into `.galdr/features/` staging entries. Deduplicates against existing staging features — appends a Collected Approach rather than creating a duplicate.
+- **Subsystem graph skill** (`g-skl-subsystem-graph`, `@g-subsystem-graph`): generates a visual Mermaid dependency graph of all registered subsystems with dependency annotations.
+- **IDE CLI skills** (`g-skl-cli-cursor`, `g-skl-cli-claude`, `g-skl-cli-gemini`, `g-skl-cli-opencode`): dedicated reference skills for headless and terminal-first operation of each supported IDE. Cover agent mode, Cloud Agent handoff, API mode, session continuation, MCP config, checkpointing, and multi-agent patterns.
+- **Granular task commands** (`@g-task-add`, `@g-task-upd`, `@g-task-del`): fine-grained task operations to supplement the existing `@g-task-new` and `@g-task-update` commands.
+- **Granular bug commands** (`@g-bug-add`, `@g-bug-upd`, `@g-bug-del`): fine-grained bug management to complement `@g-bug-report` and `@g-bug-fix`.
+- **Granular constraint commands** (`@g-constraint-upd`, `@g-constraint-del`): update and delete constraints in `CONSTRAINTS.md`.
+- **Granular subsystem commands** (`@g-subsystem-add`, `@g-subsystem-upd`, `@g-subsystem-del`, `@g-subsystem-graph`): full CRUD surface for the subsystem registry.
+- **Feature commands** (`@g-feat-new`, `@g-feat-add`, `@g-feat-upd`, `@g-feat-promote`, `@g-feat-rename`, `@g-feat-del`): full feature lifecycle management from the command surface.
+- **IDE CLI commands** (`@g-cli-cursor`, `@g-cli-claude`, `@g-cli-gemini`): quick reference commands for each IDE's CLI usage patterns.
+
+### Changed
+
+- `g-go-verify` renamed to `@g-go-review` — clearer intent (this is the review/verification phase, not a QA pass). Old command name removed from all IDE directories.
+- `g-skl-cursor-cli`, `g-skl-claude-cli`, `g-skl-gemini-cli`, `g-skl-opencode-cli` renamed to `g-skl-cli-cursor`, `g-skl-cli-claude`, `g-skl-cli-gemini`, `g-skl-cli-opencode` — consistent `g-skl-cli-*` namespace pattern. Old skill directories removed.
+- `g-skl-plan` updated: `features/` replaces `prds/` as the primary deliverable directory. PRD concepts live inside feature spec files.
+- `g-skl-harvest` updated: `APPLY` operation now calls `g-skl-features COLLECT` to dedup against existing staging features instead of creating tasks directly.
+- `g-skl-medkit` updated: detects projects with `prds/` folder and no `features/` folder — offers migration path to 1.2.0 feature pipeline.
+- README: updated component counts (Skills: 39 → 47, Commands: 52 → 76, Skill Packs: 6 → 7), added Feature Pipeline section, updated directory tree to show `features/`, updated all skill and command references.
+
+### Removed
+
+- `g-claude-cli.md`, `g-cursor-cli.md`, `g-gemini-cli.md` commands (superseded by `g-cli-claude.md`, `g-cli-cursor.md`, `g-cli-gemini.md`)
+- `g-go-verify.md` command (superseded by `g-go-review.md`)
+- `g-skl-claude-cli`, `g-skl-cursor-cli`, `g-skl-gemini-cli`, `g-skl-opencode-cli` skill directories (superseded by `g-skl-cli-*` namespace)
+
+---
+
 ## [1.1.0] - 2026-04-08
 
 ### Added
@@ -42,7 +75,7 @@ galdr uses [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - `g-go-code` now requires a Status History entry before marking any item `[🔍]`. The b3 step is mandatory.
-- `g-go-verify` FAIL path now counts FAIL rows in Status History to determine whether to reset to `[📋]` or escalate to `[🚨]`.
+- `g-go-review` FAIL path now counts FAIL rows in Status History to determine whether to reset to `[📋]` or escalate to `[🚨]`.
 - `g-go-code` skips `[🚨]` items entirely — logs them in the Skipped section as Requires-User-Attention.
 - Session start protocol (step 2) now surfaces re-work tasks when the last Status History entry is a FAIL.
 - `g-skl-tasks` and `g-skl-bugs` templates include Status History section. Every status transition appends a row.

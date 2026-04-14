@@ -58,7 +58,7 @@ Before any `.galdr/` operation, select the most appropriate agent:
 | Create/update/complete tasks, TASKS.md | `g-task-manager` |
 | Create task, spec it out, "please task" | `g-task-manager` |
 | Bugs, errors, BUGS.md, bugs/ | `g-qa-engineer` |
-| PRDs, planning, PLAN.md, prds/ | `g-planner` |
+| Feature, planning, PLAN.md, features/ | `g-planner` |
 | Ideas, goals, tracking/IDEA_BOARD.md | `g-ideas-goals` |
 | Grooming, sync, health checks | `g-project-manager` |
 | PROJECT.md, CONSTRAINTS.md, SUBSYSTEMS.md | `g-infrastructure` |
@@ -74,7 +74,7 @@ If unsure which agent — default to `g-task-manager`.
 | "I know what's in the file already" | You might be wrong. The agent reads and enforces. You don't. |
 
 ### Task Creation Trigger Phrases (always route to `g-task-manager`)
-Any of these → full task creation workflow (file first, TASKS.md second, YAML, sequential numbering):
+Any of these → full task creation workflow (file first, TASKS.md second, YAML, sequential numbering); use `g-task-add` command (alias: `g-task-new`):
 `"create a task"` | `"add a task"` | `"make a task"` | `"task and spec"` | `"spec it out"` |
 `"please task"` | `"add to tasks"` | `"task this"` | `"create a task(2)"` | `"task them"`
 

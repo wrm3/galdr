@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 
 # galdr-project
 
-Owns `.galdr/PROJECT.md`, `.galdr/PLAN.md`, `.galdr/prds/`, `.galdr/SUBSYSTEMS.md`, `.galdr/CONSTRAINTS.md`, and `.galdr/.identity`.
+Owns `.galdr/PROJECT.md`, `.galdr/PLAN.md`, `.galdr/features/`, `.galdr/SUBSYSTEMS.md`, `.galdr/CONSTRAINTS.md`, and `.galdr/.identity`.
 
 Three modes: **INITIALIZE** (new project), **GROOM** (fix existing), **PLAN** (planning and PRD work).
 
@@ -41,7 +41,7 @@ Ask 4 questions if not obvious:
 
 ### Step 2: Create Folder Structure
 ```
-.galdr/tasks/   .galdr/prds/   .galdr/bugs/   .galdr/subsystems/
+.galdr/tasks/   .galdr/features/   .galdr/bugs/   .galdr/subsystems/
 .galdr/reports/ docs/          temp_scripts/
 ```
 
@@ -89,7 +89,7 @@ Missing or invalid UUID → generate: `python -c "import uuid; print(uuid.uuid4(
 
 ### G-4: PLAN.md / PRD / CONSTRAINTS Sync
 - `PLAN.md` exists and is non-placeholder
-- `prds/` has at least one PRD for delivery-type projects
+- `features/` has at least one PRD for delivery-type projects
 - `CONSTRAINTS.md` exists
 
 ### G-5: YAML Frontmatter Validation
@@ -130,10 +130,10 @@ MANUAL REVIEW NEEDED: [list]
 ### Project Types
 | Type | Key Files |
 |------|-----------|
-| `delivery` | `prds/*.md` — one or more named PRD files |
+| `delivery` | `features/*.md` — one or more named PRD files |
 | `research` | `PLAN.md` with hypothesis sections |
 
-### PRD Structure (`.galdr/prds/*.md`)
+### Feature Structure (`.galdr/features/*.md`)
 Each PRD is its own file (e.g. `prd_main.md`, `prd_api.md`):
 1. Overview
 2. Goals (business goals / user goals / non-goals)

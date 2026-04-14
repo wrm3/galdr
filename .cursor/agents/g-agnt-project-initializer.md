@@ -64,8 +64,8 @@ Create the following structure:
 ├── BUGS.md                   # Bug index
 ├── SUBSYSTEMS.md             # Component registry + interconnection diagram
 ├── IDEA_BOARD.md             # Ideas and improvement suggestions
-├── PRDS.md                   # PRD index
-├── prds/                     # Individual PRD files
+├── FEATURES.md                   # PRD index
+├── features/                     # Individual PRD files
 ├── bugs/                     # Individual bug detail files (optional)
 ├── reports/                  # Generated reports
 ├── logs/                     # Evidence and audit logs
@@ -113,7 +113,7 @@ Parents / siblings / children projects (for broadcast & inbox). Empty if none.
 ## Key References
 - **Plan**: `PLAN.md`
 - **Constraints**: `CONSTRAINTS.md`
-- **PRDs**: `prds/`
+- **Feature**: `features/`
 - **Tasks**: `TASKS.md`
 - **Bugs**: `BUGS.md`
 - **Ideas**: `tracking/IDEA_BOARD.md`
@@ -198,7 +198,7 @@ Parents / siblings / children projects (for broadcast & inbox). Empty if none.
 - [Explicitly out of scope for this plan]
 
 ---
-*Detailed product requirements live in `prds/`.*
+*Detailed product requirements live in `features/`.*
 *Managed by galdr.*
 ```
 
@@ -322,7 +322,7 @@ Initialize the galdr task management system for this project.
 - [x] .galdr/ folder structure created
 - [x] PROJECT.md populated
 - [x] CONSTRAINTS.md initialized
-- [x] BUGS.md and prds/ initialized
+- [x] BUGS.md and features/ initialized
 - [x] TASKS.md initialized
 - [x] PLAN.md template created
 - [x] SUBSYSTEMS.md with detected subsystems
@@ -358,7 +358,7 @@ CREATED STRUCTURE:
    ├── BUGS.md
    ├── SUBSYSTEMS.md
    ├── .project_id
-   ├── prds/
+   ├── features/
    ├── bugs/
    ├── config/
    │   ├── HEARTBEAT.md
@@ -387,7 +387,7 @@ INITIAL MILESTONE:
 • Setup complete — sequential task IDs from here (next task id: 2)
 
 NEXT STEPS:
-1. Review PROJECT.md and PLAN.md; extend prds/ as needed
+1. Review PROJECT.md and PLAN.md; extend features/ as needed
 2. Review SUBSYSTEMS.md and adjust as needed
 3. Create your next task with @g-task-new (or project’s task command)
 4. Run planning / grooming when ready
@@ -413,7 +413,7 @@ COMMANDS AVAILABLE:
 
 ### With Skills
 - References `g-task-management` for task format
-- References `g-planning` for PRD structure under `prds/`
+- References `g-planning` for Feature structure under `features/`
 - References `g-qa` for bug tracking format
 
 ## Error Handling

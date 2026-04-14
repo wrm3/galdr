@@ -1,5 +1,5 @@
-Report a bug. Activates **g-bugs** → REPORT BUG operation.
+> **Deprecated**: Use `@g-bug-add` instead. This alias is kept for backward compatibility.
 
-Activate the **g-bugs** skill, REPORT BUG operation.
+Report a bug. Activates **g-skl-bugs** → REPORT BUG operation.
 
 Describe the bug. Zero-tolerance: pre-existing and unrelated bugs still get logged.

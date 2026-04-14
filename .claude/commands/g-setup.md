@@ -27,7 +27,7 @@ Activates the **g-skl-setup** skill which handles the full initialization workfl
 Create these folders if they don't exist:
 - `.galdr/` — Main working directory
 - `.galdr/tasks/` — Individual task files (sequential IDs)
-- `.galdr/prds/` — PRD files
+- `.galdr/features/` — PRD files
 - `.galdr/bugs/` — Individual bug detail files
 - `.galdr/subsystems/` — Per-subsystem spec files
 - `.galdr/logs/` — Evidence and audit logs
@@ -48,12 +48,12 @@ Create these template files:
 - `.galdr/BUGS.md` — Bug index (root level)
 - `.galdr/SUBSYSTEMS.md` — Component registry with mermaid graph
 - `.galdr/IDEA_BOARD.md` — Ideas parking lot
-- `.galdr/PRDS.md` — PRD index
+- `.galdr/FEATURES.md` — PRD index
 - `.galdr/.identity` — Project and user identity
 
 > **PRD FOLLOW-THROUGH RULE**: If PLAN.md is written with any PRD entries in its
-> Deliverable Index, you MUST create those PRD files under `prds/` AND add them to
-> `PRDS.md` in the same response. Do not defer. A PLAN.md that references PRD-001
+> Deliverable Index, you MUST create those Feature files under `features/` AND add them to
+> `FEATURES.md` in the same response. Do not defer. A PLAN.md that references PRD-001
 > through PRD-009 with no corresponding files is a broken state.
 
 ---

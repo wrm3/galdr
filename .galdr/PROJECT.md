@@ -33,7 +33,7 @@
 
 - **Plan**: `PLAN.md`
 - **Constraints**: `CONSTRAINTS.md`
-- **PRDs**: `PRDS.md` and `prds/`
+- **Feature**: `FEATURES.md` and `features/`
 - **Tasks**: `TASKS.md` and `tasks/`
 - **Bugs**: `BUGS.md` and `bugs/`
 - **Subsystems**: `SUBSYSTEMS.md` and `subsystems/`

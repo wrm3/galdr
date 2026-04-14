@@ -1,0 +1,266 @@
+---
+name: g-skl-features
+description: Own and manage all feature data — FEATURES.md index, features/ individual files, staging lifecycle (staging→specced→committed→shipped), harvest source collection, and feature promotion. Single source of truth for everything feature-related.
+---
+# g-features
+
+**Files Owned**: `.galdr/FEATURES.md`, `.galdr/features/featNNN_*.md`
+
+**Activate for**: "stage a feature", "new feature", "collect approach", "promote feature", "rename feature", "feature status", "spec this feature", "what features do we have", "harvest collected approaches".
+
+**Hierarchy**: `FEATURES.md` is the index. Each `features/featNNN_*.md` moves through: `staging → specced → committed → shipped`.
+
+---
+
+## Feature YAML Schema
+
+```yaml
+---
+id: feat-NNN
+title: 'Feature Title'
+status: staging          # staging | specced | committed | shipped
+goal: ''                 # optional: G-NN from PROJECT.md goals
+min_tier: slim           # slim | full | adv
+subsystems: []           # list of subsystem names this feature touches
+harvest_sources: []      # source slugs/paths that contributed approaches
+created_date: 'YYYY-MM-DD'
+promoted_date: ''        # date moved from staging → specced
+committed_date: ''       # date first task created (specced → committed)
+completed_date: ''       # date last task verified (committed → shipped)
+---
+```
+
+**Feature body sections**:
+- `## Summary` — 1-3 sentences: what user-visible capability this delivers
+- `## Collected Approaches` — table of approaches gathered from harvest tools, research, discussions
+- `## Potential Deliverables` — bullet list of candidate outputs (filled during staging)
+- `## Draft Tasks` — task stubs (NOT in TASKS.md yet — populated when promoting to specced)
+- `## Acceptance Criteria` — formal ACs (filled when status moves to specced)
+- `## Design Session Notes` — optional: key decisions, architecture notes, conversation references
+
+---
+
+## Operation: STAGE (create new staging feature)
+
+**Usage**: `STAGE "Feature Title" [--goal G-NN] [--tier slim|full|adv] [--from-harvest path]`
+
+1. **Determine next feat ID**: read `FEATURES.md` — find highest `feat-NNN` across ALL sections → next = highest + 1
+
+2. **Scope check** (ask unless `--from-harvest` provided):
+   - What user-visible capability does this enable?
+   - Which goal does this connect to? (optional)
+   - Any approaches already identified?
+
+3. **Create feature file** at `.galdr/features/featNNN_descriptive_slug.md`:
+   ```yaml
+   ---
+   id: feat-NNN
+   title: 'Feature Title'
+   status: staging
+   goal: ''
+   min_tier: slim
+   subsystems: []
+   harvest_sources: []
+   created_date: 'YYYY-MM-DD'
+   promoted_date: ''
+   committed_date: ''
+   completed_date: ''
+   ---
+
+   # Feature: {title}
+
+   ## Summary
+   [1-3 sentence description]
+
+   ## Collected Approaches
+   <!-- populated by COLLECT operation and harvest tools -->
+
+   | Source | Approach | Complexity | Notes |
+   |--------|----------|------------|-------|
+
+   ## Potential Deliverables
+   - (none yet)
+
+   ## Draft Tasks
+   <!-- populated manually during spec review — NOT in TASKS.md until PROMOTE -->
+   - [ ] Task: description
+
+   ## Acceptance Criteria
+   <!-- filled in when status moves to specced -->
+   ```
+
+4. **Add to FEATURES.md** index under `### Staging` section:
+   ```
+   | [feat-NNN](features/featNNN_slug.md) | Title | staging | — | Notes |
+   ```
+
+5. **Output**: confirm `feat-NNN created: .galdr/features/featNNN_slug.md`
+
+---
+
+## Operation: COLLECT (append approach to staging feature)
+
+**Usage**: `COLLECT feat-NNN --source "Source Name" --approach "description" [--complexity low|medium|high] [--harvest-path path/to/harvest]`
+
+Appends a new row to the feature's `## Collected Approaches` table. Does NOT create tasks. Does NOT overwrite existing rows.
+
+1. Read the target feature file — confirm `status: staging` (warn if specced/committed, but still allow)
+2. Append to the `## Collected Approaches` table:
+   ```
+   | Source Name | Approach description | medium | Optional notes |
+   ```
+3. If `--harvest-path` provided AND not already in `harvest_sources:` YAML array → append it
+4. Write updated file
+5. Output: `Added approach to feat-NNN: "Source Name — Approach description"`
+
+**Fuzzy match** (used by harvest tools): when a harvest discovers a capability, call COLLECT with a candidate feature name. If `name similarity ≥ 70%` to an existing staging feature, prompt: `"This looks like feat-NNN '{{title}}' — add as approach? [y/n]"`. If no match, suggest STAGE instead.
+
+---
+
+## Operation: SPEC (staging → specced)
+
+**Usage**: `SPEC feat-NNN`
+
+Promotes a staging feature to specced status — formalizes requirements.
+
+1. Read the feature file
+2. Review `## Collected Approaches` with user — confirm direction
+3. **Fill in**:
+   - `## Acceptance Criteria` (formal, measurable ACs)
+   - Update `## Draft Tasks` with refined task list
+   - Update `subsystems:` YAML field
+4. Update YAML: `status: specced`, `promoted_date: YYYY-MM-DD`
+5. Update FEATURES.md: move row from `### Staging` → `### Specced` section
+6. Output: `feat-NNN promoted to specced: ready for PROMOTE when tasks are confirmed`
+
+---
+
+## Operation: PROMOTE (specced → committed, interactive task creation)
+
+**Usage**: `PROMOTE feat-NNN`
+
+Converts a specced feature into active TASKS.md work. Human-driven — does NOT auto-generate tasks.
+
+1. Read feature file — must be `status: specced`
+2. Display `## Draft Tasks` list as starting suggestions
+3. For each draft task, ask: `"Create task for: '{{description}}'? [y/n/edit]"`
+   - `y` → create task via `g-skl-tasks CREATE TASK` (gets a TASK-NNN ID)
+   - `edit` → prompt for revised description before creating
+   - `n` → skip (task stays in Draft Tasks as a note)
+4. Update YAML: `status: committed`, `committed_date: YYYY-MM-DD`
+5. Add `features: [feat-NNN]` to each created task's YAML
+6. Update FEATURES.md: move row from `### Specced` → `### Committed`; populate Tasks column
+7. Output: `feat-NNN committed: N tasks created (TASK-X, TASK-Y, ...)`
+
+---
+
+## Operation: RENAME (rename slug + title)
+
+**Usage**: `RENAME feat-NNN "New Title"`
+
+Safe rename — preserves all data, updates all references.
+
+1. Read feature file — get current slug from filename
+2. Derive new slug: lowercase, hyphens, max 40 chars (e.g., `feat-036_new_feature_name.md`)
+3. Rename file: `git mv` from old slug to new slug
+4. Update YAML `title:` field
+5. Update `FEATURES.md` index: find `feat-NNN` row → update title + link
+6. Scan `tasks/` files for `features: [feat-NNN]` — the ID is stable, only the path changes; update path references if any
+7. Output: `feat-NNN renamed: 'Old Title' → 'New Title' (featNNN_new_slug.md)`
+
+---
+
+## Operation: STATUS (list features by status)
+
+**Usage**: `STATUS [--status staging|specced|committed|shipped] [--tier slim|full|adv] [--goal G-NN]`
+
+Reads `FEATURES.md` and outputs a summary.
+
+```
+FEATURES STATUS
+───────────────────────────────────────
+Staging (N)
+  feat-NNN  Title                  [slim] → G-01
+  ...
+
+Specced (N)
+  feat-NNN  Title                  [full]
+  ...
+
+Committed (N)
+  feat-NNN  Title                  [adv]  → TASK-X, TASK-Y
+  ...
+
+Shipped (N)
+  feat-NNN  Title
+  ...
+───────────────────────────────────────
+Total: N features | N staging | N specced | N committed | N shipped
+Next feat ID: feat-NNN
+```
+
+Filters apply to limit output. `--status staging` shows only staging features.
+
+---
+
+## FEATURES.md Index Structure
+
+```markdown
+# FEATURES.md — {project_name} Feature Registry
+
+## Overview
+Features are user-visible capabilities moving through the staging pipeline.
+
+### Feature Lifecycle
+IDEA → [staging] → [specced] → [committed] → [shipped]
+
+| Status   | Meaning |
+|----------|---------|
+| staging  | Research phase — collecting approaches, ideas, potential deliverables |
+| specced  | Formal requirements written — acceptance criteria defined |
+| committed| Active tasks created in TASKS.md — being coded |
+| shipped  | Fully implemented and verified |
+
+## Features Index
+
+### Shipped
+| ID | Title | Status | Tasks | Notes |
+
+### Committed
+| ID | Title | Status | Tasks | Notes |
+
+### Specced
+| ID | Title | Status | Notes |
+
+### Staging
+| ID | Title | Status | Notes |
+
+---
+**Last Updated**: YYYY-MM-DD
+**Next feat ID**: feat-NNN
+```
+
+---
+
+## ID Sequencing Rules
+
+- Feature IDs are globally sequential: `feat-001`, `feat-002`, ... `feat-NNN`
+- Never reuse a retired ID
+- Old PRD files migrated to features retain high-range IDs (e.g., `feat-001` through `feat-035` were migrated PRDs)
+- New features created post-migration start at `feat-036` (or next available after highest in FEATURES.md)
+- Harvest consolidation features use `feat-101` through `feat-119` range (reserved for Maestro2/galdr_forge)
+- Tier/release architecture features use `feat-120`–`feat-129` range (reserved for tier/release work)
+
+---
+
+## Integration Points
+
+**With `g-skl-harvest`**: harvest APPLY calls `COLLECT` on matching staging features instead of creating tasks directly.
+
+**With `g-skl-reverse-spec`**: APPLY operation calls `COLLECT` or `STAGE` depending on whether a matching staging feature exists.
+
+**With `g-skl-tasks`**: PROMOTE calls `CREATE TASK` for each confirmed task; tasks get `features: [feat-NNN]` back-reference.
+
+**With `g-skl-plan`**: PLAN.md Deliverable Index references feat-NNN IDs for strategic features.
+
+**With `g-skl-medkit`**: upgrade detection — finds projects with `prds/` folder and no `features/` → offers migration.

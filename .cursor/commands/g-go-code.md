@@ -1,4 +1,4 @@
-﻿Implementation-only backlog execution: $ARGUMENTS
+Implementation-only backlog execution: $ARGUMENTS
 
 ## Mode: IMPLEMENT ONLY
 
@@ -68,7 +68,7 @@ For each item:
 **g)** Move to next item
 
 > **IMPORTANT**: Mark every completed item `[🔍]`, never `[✅]`.  
-> `[✅]` requires a separate agent session running `@g-go-verify`.
+> `[✅]` requires a separate agent session running `@g-go-review`.
 
 ### 4. Docs Check (Per Task)
 
@@ -119,7 +119,7 @@ Before the handoff message, append any new decisions to `.galdr/DECISIONS.md`:
 
 ### Handoff
 {N} task(s) / {M} bug(s) moved to [🔍].
-For independent verification: open a NEW agent session and run @g-go-verify.
+For independent verification: open a NEW agent session and run @g-go-review.
 ```
 
 ## Behavioral Rules

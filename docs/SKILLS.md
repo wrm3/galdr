@@ -17,7 +17,7 @@ Each skill "owns" specific `.galdr/` files. Only its owner skill should write to
 | `g-skl-tasks` | `TASKS.md`, `tasks/` | Task creation, status updates, sync check, complexity scoring, sprint planning |
 | `g-skl-bugs` | `BUGS.md`, `bugs/` | Bug reporting, bug fixes, quality metrics |
 | `g-skl-ideas` | `IDEA_BOARD.md` | Idea capture, review, promotion to tasks, proactive scanning |
-| `g-skl-plan` | `PLAN.md`, `PRDS.md`, `prds/` | Plan creation, PRD writing, phase management |
+| `g-skl-plan` | `PLAN.md`, `FEATURES.md`, `features/` | Plan creation, PRD writing, phase management |
 | `g-skl-project` | `PROJECT.md`, `CONSTRAINTS.md` | Project identity, goals, architectural constraints |
 | `g-skl-subsystems` | `SUBSYSTEMS.md`, `subsystems/` | Subsystem discovery, spec creation, activity logging, sync |
 | `g-skl-medkit` | `.galdr/` (all files) | Health check, structural repair, version migration, routine maintenance |
@@ -34,9 +34,11 @@ Each skill "owns" specific `.galdr/` files. Only its owner skill should write to
 | `g-skl-git-commit` | Well-structured commits following galdr conventions |
 | `g-skl-swot-review` | Automated SWOT analysis for the current project phase |
 | `g-skl-verify-ladder` | Multi-level verification gates for completed tasks |
-| `g-skl-dependency-graph` | Generate and update task dependency graph |
+| `g-skl-dependency-graph` | Generate task and subsystem dependency graphs (dispatcher — use with `--tasks`, `--subsystems`, or `--all`) |
+| `g-skl-subsystem-graph` | Generate subsystem dependency graph with layer analysis and cycle detection |
 
 
 ---
 
 *galdr slim ships 16 core skills. Additional domain skills (cross-project linking, video/3D, business/startup, IDE config) are available in galdr full.*
+

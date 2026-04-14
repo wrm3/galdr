@@ -34,7 +34,7 @@ Open a plain issue or start a discussion if you have ideas that do not fit neatl
 
 ## How galdr Is Developed
 
-galdr is built with galdr. The source development repository (`galdr_full`) uses galdr's own task management, skill system, and quality gates to develop itself. Tasks are tracked in `.galdr/TASKS.md`, acceptance criteria are written into individual task spec files, and the two-phase `@g-go-code` / `@g-go-verify` gate is used for every feature.
+galdr is built with galdr. The source development repository (`galdr_full`) uses galdr's own task management, skill system, and quality gates to develop itself. Tasks are tracked in `.galdr/TASKS.md`, acceptance criteria are written into individual task spec files, and the two-phase `@g-go-code` / `@g-go-review` gate is used for every feature.
 
 The `galdr` repository you are reading now is the installable consumer template. It is exported from `template_full/` in the `galdr_full` source repository on each release.
 

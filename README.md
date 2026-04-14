@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.1.0-green.svg" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.2.0-green.svg" alt="Version"></a>
   <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
   <a href="https://github.com/wrm3/galdr/releases"><img src="https://img.shields.io/github/v/release/wrm3/galdr?label=release" alt="Latest Release"></a>
   <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
@@ -50,15 +50,133 @@ You finish a feature and ask the same agent to verify it. It passes everything �
 
 ## What's Included
 
+> **How activation works:** All agents, skills, commands, hooks, and rules in this repo are inert markdown/script files until you copy the relevant platform folder into your project. Dropping `.cursor/` into a project activates the full galdr surface for Cursor. Same for `.claude/`, `.agent/`, `.codex/`, and `.opencode/`. You pick which platforms you use — nothing runs without you copying the files first.
+
 | Component | Count | What it covers |
 |-----------|-------|----------------|
 | **Agents** | 9 | Task manager, code reviewer, QA engineer, project planner, infrastructure, ideas, verifier, project initializer, PCAC coordinator |
-| **Skill Packs** | 6 | Core task management, multi-project coordination (PCAC), knowledge vault, code quality, git/workflow, IDE CLI |
-| **Skills** | 39 | 39 individual skills across 6 packs — tasks, bugs, plan, project, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, PCAC (8 skills), medkit, and more |
-| **Commands** | 52 | Full `@g-*` command surface — task management, code quality, vault, multi-repo, ideas, constraints, and maintenance |
+| **Skill Packs** | 7 | Core task management, feature pipeline, multi-project coordination (PCAC), knowledge vault, code quality, git/workflow, IDE CLI |
+| **Skills** | 47 | 47 individual skills across 7 packs — tasks, bugs, plan, project, features, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, harvest-intake, reverse-spec, subsystem-graph, PCAC (8 skills), medkit, IDE CLIs (4), and more |
+| **Commands** | 76 | Full `@g-*` command surface — task management, bug management, feature pipeline, code quality, vault, multi-repo, ideas, constraints, subsystems, and maintenance |
 | **Hooks** | 12 | Session start, agent complete, pre-commit, pre-push, PCAC inbox check, vault operations |
 | **Rules** | 12 | Always-apply: documentation, git workflow, error reporting, task completion gates, TODO/stub lifecycle, bug discovery |
 | **IDE Platforms** | 5 | Cursor, Claude Code, Gemini, Codex, OpenCode |
+
+### Agents
+
+galdr ships 9 specialized agents — each is a focused persona with a defined scope, tool set, and activation criteria. Agents are plain markdown files living in `.cursor/agents/`, `.claude/agents/`, etc. They are **inert until you copy the platform folder into your project.**
+
+| Agent | File | What it does |
+|-------|------|-------------|
+| `g-agnt-task-manager` | `g-agnt-task-manager.md` | Owns `.galdr/` state — creates, updates, and syncs tasks, bugs, and the TASKS.md index. The source of truth for all backlog operations. |
+| `g-agnt-qa-engineer` | `g-agnt-qa-engineer.md` | QA specialist. Logs bugs, writes BUG entries with severity and code annotations, runs quality metrics, and tracks resolution. Enforces the bug discovery gate before any task reaches `[🔍]`. |
+| `g-agnt-code-reviewer` | `g-agnt-code-reviewer.md` | Adversarial reviewer. Runs in a **separate session** from the implementer. Reads only what exists on disk, confirms every acceptance criterion, and decides `[✅]` or `[📋]` (fail with documented reasons). Cannot implement — only review. |
+| `g-agnt-project` | `g-agnt-project.md` | Project strategist. Maintains `PROJECT.md`, `PLAN.md`, milestones, goal alignment, and the feature pipeline. Translates high-level intent into structured deliverables. |
+| `g-agnt-infrastructure` | `g-agnt-infrastructure.md` | Architectural guardian. Manages `SUBSYSTEMS.md`, subsystem specs, `CONSTRAINTS.md`, and subsystem Activity Logs. Flags constraint violations and keeps the registry in sync with the actual codebase. |
+| `g-agnt-ideas-goals` | `g-agnt-ideas-goals.md` | Idea and goal steward. Captures ideas to `IDEA_BOARD.md`, evaluates them against project goals, promotes promising ideas to the feature pipeline, and runs proactive codebase scans for improvement opportunities. |
+| `g-agnt-verifier` | `g-agnt-verifier.md` | Standalone verification specialist. Operates identically to the code-reviewer but can be invoked explicitly on a single task or file set. Used when a dedicated reviewer session is warranted outside the normal `@g-go-review` flow. |
+| `g-agnt-project-initializer` | `g-agnt-project-initializer.md` | Bootstrap agent. Runs `@g-setup` end-to-end for a brand-new project: creates `.galdr/.identity`, seeds all structural files, registers the project, and produces a starter `PROJECT.md` and `PLAN.md`. |
+| `g-agnt-pcac-coordinator` | `g-agnt-pcac-coordinator.md` | Cross-project coordinator. Manages the full PCAC topology — reads the INBOX, routes broadcasts from parent projects, handles requests from children, syncs contracts with siblings, and resolves conflicts before session work begins. |
+
+### Skill Packs
+
+Skills are detailed instruction documents that tell agents not just *what* to do but exactly *how* to do it — including operations, file formats, edge cases, and cross-references to sibling skills. Each skill owns a named slice of the system.
+
+**Skills are plain markdown files living in `.cursor/skills/`, `.claude/skills/`, etc. They are inert until you copy a platform folder into your project.** Once active, your IDE's agent can read and follow them on demand or when triggered by a matching context.
+
+**📋 Core Task Management Pack**
+
+The foundation. Owns every file in `.galdr/` and manages the full lifecycle of tasks, bugs, plans, goals, constraints, and subsystems.
+
+| Skill | What it owns |
+|-------|-------------|
+| `g-skl-tasks` | `TASKS.md` + `tasks/` — full task lifecycle: create, update, sync, sprint plan, complexity score |
+| `g-skl-bugs` | `BUGS.md` + `bugs/` — bug tracking, severity classification, quality metrics, resolution workflow |
+| `g-skl-plan` | `PLAN.md` + `features/` — strategic milestones, deliverable index, phase management |
+| `g-skl-features` | `FEATURES.md` + `features/` — feature staging pipeline: STAGE, COLLECT, SPEC, PROMOTE, RENAME, STATUS |
+| `g-skl-project` | `PROJECT.md` — mission, vision, goals, project linking |
+| `g-skl-constraints` | `CONSTRAINTS.md` — ADD, UPDATE, CHECK, DELETE, LIST operations for architectural rules |
+| `g-skl-subsystems` | `SUBSYSTEMS.md` + `subsystems/` — component registry with Activity Logs and dependency tracking |
+| `g-skl-ideas` | `IDEA_BOARD.md` — capture, review, farm, and promote ideas to the feature pipeline |
+| `g-skl-status` | Read-only session context: active tasks, phase progress, open bugs, pending ideas |
+| `g-skl-medkit` | `.galdr/` health check, structural repair, and version migration (1.0 → 1.1 → 1.2) |
+| `g-skl-setup` | Initialize galdr in a brand-new project — creates all structural files from templates |
+
+**🌐 Feature Pipeline Pack**
+
+The staging layer between idea capture and the task backlog. Features are research artifacts before they become implementation work.
+
+| Skill | What it owns |
+|-------|-------------|
+| `g-skl-features` | *(listed above — FEATURES.md and the full staging lifecycle)* |
+| `g-skl-reverse-spec` | 5-pass deep repo analysis: skeleton → module map → feature scan → deep dives → synthesis report |
+| `g-skl-harvest-intake` | Processes approved harvest output into `.galdr/features/` staging entries with dedup |
+
+**🔗 Multi-Project Coordination Pack (PCAC)**
+
+The full parent/child/sibling coordination system. Eight skills covering every direction of cross-project communication.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-pcac-adopt` | Register a child project — writes `link_topology.md` on both sides |
+| `g-skl-pcac-claim` | Register a parent project — bidirectional topology link |
+| `g-skl-pcac-order` | Broadcast a task to child projects with configurable cascade depth (1–3) |
+| `g-skl-pcac-ask` | Write a request to the parent project's `INBOX.md` |
+| `g-skl-pcac-sync` | Initiate or respond to sibling contract sync — advisory, non-blocking |
+| `g-skl-pcac-read` | Review and action all incoming INBOX items: conflicts, requests, broadcasts, notifications |
+| `g-skl-pcac-notify` | Send a lightweight `[INFO]` FYI to one or more project INBOXes — no task created |
+| `g-skl-pcac-move` | Transfer files/folders between topology projects with provenance tracking |
+
+**🧠 Knowledge Vault Pack**
+
+Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All output is Obsidian-compatible YAML frontmatter.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-vault` | Vault CRUD, Obsidian frontmatter compliance, `_INDEX.md` MOC hub rebuild, GitHub repo summaries |
+| `g-skl-learn` | Continual learning — agents self-report insights to vault memory files after each session |
+| `g-skl-crawl` | Native crawl4ai web crawler — clean LLM-optimized markdown from any URL, no Docker required |
+| `g-skl-ingest-docs` | Platform doc ingestion with per-platform freshness tracking and stale-doc surfacing at session start |
+| `g-skl-ingest-url` | One-time URL capture into `research/articles/` with deduplication by source URL |
+| `g-skl-ingest-youtube` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` |
+| `g-skl-harvest` | Analyze external GitHub repos for adoptable patterns — zero writes without human approval |
+| `g-skl-harvest-intake` | *(listed above — processes approved harvest output into feature staging)* |
+| `g-skl-reverse-spec` | *(listed above — 5-pass deep analysis into a structured harvest report)* |
+| `g-skl-knowledge-refresh` | Audit vault freshness, detect stale notes and broken links, rebuild MOC hub files |
+| `g-platform-crawl` | Dedicated crawl targets for Cursor, Claude Code, Gemini, and other platform docs |
+
+**🔍 Code Quality Pack**
+
+Structured review, configurable verification gates, SWOT analysis, automated dependency visualization, and subsystem graph generation.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-code-review` | Full structured review: security, performance, maintainability, architectural alignment — severity-classified with file/line references |
+| `g-skl-review` | Quick-scan review — concise severity ratings and action items |
+| `g-skl-verify-ladder` | Configurable verification gates from minimal (lint only) to thorough (tests + acceptance criteria + hallucination guard) |
+| `g-skl-swot-review` | Automated SWOT analysis for the current project phase: progress, code quality, technical debt |
+| `g-skl-dependency-graph` | Auto-generate `.galdr/DEPENDENCY_GRAPH.md` from task `blocked_by` fields — shows blocked/blocking chains |
+| `g-skl-subsystem-graph` | Generate a Mermaid visual of all registered subsystems and their dependency relationships |
+| `g-skl-qa` | QA activation mode — bug discovery workflow, quality metrics reports, retroactive documentation |
+
+**🛠️ Git & Workflow Pack**
+
+Commit discipline, pre-commit gates, and conventional commit format with task references.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-git-commit` | Conventional commit format (`feat/fix/chore`) with task ID reference and optional agent footer for autonomous commits |
+
+**💻 IDE CLI Pack**
+
+Headless, multi-agent, and terminal-first usage of each supported IDE from the command line. Covers session continuation, MCP config, Cloud Agent handoff, and overnight/CI patterns.
+
+| Skill | What it does |
+|-------|-------------|
+| `g-skl-cli-cursor` | Cursor CLI: `agent` command, API mode, Cloud Agent handoff, session management |
+| `g-skl-cli-claude` | Claude Code CLI: headless flags, `--continue`, MCP config, multi-agent via Agent SDK |
+| `g-skl-cli-gemini` | Gemini CLI: authentication, checkpointing, `--checkpoint` flag, extensions/tools, memory patterns |
+| `g-skl-cli-opencode` | OpenCode CLI: stub — full docs pending first stable release |
 
 ---
 
@@ -73,18 +191,20 @@ your-project/
 │   ├── PROJECT.md             # Mission, vision, goals (plain language)
 │   ├── CONSTRAINTS.md         # Architectural rules agents must obey
 │   ├── SUBSYSTEMS.md          # Component registry + dependency graph
+│   ├── FEATURES.md            # Feature registry — staging pipeline (staging→specced→committed→shipped)
 │   ├── .vault_location        # Path to your knowledge vault (default: local)
 │   ├── tasks/                 # Individual task specs (YAML + acceptance criteria)
 │   ├── bugs/                  # Individual bug spec files
-│   ├── prds/                  # PRD files
+│   ├── features/              # Feature staging files (feat-NNN_slug.md)
+│   ├── prds/                  # Legacy PRD files (migrated to features/ in 1.2.0)
 │   ├── subsystems/            # Per-subsystem spec files with Activity Logs
 │   ├── linking/               # Cross-project topology + INBOX
 │   └── vault/                 # Local vault (if .vault_location = {LOCAL})
 │
 ├── .cursor/                   # Cursor IDE
 │   ├── agents/                # 9 galdr agents
-│   ├── skills/                # 39 skills (g-skl-*)
-│   ├── commands/              # 52 @g-* commands
+│   ├── skills/                # 47 skills (g-skl-*)
+│   ├── commands/              # 76 @g-* commands
 │   ├── hooks/                 # 12 PowerShell automation hooks
 │   └── rules/                 # 12 always-apply rules
 │
@@ -180,7 +300,7 @@ Every project has an INBOX (`linking/INBOX.md`) that the session-start hook read
 
 ```
 # Phase 2 — verify (a SEPARATE agent session, new window):
-@g-go-verify
+@g-go-review
 
 # Reads only what exists on disk
 # Confirms every acceptance criterion independently
@@ -199,6 +319,39 @@ An agent that implements and verifies its own work has a systematic blind spot �
 | `[🔍]` | Awaiting Verification — implementation complete |
 | `[✅]` | Complete — verified by a separate session |
 | `[🚨]` | Requires Human — circuit breaker engaged after 3+ failures |
+
+---
+
+### Feature Pipeline (Staging → Shipped)
+
+Ideas don't go straight to tasks. galdr now provides a structured feature pipeline — a staging layer between idea capture and task creation. Features move through four phases with checkpoints at each transition.
+
+```
+@g-feat-new "Webhook retry with exponential backoff"
+# Creates .galdr/features/feat-036_webhook_retry.md
+# Status: staging — collecting approaches before committing
+
+@g-feat-add feat-036 --source "github.com/user/repo" --approach "Redis-backed retry queue"
+# Appends approach to the feature's Collected Approaches table
+
+@g-reverse-spec https://github.com/some/project
+# 5-pass deep analysis: skeleton → module map → feature scan → deep dives → synthesis
+# Output: research/harvests/some__project/FEATURES.md for human review
+
+@g-harvest-intake some__project
+# Process approved harvest entries into .galdr/features/ staging
+```
+
+**Feature lifecycle:**
+
+| Phase | Description |
+|-------|-------------|
+| `staging` | Research phase — collecting approaches from harvest tools, discussions, external repos |
+| `specced` | Formal requirements written — acceptance criteria defined |
+| `committed` | Active tasks created in TASKS.md — being coded |
+| `shipped` | Fully implemented and verified |
+
+Features only become tasks (and enter the TASKS.md backlog) when promoted via `@g-feat-promote`. This keeps the task backlog clean and intention-driven.
 
 ---
 
@@ -260,24 +413,41 @@ Constraints live in `CONSTRAINTS.md` with enforcement definitions. They load at 
 
 ### Skill Packs
 
-Skills are detailed instruction documents that tell agents not just *what* to do but exactly *how* to do it — including operations, file formats, edge cases, and cross-references. They ship in thematic packs, each owning a specific part of the system.
+Skills are detailed instruction documents that tell agents not just *what* to do but exactly *how* — covering operations, file formats, edge cases, and cross-references to sibling skills. Each skill owns a named slice of the system and is activated by copying the platform folder (`.cursor/`, `.claude/`, `.agent/`, `.codex/`, or `.opencode/`) into your project.
+
+---
 
 **📋 Core Task Management Pack**
 
 The foundation. Owns every file in `.galdr/` and manages the full lifecycle of tasks, bugs, plans, goals, constraints, and subsystems.
 
-| Skill | What it owns |
+| Skill | Owned files | What it does |
+|-------|-------------|-------------|
+| `g-skl-tasks` | `TASKS.md`, `tasks/` | Full task lifecycle: create, update, sync, sprint plan, complexity score, dependency tracking |
+| `g-skl-bugs` | `BUGS.md`, `bugs/` | Bug tracking, severity classification (Critical/High/Medium/Low), quality metrics, resolution workflow |
+| `g-skl-plan` | `PLAN.md`, `features/` | Strategic milestones, deliverable index, phase management, PRD cross-references |
+| `g-skl-features` | `FEATURES.md`, `features/` | Feature staging pipeline: STAGE, COLLECT, SPEC, PROMOTE, RENAME, STATUS operations |
+| `g-skl-project` | `PROJECT.md` | Mission, vision, goals (G-NN format), project linking to topology |
+| `g-skl-constraints` | `CONSTRAINTS.md` | ADD, UPDATE, CHECK, DELETE, LIST operations for architectural rules |
+| `g-skl-subsystems` | `SUBSYSTEMS.md`, `subsystems/` | Component registry with Activity Logs, dependency and dependent tracking |
+| `g-skl-ideas` | `IDEA_BOARD.md` | Capture, review, farm, and promote ideas to the feature pipeline |
+| `g-skl-status` | read-only | Session context summary: active tasks, phase progress, open bugs, pending ideas |
+| `g-skl-medkit` | `.galdr/` | Health check, structural repair, and version migration (1.0 → 1.1 → 1.2) |
+| `g-skl-setup` | `.galdr/` | Initialize galdr in a brand-new project — creates all structural files from templates |
+
+---
+
+**🌐 Feature Pipeline Pack**
+
+The staging layer between idea capture and the task backlog. Features collect approaches and get formally specced before any task is created — keeps the backlog clean and intention-driven.
+
+| Skill | What it does |
 |-------|-------------|
-| `g-skl-tasks` | TASKS.md, tasks/ — full task lifecycle |
-| `g-skl-bugs` | BUGS.md, bugs/ — bug tracking and quality reports |
-| `g-skl-plan` | PLAN.md, prds/ — strategy and PRD management |
-| `g-skl-project` | PROJECT.md — mission, goals, project identity |
-| `g-skl-constraints` | CONSTRAINTS.md — ADD, UPDATE, CHECK, LIST |
-| `g-skl-subsystems` | SUBSYSTEMS.md, subsystems/ — component registry |
-| `g-skl-ideas` | IDEA_BOARD.md — capture, review, farm |
-| `g-skl-status` | Session context, active tasks, phase progress |
-| `g-skl-medkit` | `.galdr/` health check, repair, and version migration |
-| `g-skl-setup` | Initialize galdr in a new project |
+| `g-skl-features` | STAGE a new feature, COLLECT approaches, SPEC requirements, PROMOTE to tasks, RENAME slugs |
+| `g-skl-reverse-spec` | 5-pass deep analysis of any external repo: skeleton → module map → feature scan → deep dives → synthesis. Output lives in `research/harvests/{slug}/` — no `.galdr/` writes until human approves |
+| `g-skl-harvest-intake` | Reads an approved harvest report and creates `.galdr/features/` staging entries; deduplicates by appending a Collected Approach to an existing feature rather than creating a duplicate |
+
+---
 
 **🔗 Multi-Project Coordination Pack (PCAC)**
 
@@ -285,42 +455,50 @@ The full parent/child/sibling coordination system. Eight skills covering every d
 
 | Skill | What it does |
 |-------|-------------|
-| `g-skl-pcac-adopt` | Register a child project (bidirectional topology) |
-| `g-skl-pcac-claim` | Register a parent project (bidirectional topology) |
-| `g-skl-pcac-order` | Broadcast tasks to child projects with cascade depth |
-| `g-skl-pcac-ask` | Request action from parent project |
-| `g-skl-pcac-sync` | Sync shared contracts with sibling projects |
-| `g-skl-pcac-read` | Review and action cross-project INBOX |
-| `g-skl-pcac-notify` | Send lightweight FYI notifications across topology |
-| `g-skl-pcac-move` | Transfer files/folders between topology projects |
+| `g-skl-pcac-adopt` | Register a child project — writes `link_topology.md` bidirectionally on both sides |
+| `g-skl-pcac-claim` | Register a parent project — bidirectional topology link with parent confirmation |
+| `g-skl-pcac-order` | Broadcast a task to child projects with configurable cascade depth (1–3 hops) |
+| `g-skl-pcac-ask` | Write a request to the parent project's `INBOX.md`; marks local task as blocked with cross-project metadata |
+| `g-skl-pcac-sync` | Initiate or respond to sibling contract sync — advisory only, non-blocking |
+| `g-skl-pcac-read` | Review and action all INBOX items: conflicts (block planning), requests from children, broadcasts from parents |
+| `g-skl-pcac-notify` | Send a lightweight `[INFO]` FYI to one or more INBOXes — no task created, no approval required |
+| `g-skl-pcac-move` | Transfer files/folders between topology projects with provenance tracking and vault log entries on both sides |
+
+---
 
 **🧠 Knowledge Vault Pack**
 
-Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All output is Obsidian-compatible.
+Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All vault output uses a standardized Obsidian-compatible YAML frontmatter schema.
 
 | Skill | What it does |
 |-------|-------------|
-| `g-skl-vault` | Vault operations, Obsidian compliance, MOC rebuild |
-| `g-skl-learn` | Continual learning — agents write insights to vault memory |
-| `g-skl-crawl` | Native crawl4ai web crawler (no Docker required) |
-| `g-skl-ingest-docs` | Platform docs with schedule-aware freshness tracking |
-| `g-skl-ingest-url` | One-time URL capture with deduplication |
-| `g-skl-ingest-youtube` | YouTube transcripts via yt-dlp (offline, no API needed) |
-| `g-skl-harvest` | Analyze external repos for adoptable patterns |
-| `g-skl-knowledge-refresh` | Audit vault freshness, rebuild MOC hubs |
+| `g-skl-vault` | Vault CRUD, Obsidian frontmatter compliance, `_INDEX.md` MOC hub rebuild, GitHub repo summaries |
+| `g-skl-learn` | Agents self-report insights to vault memory files after each session — file-only, no external services |
+| `g-skl-crawl` | Native crawl4ai web crawler — LLM-optimized markdown from any URL, no Docker required. Shared primitive for ingest-docs, ingest-url, and harvest |
+| `g-skl-ingest-docs` | Platform doc ingestion (Cursor, Claude, Gemini, etc.) with per-platform freshness tracking; stale docs surfaced at session start |
+| `g-skl-ingest-url` | One-time URL capture into `research/articles/` with deduplication by source URL |
+| `g-skl-ingest-youtube` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` with full frontmatter |
+| `g-skl-harvest` | Analyze external GitHub repos for adoptable patterns — zero writes to `.galdr/` without human approval |
+| `g-skl-knowledge-refresh` | Audit vault freshness, detect stale notes and broken links, rebuild `_INDEX.md` MOC hub files |
+| `g-platform-crawl` | Dedicated crawl targets for Cursor, Claude Code, Gemini, and other platform documentation |
+
+---
 
 **🔍 Code Quality Pack**
 
-Structured review, configurable verification gates, SWOT analysis, and automated dependency visualization.
+Structured review, configurable verification gates, SWOT analysis, automated dependency visualization, and subsystem graph generation.
 
 | Skill | What it does |
 |-------|-------------|
-| `g-skl-code-review` | Security, performance, quality, architectural alignment |
-| `g-skl-review` | Quick-scan review with severity ratings |
-| `g-skl-verify-ladder` | Configurable verification gates (lint → full AC check) |
-| `g-skl-swot-review` | Automated SWOT analysis for current project phase |
-| `g-skl-dependency-graph` | Auto-generate DEPENDENCY_GRAPH.md from task dependencies |
-| `g-skl-qa` | QA activation mode — bug tracking and quality reporting |
+| `g-skl-code-review` | Full structured review: security, performance, maintainability, architectural alignment — severity-classified output with file/line references |
+| `g-skl-review` | Quick-scan review — concise severity ratings and action items for smaller diffs |
+| `g-skl-verify-ladder` | Configurable verification gates from minimal (lint only) to thorough (tests + every acceptance criterion + hallucination guard) |
+| `g-skl-swot-review` | Automated SWOT analysis for the current project phase: progress, architectural compliance, code quality, technical debt |
+| `g-skl-dependency-graph` | Auto-generate `.galdr/DEPENDENCY_GRAPH.md` from task `blocked_by` fields — shows full blocked/blocking chains |
+| `g-skl-subsystem-graph` | Generate a Mermaid visual of all registered subsystems and their declared dependency relationships |
+| `g-skl-qa` | QA activation mode — bug discovery workflow, quality metrics reports, retroactive documentation |
+
+---
 
 **🛠️ Git & Workflow Pack**
 
@@ -328,18 +506,20 @@ Commit discipline, pre-commit gates, and conventional commit format with task re
 
 | Skill | What it does |
 |-------|-------------|
-| `g-skl-git-commit` | Conventional commits with task references and agent footers |
+| `g-skl-git-commit` | Conventional commit format (`feat/fix/chore/docs`) with task ID reference and optional agent footer for autonomous commits |
+
+---
 
 **💻 IDE CLI Pack**
 
-Headless, multi-agent, and terminal-first usage of each supported IDE from the command line.
+Headless, multi-agent, and terminal-first usage of each supported IDE. Covers session continuation, MCP config, Cloud Agent handoff, and overnight/CI patterns. One skill per IDE.
 
 | Skill | What it does |
 |-------|-------------|
-| `g-skl-cursor-cli` | Cursor CLI (agent mode, Cloud Agent, API mode) |
-| `g-skl-claude-cli` | Claude Code CLI (headless, MCP config, multi-agent) |
-| `g-skl-gemini-cli` | Gemini CLI (checkpointing, extensions, memory patterns) |
-| `g-skl-opencode-cli` | OpenCode CLI (stub — docs pending stable release) |
+| `g-skl-cli-cursor` | Cursor CLI: `agent` command, API mode, Cloud Agent handoff, session management, approval modes |
+| `g-skl-cli-claude` | Claude Code CLI: headless flags, `--continue`, MCP config, permissions, multi-agent via Agent SDK |
+| `g-skl-cli-gemini` | Gemini CLI: authentication, `--checkpoint` flag, config file, extensions/tools, memory patterns |
+| `g-skl-cli-opencode` | OpenCode CLI: stub — full documentation pending first stable release |
 
 ---
 
@@ -350,13 +530,19 @@ Headless, multi-agent, and terminal-first usage of each supported IDE from the c
 | Command | What it does |
 |---------|-------------|
 | `@g-task-new` | Create a task with full spec and acceptance criteria |
+| `@g-task-add` | Add a task quickly with minimal spec |
 | `@g-task-update` | Update task status, priority, or metadata |
+| `@g-task-upd` | Update specific task fields |
+| `@g-task-del` | Delete a task and remove from TASKS.md |
 | `@g-task-sync-check` | Validate TASKS.md ↔ tasks/ file sync |
 | `@g-bug-report` | Log a bug with severity, file, and description |
 | `@g-bug-fix` | Fix a reported bug and update BUGS.md |
+| `@g-bug-add` | Add a bug entry to BUGS.md |
+| `@g-bug-upd` | Update an existing bug entry |
+| `@g-bug-del` | Delete a bug entry |
 | `@g-go` | Full autonomous cycle (implement + verify in sequence) |
 | `@g-go-code` | Implement-only: marks completed items `[🔍]`, never `[✅]` |
-| `@g-go-verify` | Verify-only: run in a new agent session to confirm `[🔍]` items |
+| `@g-go-review` | Verify-only: run in a new agent session to confirm `[🔍]` items |
 | `@g-status` | Project status: active tasks, goals, open bugs, ideas |
 | `@g-workflow` | Task expansion and sprint planning |
 
@@ -364,12 +550,29 @@ Headless, multi-agent, and terminal-first usage of each supported IDE from the c
 
 | Command | What it does |
 |---------|-------------|
-| `@g-plan` | Create or update PLAN.md and PRD files |
+| `@g-plan` | Create or update PLAN.md and milestone docs |
 | `@g-setup` | Initialize galdr in a new project |
 | `@g-goal-update` | Update PROJECT_GOALS.md |
 | `@g-phase-add` | Add a new project phase |
 | `@g-phase-pivot` | Pivot project direction |
 | `@g-subsystems` | Sync check, add, update subsystem Activity Logs |
+| `@g-subsystem-add` | Add a new subsystem to the registry |
+| `@g-subsystem-upd` | Update subsystem spec or Activity Log |
+| `@g-subsystem-del` | Delete a subsystem from the registry |
+| `@g-subsystem-graph` | Generate visual subsystem dependency graph |
+
+**Feature Pipeline**
+
+| Command | What it does |
+|---------|-------------|
+| `@g-feat-new` | Stage a new feature and create the feature spec file |
+| `@g-feat-add` | Add to an existing feature (collect approach, deliverable) |
+| `@g-feat-upd` | Update feature status, metadata, or notes |
+| `@g-feat-promote` | Promote a specced feature to committed — creates tasks |
+| `@g-feat-rename` | Rename a feature slug and update all references |
+| `@g-feat-del` | Delete a feature and remove from FEATURES.md |
+| `@g-reverse-spec` | 5-pass analysis of an external repo → harvest report |
+| `@g-harvest-intake` | Process a harvest report into feature staging entries |
 
 **Knowledge & Vault**
 
@@ -414,6 +617,8 @@ Headless, multi-agent, and terminal-first usage of each supported IDE from the c
 |---------|-------------|
 | `@g-constraint-add` | Add a new architectural constraint |
 | `@g-constraint-check` | Run compliance check against all active constraints |
+| `@g-constraint-upd` | Update an existing constraint |
+| `@g-constraint-del` | Delete a constraint |
 
 **Ideas & Discovery**
 
@@ -430,6 +635,9 @@ Headless, multi-agent, and terminal-first usage of each supported IDE from the c
 | `@g-medkit` | `.galdr/` health check, repair, and version migration |
 | `@g-swot-review` | SWOT analysis for the current project phase |
 | `@g-dependency-graph` | Generate DEPENDENCY_GRAPH.md from task dependencies |
+| `@g-cli-cursor` | Cursor CLI reference and usage patterns |
+| `@g-cli-claude` | Claude Code CLI reference and usage patterns |
+| `@g-cli-gemini` | Gemini CLI reference and usage patterns |
 
 ---
 
@@ -478,7 +686,7 @@ project_id=<generated-uuid>
 project_name=my-project
 user_id=<your-user-id>
 user_name=YourName
-galdr_version=1.1.0
+galdr_version=1.2.0
 ```
 
 ### Vault Location
@@ -502,6 +710,99 @@ POSTGRES_USER=galdr
 POSTGRES_PASSWORD=your_password_here
 OPENAI_API_KEY=your-key-here
 ```
+
+---
+
+## Optional Skill Packs
+
+Beyond the built-in galdr system skills, `skill_packs/` contains **optional, domain-specific packs** you install on demand. These are not loaded by default — nothing installs until you run the pack's `install.ps1`. Each pack deploys to all 5 IDE targets (`.cursor/`, `.claude/`, `.agent/`, `.codex/`, `.opencode/`).
+
+```powershell
+# Install a pack into the current project
+.\skill_packs\infrastructure\install.ps1
+
+# Install into a specific project directory
+.\skill_packs\infrastructure\install.ps1 -ProjectRoot "C:\my-other-project"
+```
+
+To uninstall: delete the skill directories listed in the pack's `PACK.md`.
+
+---
+
+**🎬 ai-video-tools** — AI video generation, avatar creation, animated GIFs, explainer production, and multi-platform ad specs
+
+| Skill | What it does |
+|-------|-------------|
+| `ai-video-generation` | 40+ models via inference.sh CLI: text-to-video, image-to-video, Veo, Wan, Seedance |
+| `ai-avatar-lipsync` | OmniHuman/Fabric/PixVerse models; audio-driven lipsync and dubbing workflows |
+| `remotion-video` | React-based video: compositions, audio, captions, 3D, transitions, cloud render |
+| `animated-gif-creator` | Composable animation primitives, Slack constraints (2MB/64KB), easing and optimization |
+| `explainer-video` | Script formulas (AIDA), pacing rules, scene planning, voiceover and music integration |
+| `storyboard-creation` | Shot composition, camera angles, movement, continuity; pre-production workflow |
+| `video-ad-specs` | TikTok/Instagram/YouTube/Facebook/LinkedIn dimensions, timing requirements, AIDA framework |
+| `pipeline-validation` | Multi-agent QA gates: specs, narrative, render readiness, asset handoff checks |
+
+---
+
+**🧊 3d-graphics** — 3D performance optimization, asset pipelines, animation principles, and generative art
+
+| Skill | What it does |
+|-------|-------------|
+| `3d-performance` | LOD strategies, frustum/occlusion culling, draw call reduction, R3F-specific optimizations |
+| `asset-optimization` | gltf-transform pipeline: Draco mesh compression, WebP/KTX2 textures, LOD generation |
+| `animation-principles` | Disney's 12 animation principles applied to 3D/game contexts, timing and frame count guidelines |
+| `algorithmic-art` | p5.js generative art: seeded randomness, flow fields, particle systems, interactive parameters |
+
+---
+
+**📱 content-creation** — Social strategy, video scripting, storyboarding, and platform ad specs
+
+| Skill | What it does |
+|-------|-------------|
+| `social-media-marketing` | YouTube/TikTok/Instagram/LinkedIn growth strategy, thumbnails, influencer workflows |
+| `storyboard-creation` | Shot composition, angles, movement, continuity for film and animation pre-production |
+| `explainer-video` | AIDA script formulas, pacing rules, scene planning, voiceover and music guidance |
+| `video-ad-specs` | Platform-specific dimensions, timing, and AIDA framework for paid social |
+
+---
+
+**🤖 ai-ml-dev** — AI/ML development, cloud GPU training, and mathematical animation
+
+| Skill | What it does |
+|-------|-------------|
+| `ai-ml-development` | Model selection, training loops, evaluation, fine-tuning, RLHF, RAG, MLOps patterns |
+| `cloud-gpu-training` | RunPod/Lambda/Vast.ai: SCP workflow, batch sizing, cost estimates, checkpointing |
+| `manim-animation` | 3Blue1Brown-style math animations: scenes, LaTeX, graphs, algorithm demos in Python |
+
+---
+
+**🚀 startup-tools** — VC fundraising, business formation, product development, and resource access
+
+| Skill | What it does |
+|-------|-------------|
+| `startup-vc-fundraising` | Pre-seed through Series C+: pitch decks, investor targeting, term sheets, due diligence |
+| `startup-business-formation` | Delaware C-Corp, cap table, 83(b) election, founder vesting, foreign qualification |
+| `startup-product-development` | Discovery, MVP scoping, RICE prioritization, stack choice, QA, build vs buy decisions |
+| `startup-resource-access` | Cloud credits, AI credits, grants, accelerators, banking tools, community resources |
+
+---
+
+**⛓️ blockchain** — Web3 and blockchain development
+
+| Skill | What it does |
+|-------|-------------|
+| `web3-blockchain` | EVM/Solana/Cosmos/Bitcoin; Solidity smart contracts; DeFi, NFTs, token design; cross-chain bridging |
+
+---
+
+**☁️ infrastructure** — Cloud engineering, Kubernetes, CI/CD, and MCP server development
+
+| Skill | What it does |
+|-------|-------------|
+| `cloud-engineering` | AWS/GCP/Azure IaC patterns, Terraform, cost optimization, security best practices |
+| `kubernetes-operations` | Workloads, networking, Helm, RBAC, cloud-native ops, troubleshooting runbooks |
+| `cicd-pipelines` | GitHub Actions, GitLab CI, Jenkins, Azure DevOps; deployment strategies, quality gates |
+| `mcp-builder` | Build MCP servers with FastMCP or Node/TypeScript SDK for AI agent tool integration |
 
 ---
 

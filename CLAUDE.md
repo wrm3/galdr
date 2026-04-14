@@ -19,7 +19,7 @@
 ## Key Directories
 
 ```
-.galdr/        # Task management — TASKS.md, tasks/, bugs/, prds/, subsystems/,
+.galdr/        # Task management — TASKS.md, tasks/, bugs/, features/, subsystems/,
                #   specifications_collection/ (incoming specs/PRDs from stakeholders)
 .claude/       # Claude Code configuration (rules, skills, agents, commands)
 src/           # {main source folder}
@@ -121,5 +121,5 @@ If code files were modified and no task or bug is referenced — create a retroa
 
 ---
 
-**galdr version**: 1.1.0
+**galdr version**: 1.2.0
 **Supported IDEs**: Cursor, Claude Code, Gemini, Codex, OpenCode

@@ -11,7 +11,7 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 Read the following files **in this order** to understand the project state:
 - `.galdr/PROJECT.md` — mission, goals, ecosystem context
 - `.galdr/PLAN.md` — current project milestones and development focus
-- `.galdr/PRDS.md` — PRD index (understand delivery intent)
+- `.galdr/FEATURES.md` — PRD index (understand delivery intent)
 - `.galdr/SUBSYSTEMS.md` — subsystem registry (understand scope before touching files)
 - `.galdr/BUGS.md` — open bugs (**read before TASKS** — never implement a fix that re-introduces a known bug)
 - `.galdr/TASKS.md` — master task list

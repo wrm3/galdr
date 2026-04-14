@@ -1,32 +1,25 @@
-Manage the subsystem registry. Activates **g-skl-subsystems**.
-
-## Usage
+List and check the subsystem registry. Activates **g-skl-subsystems**.
 
 ```
-@g-subsystems [check | add <name> | update <name>]
+@g-subsystems                    # sync check (default)
+@g-subsystems --status active    # show only active subsystems
+@g-subsystems --status all       # show all (active/planned/deprecated)
 ```
 
-## Operations
+## What it does
 
-| Argument | What it does |
-|----------|-------------|
-| *(no args)* | **SYNC CHECK** — audit all task files' `subsystems:` fields against SUBSYSTEMS.md; report missing entries; create stub specs for any that don't exist |
-| `check` | Same as no-args — explicit sync check alias |
-| `add <name>` | CREATE SUBSYSTEM SPEC — scaffold `.galdr/subsystems/<name>.md` and add entry to SUBSYSTEMS.md index |
-| `update <name>` | UPDATE ACTIVITY LOG — append latest task/bug completions to `<name>.md` Activity Log |
+| Invocation | Operation |
+|------------|-----------|
+| `(no args)` | **SYNC CHECK** — audit all task files' `subsystems:` fields against SUBSYSTEMS.md; report missing entries; create stub specs for any without spec files |
+| `--status active` | List active subsystems grouped by status |
+| `--status all` | List all subsystems (active + planned + deprecated) with min_tier column |
 
-## When to Use
+## Related CRUD commands
 
-- After completing a batch of tasks: `@g-subsystems update cross-project`
-- When the registry looks stale: `@g-subsystems check`
-- When adding a new functional area to the project: `@g-subsystems add <name>`
-- During `@g-grooming` or `@g-cleanup` to catch subsystem drift
+| Command | Operation |
+|---------|-----------|
+| `@g-subsystem-add` | Create new subsystem spec + SUBSYSTEMS.md entry |
+| `@g-subsystem-upd` | Update subsystem spec fields + Activity Log |
+| `@g-subsystem-del` | Deprecate a subsystem |
 
-## Integrity Rule
-
-**Every task file must reference ≥1 subsystem in its `subsystems:` field, and every
-referenced subsystem must have an entry in SUBSYSTEMS.md.**  
-`@g-subsystems check` enforces this invariant.
-
-Activate the **g-skl-subsystems** skill, matching operation to the argument given.
-
+Activate the **g-skl-subsystems** skill.

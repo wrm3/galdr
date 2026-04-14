@@ -52,7 +52,7 @@ Before any `.galdr/` operation, select the most appropriate agent:
 | Create/update/complete tasks, TASKS.md | `g-task-manager` |
 | Create task, spec it out, "please task" | `g-task-manager` |
 | Bugs, errors, BUGS.md, bugs/ | `g-qa-engineer` |
-| PRDs, planning, PLAN.md, prds/ | `g-planner` |
+| Feature, planning, PLAN.md, features/ | `g-planner` |
 | Ideas, goals, tracking/IDEA_BOARD.md | `g-ideas-goals` |
 | Grooming, sync, health checks | `g-project-manager` |
 | PROJECT.md, CONSTRAINTS.md, SUBSYSTEMS.md | `g-infrastructure` |

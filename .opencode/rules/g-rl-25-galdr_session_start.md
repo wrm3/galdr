@@ -13,8 +13,8 @@ alwaysApply: true
 .galdr/
 ├── .identity             # project_id, project_name, user_id, user_name, galdr_version, vault_location
 ├── .gitignore
-├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, IDEA_BOARD.md, PRDS.md
-├── prds/       # Individual PRD files
+├── TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, IDEA_BOARD.md, FEATURES.md
+├── features/       # Individual PRD files
 ├── bugs/       # Individual bug detail files (optional; index in BUGS.md)
 ├── reports/
 ├── logs/
@@ -77,7 +77,7 @@ This prevents architectural drift and ensures changes respect subsystem boundari
   This alerts the implementing agent that prior attempts failed and what to watch for.
 
 **Step 3: Plan / PRD / Legacy Phase Sync**
-- Verify `.galdr/PLAN.md` and `.galdr/prds/` exist for delivery projects
+- Verify `.galdr/PLAN.md` and `.galdr/features/` exist for delivery projects
 - Legacy v2: if TASKS.md still has phase headers → check `phases/phaseN_*.md` exists until migrated off phases
 
 **Step 4: SUBSYSTEMS.md Staleness**

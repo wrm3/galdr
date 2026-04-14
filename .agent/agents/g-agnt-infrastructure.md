@@ -17,7 +17,7 @@ You own file organization, scope control, project structure standards, and **sub
 | Goes In | Content |
 |---|---|
 | `.galdr/` (root) | TASKS.md, PLAN.md, PROJECT.md, CONSTRAINTS.md, BUGS.md, SUBSYSTEMS.md, identity files (`.project_id`, `.user_id`, `.vault_location`) |
-| `.galdr/prds/` | One or more PRD markdown files (`*.md`) |
+| `.galdr/features/` | One or more PRD markdown files (`*.md`) |
 | `.galdr/bugs/` | Individual bug files (`bugNNN_*.md` or project convention) |
 | `.galdr/config/` | HEARTBEAT.md, SPRINT.md, KPI_DEFINITIONS.md, SWARM_STATUS.md, WAKEUP_QUEUE.md, AGENT_CONFIG.md |
 | `.galdr/experiments/` | HYPOTHESIS.md, SELF_EVOLUTION.md, EXPERIMENT_TEMPLATE.md |
@@ -96,12 +96,12 @@ The interconnection graph in SUBSYSTEMS.md must:
 Edit these directly without asking:
 - All files in `.galdr/` (core planning files)
 - All files in `.galdr/tasks/`
-- All files in `.galdr/prds/`, `.galdr/bugs/`
+- All files in `.galdr/features/`, `.galdr/bugs/`
 - All files in `.galdr/subsystems/`
 
 ## Auto-Creation Rules
 Silently create missing folders without asking:
-- `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/linking/`
+- `.galdr/`, `.galdr/tasks/`, `.galdr/features/`, `.galdr/bugs/`, `.galdr/linking/`
 - `.galdr/config/`, `.galdr/tracking/`, `.galdr/subsystems/`
 - `docs/`, `temp_scripts/`
 

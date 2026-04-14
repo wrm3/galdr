@@ -1,5 +1,5 @@
-Create a new task. Activates **g-tasks** → CREATE operation.
+> **Deprecated**: Use `@g-task-add` instead. This alias is kept for backward compatibility.
 
-Activate the **g-tasks** skill, CREATE operation.
+Create a new task. Activates **g-skl-tasks** → CREATE TASK operation.
 
 Provide: task title and brief description. The skill handles ID assignment, complexity scoring, file creation, and TASKS.md entry atomically.

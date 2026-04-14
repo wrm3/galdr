@@ -92,12 +92,12 @@ Do NOT report as pre-existing bugs:
 
 ---
 
-## Integration with g-go-code / g-go-verify
+## Integration with g-go-code / g-go-review
 
 **During implementation (g-go-code b2 AC gate)**:
 - Any pre-existing bug encountered must have a BUG entry + comment before `[🔍]`
 - Bugs introduced by this task must be fixed inline before `[🔍]`
 
-**During verification (g-go-verify review step)**:
+**During verification (g-go-review review step)**:
 - Bug introduced by this task → flag as unmet criterion → task FAIL (back to `[📋]`)
 - Pre-existing bug discovered → log BUG entry + comment; note in summary; does NOT fail this task

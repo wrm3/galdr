@@ -26,7 +26,7 @@
 ├── SUBSYSTEMS.md        # Component registry
 ├── tasks/               # Individual task spec files
 ├── bugs/                # Individual bug files
-├── prds/                # PRD files
+├── features/                # PRD files
 └── specifications_collection/  # Incoming specs, PRDs, wireframes from stakeholders
 
 .cursor/                 # Cursor IDE configuration
@@ -81,11 +81,12 @@ Commands use `@g-` in Cursor, `/g-` in Claude Code.
 | `g-idea-capture` | Capture an idea to IDEA_BOARD.md |
 | `g-idea-review` | Review and promote ideas |
 | `g-medkit` | Health check, repair, or upgrade `.galdr/` |
-| `g-dependency-graph` | Generate task dependency graph |
+| `g-dependency-graph` | Generate task and/or subsystem dependency graphs (`--tasks`, `--subsystems`, `--all`) |
+| `g-subsystem-graph` | Generate subsystem dependency graph (alias: `@g-dependency-graph --subsystems`) |
 | `g-git-commit` | Create structured commit messages |
 | `g-go` | Run autonomously through the backlog (self-review mode — both phases) |
 | `g-go-code` | Implementation-only run — marks tasks `[🔍]`, never `[✅]` |
-| `g-go-verify` | Verification-only run — run in a **new agent session** from the coder |
+| `g-go-review` | Verification-only run — run in a **new agent session** from the coder |
 | `g-harvest` | Harvest improvements from external sources |
 | `g-vault-ingest` | Ingest or refresh vault knowledge |
 | `g-vault-search` | Search the file-first vault |
@@ -130,7 +131,7 @@ Edit these files directly without asking for permission:
 - `.galdr/BUGS.md` — bug index
 - `.galdr/PLAN.md` — project plan
 - `.galdr/PROJECT.md` — project identity
-- All files in `.galdr/tasks/`, `.galdr/bugs/`, `.galdr/prds/`
+- All files in `.galdr/tasks/`, `.galdr/bugs/`, `.galdr/features/`
 
 ---
 
@@ -177,7 +178,7 @@ This project is both a live galdr workspace and a source of installable framewor
 
 ## galdr Version
 
-**galdr version**: 1.1.0
+**galdr version**: 1.2.0
 **Supported IDEs**: Cursor, Claude Code, Gemini, Codex, OpenCode
 
 ---
@@ -233,3 +234,4 @@ All `.md` documentation files go in `docs/` — never in the project root. Excep
 - Use `;` as command separator (NOT `&&`)
 - Use `curl.exe` or `Invoke-WebRequest`, never bare `curl`
 - Use `uv` for Python virtual environments, never bare `pip` or `python -m venv`
+

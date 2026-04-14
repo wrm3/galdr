@@ -2,7 +2,7 @@ Autonomous backlog execution: $ARGUMENTS
 
 > ⚠️  **SELF-REVIEW MODE** — g-go runs both implementation AND verification in one session.
 > Independent verification is bypassed. For production task completion use two sessions:
->   Session 1: `@g-go-code`  →  Session 2 (new window/agent): `@g-go-verify`
+>   Session 1: `@g-go-code`  →  Session 2 (new window/agent): `@g-go-review`
 
 ## What This Command Does
 
@@ -15,7 +15,7 @@ Works through the task backlog autonomously, completing as many tasks as possibl
 Read the following files **in this order** to understand the project state:
 - `.galdr/PROJECT.md` — mission, goals, ecosystem context
 - `.galdr/PLAN.md` — current project milestones and development focus
-- `.galdr/PRDS.md` — PRD index (understand delivery intent)
+- `.galdr/FEATURES.md` — PRD index (understand delivery intent)
 - `.galdr/SUBSYSTEMS.md` — subsystem registry (understand scope before touching files)
 - `.galdr/BUGS.md` — open bugs (**read before TASKS** — never implement a fix that re-introduces a known bug)
 - `.galdr/TASKS.md` — master task list
@@ -137,7 +137,7 @@ After completing as many tasks as possible, present:
 | Commit after each completed task (if user allows) | Preserve progress incrementally |
 | Respect CONSTRAINTS.md | Don't violate project guardrails |
 | Stop if a task would be destructive (schema drops, data loss) | Safety first — log it as a blocker |
-| For independent verification: use g-go-code + g-go-verify across two sessions | Self-review mode (`g-go`) skips the independence gate |
+| For independent verification: use g-go-code + g-go-review across two sessions | Self-review mode (`g-go`) skips the independence gate |
 
 ## Usage Examples
 
@@ -174,7 +174,7 @@ After completing as many tasks as possible, present:
 **For independent two-session workflow (recommended):**
 ```
 Session 1:  @g-go-code
-Session 2 (new agent window):  @g-go-verify
+Session 2 (new agent window):  @g-go-review
 ```
 
 Let's get to work.

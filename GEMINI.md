@@ -80,7 +80,7 @@ MCP servers are configured in `.mcp.json` at the project root.
 ### Direct Edit Policy
 Edit these files directly without asking for permission:
 - `.galdr/TASKS.md`, `.galdr/BUGS.md`, `.galdr/PLAN.md`, `.galdr/PROJECT.md`
-- All files in `.galdr/tasks/`, `.galdr/bugs/`, `.galdr/prds/`
+- All files in `.galdr/tasks/`, `.galdr/bugs/`, `.galdr/features/`
 
 ### Atomic Updates
 Always update BOTH in the same response:

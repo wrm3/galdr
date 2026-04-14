@@ -81,7 +81,7 @@ After installing, run the setup command in your AI IDE:
 The setup will:
 1. Create `.galdr/.identity` with your project's unique ID
 2. Create all required `.galdr/` files (`TASKS.md`, `BUGS.md`, `PLAN.md`, etc.)
-3. Create folder structure (`tasks/`, `bugs/`, `prds/`, etc.)
+3. Create folder structure (`tasks/`, `bugs/`, `features/`, etc.)
 4. Prompt you for your project name and mission
 
 ---
@@ -150,14 +150,14 @@ Tasks are stored in two places:
 ├── TASKS.md           # Master task checklist
 ├── BUGS.md            # Bug tracker
 ├── PLAN.md            # Project plan and deliverable index
-├── PRDS.md            # PRD index
+├── FEATURES.md            # PRD index
 ├── PROJECT.md         # Mission, goals, non-goals
 ├── CONSTRAINTS.md     # Architectural rules agents must follow
 ├── IDEA_BOARD.md      # Captured ideas and potential improvements
 ├── SUBSYSTEMS.md      # System component registry
 ├── tasks/             # Individual task spec files
 ├── bugs/              # Individual bug spec files
-├── prds/              # Individual PRD files
+├── features/              # Individual PRD files
 ├── subsystems/        # Per-subsystem spec files
 ├── reports/           # Health reports (date-prefixed, not committed)
 └── logs/              # Hook-generated audit logs (not committed)
