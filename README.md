@@ -56,8 +56,8 @@ You finish a feature and ask the same agent to verify it. It passes everything �
 |-----------|-------|----------------|
 | **Agents** | 9 | Task manager, code reviewer, QA engineer, project planner, infrastructure, ideas, verifier, project initializer, PCAC coordinator |
 | **Skill Packs** | 7 | Core task management, feature pipeline, multi-project coordination (PCAC), knowledge vault, code quality, git/workflow, IDE CLI |
-| **Skills** | 47 | 47 individual skills across 7 packs — tasks, bugs, plan, project, features, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, harvest-intake, reverse-spec, subsystem-graph, PCAC (8 skills), medkit, IDE CLIs (4), and more |
-| **Commands** | 76 | Full `@g-*` command surface — task management, bug management, feature pipeline, code quality, vault, multi-repo, ideas, constraints, subsystems, and maintenance |
+| **Skills** | 49 | 49 individual skills across 7 packs — tasks, bugs, plan, project, features, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, harvest-intake, reverse-spec, subsystem-graph, PCAC (10 skills), medkit, IDE CLIs (4), and more |
+| **Commands** | 78 | Full `@g-*` command surface — task management, bug management, feature pipeline, code quality, vault, multi-repo, ideas, constraints, subsystems, and maintenance |
 | **Hooks** | 12 | Session start, agent complete, pre-commit, pre-push, PCAC inbox check, vault operations |
 | **Rules** | 12 | Always-apply: documentation, git workflow, error reporting, task completion gates, TODO/stub lifecycle, bug discovery |
 | **IDE Platforms** | 5 | Cursor, Claude Code, Gemini, Codex, OpenCode |
@@ -126,6 +126,8 @@ The full parent/child/sibling coordination system. Eight skills covering every d
 | `g-skl-pcac-read` | Review and action all incoming INBOX items: conflicts, requests, broadcasts, notifications |
 | `g-skl-pcac-notify` | Send a lightweight `[INFO]` FYI to one or more project INBOXes — no task created |
 | `g-skl-pcac-move` | Transfer files/folders between topology projects with provenance tracking |
+| `g-skl-pcac-spawn` | Spawn a new galdr project from this one — creates folder, installs galdr, seeds with features/code, links PCAC topology |
+| `g-skl-pcac-send-to` | Send files, features, specs, ideas, or code to any related project with INBOX notification and vault provenance log |
 
 **🧠 Knowledge Vault Pack**
 
@@ -463,6 +465,8 @@ The full parent/child/sibling coordination system. Eight skills covering every d
 | `g-skl-pcac-read` | Review and action all INBOX items: conflicts (block planning), requests from children, broadcasts from parents |
 | `g-skl-pcac-notify` | Send a lightweight `[INFO]` FYI to one or more INBOXes — no task created, no approval required |
 | `g-skl-pcac-move` | Transfer files/folders between topology projects with provenance tracking and vault log entries on both sides |
+| `g-skl-pcac-spawn` | Spawn a new galdr project from this one — creates folder, installs galdr, seeds with features/code, runs setup, links PCAC topology bidirectionally |
+| `g-skl-pcac-send-to` | Send files, features, specs, ideas, or code to any related project — writes destination INBOX notification and source vault provenance log |
 
 ---
 
@@ -601,6 +605,8 @@ Headless, multi-agent, and terminal-first usage of each supported IDE. Covers se
 | `@g-pcac-read` | Review and action all INBOX items |
 | `@g-pcac-notify` | Send a lightweight FYI notification across topology |
 | `@g-pcac-move` | Transfer files/folders to another project in topology |
+| `@g-pcac-spawn` | Spawn a new galdr project — creates, installs galdr, seeds with features/code, links topology |
+| `@g-pcac-send-to` | Send files, features, ideas, or code to any related project with INBOX notification |
 
 **Code Quality & Git**
 
