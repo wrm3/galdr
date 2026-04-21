@@ -71,6 +71,40 @@ description: As a parent project, push a task to one or more child projects with
    **Status:** task_created
    ```
 
+   e. **Create local outbound order ledger record** at `.galdr/linking/sent_orders/order_{YYYYMMDD-HHMMSS}_{child_project_id}_{task_slug}.md`:
+   ```markdown
+   ---
+   order_id: "ord-{uuid-short}"            # 8-char uuid suffix is fine
+   sent_to: "{child_project_id}"
+   sent_to_path: "G:/path/to/child"
+   sent_at: "YYYY-MM-DD"
+   local_depends: [task_id, ...]            # which LOCAL tasks/features gate on this
+   remote_task_title: "[broadcast title]"
+   remote_task_id: NNN                      # the child task id created in step b
+   status: sent                             # sent | acknowledged | in-progress | completed | blocked | timed-out
+   last_sync: "YYYY-MM-DD"
+   broadcast_id: "BCAST-XXX"                # cross-link to INBOX entry
+   ---
+
+   # Order: [broadcast title]
+
+   **Sent to**: {child_project_id} at {child_path}
+   **Sent at**: YYYY-MM-DD
+   **Remote task**: child task NNN — taskNNN_{slug}.md
+   **Local dependents**: {task_ids that referenced this order via cross_project_ref}
+   **Broadcast**: BCAST-XXX (see child INBOX.md)
+
+   ## Sync History
+
+   | Timestamp  | Status | Notes |
+   |------------|--------|-------|
+   | YYYY-MM-DD | sent   | Order dispatched + child task created |
+   ```
+
+   - Ensure `.galdr/linking/sent_orders/` exists; create if missing.
+   - The `order_id` is the stable cross-reference used by `cross_project_ref:` on local tasks/features.
+   - If any local task/feature was passed in via `--depends-on` or interactive prompt, append its ID to `local_depends:` AND write a `cross_project_ref:` entry on that local task/feature pointing back at this `order_id` (see `g-skl-tasks` and `g-skl-features` schemas).
+
 6. **If child path not accessible**: stage the order locally instead of dropping it
    - Write to `.galdr/linking/pending_orders/order_[child_project_name]_[date].md`:
    ```markdown
@@ -101,12 +135,18 @@ description: As a parent project, push a task to one or more child projects with
    [full INBOX markdown that would have been appended to child INBOX.md]
    ```
    - Report: "📦 [child-project]: order staged in pending_orders/ — will deliver when accessible"
+   - **Also create the outbound order ledger record** at `.galdr/linking/sent_orders/order_{YYYYMMDD-HHMMSS}_{child_project_id}_{task_slug}.md` with the same frontmatter described in step 5e, but with:
+     - `status: blocked` (target inaccessible — not yet delivered)
+     - `remote_task_id: null` (will be filled when the staged order delivers and the child task ID is known)
+     - Add a Sync History row: `| YYYY-MM-DD | blocked | Target path inaccessible — staged in pending_orders/ |`
+   - When the staged order is later delivered (via Step 0 pre-flight), the same `sent_orders/` record is updated: `status: sent`, `remote_task_id: NNN` is filled in, and a new Sync History row is appended.
 
 **Step 0 (pre-flight — runs before steps 1-6 above)**:
    - Check `.galdr/linking/pending_orders/` for any staged orders with `Status: pending_delivery`
    - For each staged order where the target path is NOW accessible:
      - Deliver: create the task + append INBOX entry as described in step 5
      - Move staged file to `.galdr/linking/pending_orders/delivered/`
+     - **Update the matching `.galdr/linking/sent_orders/` record**: set `status: sent`, fill `remote_task_id: NNN` (the child task ID just created), update `last_sync:`, append Sync History row `| YYYY-MM-DD | sent | Delivered from pending_orders staging |`
      - Report: "📨 Delivered staged order to [child_project]: [title]"
    - Check for duplicate: if BCAST ID already exists in child INBOX.md, skip (idempotent)
 

@@ -1,180 +1,249 @@
-Autonomous backlog execution: $ARGUMENTS
+Pipeline orchestrator — implement then auto-review: $ARGUMENTS
 
-> ⚠️  **SELF-REVIEW MODE** — g-go runs both implementation AND verification in one session.
-> Independent verification is bypassed. For production task completion use two sessions:
->   Session 1: `@g-go-code`  →  Session 2 (new window/agent): `@g-go-review`
+## Mode: PIPELINE (Implement → Auto-Review)
 
-## What This Command Does
+`g-go` is a **two-phase pipeline**. Phase 1 implements tasks; Phase 2 automatically spawns an
+independent reviewer agent on the completed work. You get adversarial QA without manually
+alternating between sessions.
 
-Works through the task backlog autonomously, completing as many tasks as possible in a single session. All questions, blockers, and decisions that need human input are collected and presented at the end — never interrupting the flow.
+> **Independence guarantee**: The Phase 2 reviewer is a fresh Task subagent. It receives only
+> the task IDs and the `g-go-review` protocol — it has **no access** to Phase 1's conversation
+> history, reasoning, or implementation decisions. It reads the artifacts on disk cold.
 
-## Execution Protocol
+---
+
+## Phase 1: Implementation
+
+Phase 1 runs the full `g-go-code` protocol. Every completed item is marked `[🔍]`.
 
 ### 1. Load Context (Before Touching Anything)
 
-Read the following files **in this order** to understand the project state:
+Read in this order:
 - `.galdr/PROJECT.md` — mission, goals, ecosystem context
-- `.galdr/PLAN.md` — current project milestones and development focus
-- `.galdr/FEATURES.md` — PRD index (understand delivery intent)
-- `.galdr/SUBSYSTEMS.md` — subsystem registry (understand scope before touching files)
-- `.galdr/BUGS.md` — open bugs (**read before TASKS** — never implement a fix that re-introduces a known bug)
+- `.galdr/PLAN.md` — current milestones
+- `.galdr/BUGS.md` — open bugs (**read before TASKS** — bugs run first)
 - `.galdr/TASKS.md` — master task list
 - `.galdr/CONSTRAINTS.md` — guardrails (if exists)
+- `.galdr/DECISIONS.md` — past decisions (if exists, read-only)
 - `git log --oneline -10` — recent changes
 
 ### 2. Build the Work Queue
 
-**Bugs come before tasks.** If BUGS.md has any open bugs with status `Open` or `In Progress`, those enter the queue first — before any pending tasks. A known broken thing should not be skipped in favor of new work.
+**Bugs first (Tier 1), then tasks (Tier 2).**
 
-Work queue construction order:
+**Tier 1 — Open bugs:**
+- From `BUGS.md` + `bugs/` files; Critical → High → Medium → Low
+- Skip bugs with external blockers
+- **Skip `[🚨]` bugs** — log in Skipped section
 
-**Tier 1 — Open bugs (from BUGS.md + individual bug files in `bugs/`):**
-- Severity: Critical bugs first, then High, Medium, Low
-- Only bugs with no external blocker (e.g. not waiting on an API key or upstream fix)
-
-**Tier 2 — Pending tasks (from TASKS.md):**
-- Status is `[ ]` (pending) or `[📋]` (ready)
-- No unmet dependencies (prerequisite tasks are `[✅]`)
-- Not explicitly marked as `ai_safe: false`
-- Not blocked by human input
+**Tier 2 — Pending tasks:**
+- Status `[ ]` (pending) or `[📋]` (ready)
+- **NOT** `[🚨]` — skip entirely
+- No unmet dependencies; not `ai_safe: false`
 - Priority: Critical → High → Medium → Low
 
-If `$ARGUMENTS` restricts the queue, supported filters:
-- Task IDs: `@g-go tasks 7, 9, 12`
-- Bug IDs: `@g-go bugs BUG-003, BUG-007`
+Supported `$ARGUMENTS` filters:
+- Task IDs: `@g-go tasks 7, 9`
+- Bug IDs: `@g-go bugs BUG-003`
 - Subsystem: `@g-go subsystem vault-hooks-automation`
-- Tier only: `@g-go bugs-only` / `@g-go tasks-only`
-- Combined: `@g-go subsystem cross-project bugs-only`
+- `@g-go bugs-only` / `@g-go tasks-only`
 
+### 3. Implement Each Item
 
-### 3. Work Through Tasks Sequentially
+For each item:
 
-For each task in the queue:
+**a)** Read the task/bug file — understand objective and acceptance criteria
+**b)** Implement the solution — write code, make changes
+**b2) AC gate** — before moving on, walk every `- [ ]` acceptance criterion:
+  - Is this criterion satisfied in actual files? → proceed
+  - Unmet → return to **(b)**
+  - Cannot meet this session → log as Blocker, skip task entirely (no partial `[🔍]`)
+  - **Stub/TODO scan**: bare `# TODO`, `pass`, `raise NotImplementedError` → annotate `TODO[TASK-X→TASK-Y]` + create follow-up task (see `g-rl-34`)
+  - **Bug-discovery check**: pre-existing bugs → BUG entry + `BUG[BUG-{id}]` comment; current-task bugs → fix inline (see `g-rl-35`)
+  - **Constraint check**: any `🚫 VIOLATION` blocks `[🔍]`
+**b3) Status History** — append row before marking `[🔍]`:
+  ```
+  | YYYY-MM-DD | pending | awaiting-verification | Implementation complete; {1-line summary} |
+  ```
+**c)** Validate — lint, test, check files exist
+**d)** Record decisions → append to `.galdr/DECISIONS.md`
+**e)** Update subsystem Activity Log for each subsystem in `subsystems:` field
+**f)** Mark `[🔍]` (NOT `[✅]`) in task file + TASKS.md; add task ID to `phase1_results`
+**g)** Move to next item
 
-**a) Read the task file** — understand objective and acceptance criteria
-**b) Implement the solution** — write code, make changes, satisfy acceptance criteria
-**b2) AC gate** — before moving on, walk every `- [ ]` acceptance criterion in the task spec:
-  - Each criterion confirmed met in actual files/code? → continue
-  - Any unmet criterion → return to **(b)** and address it
-  - Cannot meet a criterion this session → log as Blocker in step 4 and skip this task (no partial marking)
-  - **Stub/TODO scan**: search files modified for this task for bare `# TODO`, `// TODO`, `pass` (non-abstract), `raise NotImplementedError`, `throw new Error("not implemented")` — each is an unmet criterion until annotated `TODO[TASK-X→TASK-Y]` with a follow-up task (see `g-rl-34`)
-  - **Bug-discovery check**: pre-existing bugs → BUG entry + `BUG[BUG-{id}]` comment; current-task bugs → fix inline before `[🔍]` (see `g-rl-35`)
-**c) Validate** — run any available tests, check lints, verify the work
-**d) Record decisions** — if you chose approach A over B, append to `.galdr/DECISIONS.md`
-**e) Update subsystem Activity Log** — for each subsystem in the task's `subsystems:` field, append a row to `.galdr/subsystems/{name}.md` Activity Log: `| {date} | TASK | {id} | {title} | — |`. If the spec file doesn't exist, create a stub (see `g-skl-subsystems` CREATE SUBSYSTEM SPEC).
-**f) Update task status** — mark `[🔍]` in task file + TASKS.md; mark `[✅]` only after independent self-review confirms the work
-**f2) Docs check** (only when marking `[✅]`) — does this task add/remove/change user-facing behavior?
-  - **YES** → append entry to `CHANGELOG.md` under `[Unreleased]`; update `README.md` if a relevant section exists
-  - **NO** (internal refactor, task housekeeping, bug fix with no interface change) → skip
-  - See `g-rl-26-readme-changelog.mdc` for qualifying criteria and format
-**g) Move to next task**
+### 4. Phase 1 Completion
 
-### 4. Question & Blocker Collection
+After all items processed, output the transition block:
 
-**DO NOT** stop to ask questions during execution. Instead, maintain a running log:
-
-```markdown
-## Deferred Items
-
-### Questions (Need Human Answer)
-- Q1: [question] (encountered during task #X)
-- Q2: [question] (encountered during task #Y)
-
-### Blockers (Could Not Proceed)
-- B1: Task #X — [why it's blocked]
-- B2: Task #Y — [missing dependency / credentials / unclear spec]
-
-### Decisions Made (FYI)
-- D1: Task #X — chose approach A over B because [reason]
-- D2: Task #Y — interpreted ambiguous spec as [interpretation]
+```
+[PIPELINE] Phase 1 complete
+  Implemented → [🔍]: {phase1_results IDs}
+  Blocked/Skipped: {list with reasons}
 ```
 
-### 5. Record Decisions
+If `phase1_results` is empty → skip Phase 2:
+```
+[PIPELINE] Phase 1 completed 0 items — Phase 2 skipped. Nothing to review.
+```
 
-Before writing the session summary, append any new architectural or workflow decisions to
-`.galdr/DECISIONS.md`:
+---
 
-> If you chose approach A over B, deferred a feature, changed a convention, or made any
-> decision that should inform future agents — append it to `.galdr/DECISIONS.md` using
-> the ID format `D{NNN}` (next sequential ID after the last existing entry).
+## Phase 2: Auto-Spawn Independent Reviewer
 
-### 6. Session Summary (Always End With This)
+> **Only runs if Phase 1 marked at least 1 item `[🔍]`.**
 
-After completing as many tasks as possible, present:
+### Spawn
+
+Print the handoff notice:
+```
+[PIPELINE] Spawning Phase 2 reviewer for: Task {IDs}
+[PIPELINE] Reviewer is a fresh agent — no Phase 1 context. Adversarial independence: ✓
+```
+
+Spawn a Task subagent with:
+- The full `g-go-review` prompt
+- Filter: `tasks {phase1_result_ids}`
+- No other context from Phase 1
+
+### Reviewer Protocol
+
+The spawned agent runs the standard `g-go-review` protocol:
+- Reads each task spec and checks ACs against actual files
+- PASS → marks `[✅]` + appends verification note
+- FAIL → appends Status History row + marks back to `[📋]`; stuck-loop check (≥3 FAILs → `[🚨]`)
+- **Does NOT write to TASKS.md** — returns result payload to coordinator
+
+### Coordinator Collects and Finalises
+
+After reviewer completes:
+1. Batch-update `TASKS.md` (all PASS → `[✅]`, all FAIL → `[📋]`) in a single write
+2. Write Pipeline Session Summary (see format below)
+
+---
+
+## Pipeline Session Summary
 
 ```markdown
-## Backlog Execution Summary
+## Pipeline Session Summary
 
-### Completed
-- [✅] Task #X: {title}
-- [✅] Task #Y: {title}
+### Phase 1: Implementation
+- Items attempted: {N}
+- Completed → [🔍]: Task 7, Task 9, Bug BUG-003
+- Blocked/Skipped: Task 10 — {reason}
 
-### Skipped (Blocked)
-- Task #Z: {reason — dependency, needs human, unclear spec}
+### Phase 2: Adversarial Review (independent agent)
+- Reviewer: 1 fresh Task subagent
+- Reviewer had NO Phase 1 context ✓
 
-### Failed (Attempted but couldn't finish)
-- Task #W: {what went wrong}
+| Task | Result | Notes |
+|------|--------|-------|
+| Task 7 | [✅] PASS | all ACs met |
+| Task 9 | [✅] PASS | all ACs met |
+| BUG-003 | [📋] FAIL | AC-2 not met — {reason} |
 
-### Deferred Questions & Blockers
-{the collected questions and blockers from step 4}
+### Final Status
+- ✅ Completed (verified): 2
+- 📋 Failed (back to pending): 1
+- Blocked (not attempted): 1
 
-### Recommended Next Steps
-1. [what to do next]
-2. [what to do next]
-
-### Git Status
-- Changes committed: Yes/No
-- Uncommitted changes: {list if any}
+### Re-implement failed tasks
+@g-go tasks {failed_ids}
 ```
+
+---
+
+## Swarm Mode (`--swarm`)
+
+When `$ARGUMENTS` includes `--swarm`, both phases run in swarm mode.
+
+### Phase 1 Swarm (g-go-code swarm protocol)
+
+**Smart Agent Count:**
+
+| Queue size | Agents |
+|-----------|--------|
+| 1 | 1 (no swarm — fallback) |
+| 2–4 | 2 |
+| 5–9 | `ceil(count / 3)` (2–3) |
+| 10–14 | 4 |
+| 15+ | 5 (hard cap) |
+
+**Conflict-safe partition** (subsystem-boundary):
+```
+1. For each pair (A, B): CONFLICT if shared subsystem OR A depends_on B OR B depends_on A
+2. Greedy assign: item → first bucket with no conflict (open new bucket up to agent_count limit)
+3. Tasks touching TASKS.md/BUGS.md directly → single bucket
+```
+
+Display partition plan, spawn N implementer agents, collect `phase1_results` = union of all `[🔍]` items.
+
+### Phase 2 Swarm (g-go-review swarm protocol)
+
+Partition `phase1_results` round-robin across M reviewer agents (same count formula).
+Each reviewer produces a result payload (no TASKS.md writes).
+Coordinator performs single batch TASKS.md update.
+
+### Swarm Pipeline Summary
+
+```markdown
+## Swarm Pipeline Session Summary
+
+### Phase 1: Swarm Implementation
+- Implementers: N
+- Partition: subsystem-boundary
+| Bucket | Tasks | [🔍] | Blocked |
+|--------|-------|------|---------|
+| 1 | 7, 9 | 2 | 0 |
+| 2 | 10, 11 | 1 | 1 |
+
+### Phase 2: Swarm Review (N fresh agents — no Phase 1 context)
+- Reviewers: M
+- Partition: round-robin by priority
+| Reviewer | Tasks | PASS | FAIL |
+|----------|-------|------|------|
+| R-1 | 7, 10 | 2 | 0 |
+| R-2 | 9 | 0 | 1 |
+
+### Final Status
+- ✅ Completed (verified): {N}
+- 📋 Failed (back to pending): {M}
+- Blocked: {K}
+```
+
+---
 
 ## Behavioral Rules
 
 | Rule | Why |
 |------|-----|
-| Never ask questions mid-execution | The whole point is uninterrupted autonomous work |
-| Log every decision you make autonomously | User needs to review what you decided |
-| Skip tasks you can't complete, don't fail the whole run | Maximize total output |
-| Commit after each completed task (if user allows) | Preserve progress incrementally |
-| Respect CONSTRAINTS.md | Don't violate project guardrails |
-| Stop if a task would be destructive (schema drops, data loss) | Safety first — log it as a blocker |
-| For independent verification: use g-go-code + g-go-review across two sessions | Self-review mode (`g-go`) skips the independence gate |
+| Phase 1 never marks `[✅]` — only `[🔍]` | Phase 2 reviewer owns `[✅]` |
+| Phase 2 reviewer spawned with no Phase 1 context | Adversarial independence guarantee |
+| Coordinator batch-writes TASKS.md after Phase 2 | Prevents concurrent line-edit conflicts |
+| Never ask questions mid-execution | Uninterrupted autonomous work |
+| Skip tasks you can't complete | Maximize total output |
+| Respect CONSTRAINTS.md | Never violate project guardrails |
+| Abort if destructive (schema drop, data loss) | Safety first — log as blocker |
+
+---
 
 ## Usage Examples
 
-**Work everything available:**
 ```
 @g-go
-```
-
-**Work specific tasks:**
-```
 @g-go tasks 7, 9, 12
-```
-
-**Work specific bugs:**
-```
 @g-go bugs BUG-003, BUG-007
-```
-
-**Work a specific subsystem (bugs + tasks):**
-```
 @g-go subsystem vault-hooks-automation
-```
-
-**Bugs only:**
-```
 @g-go bugs-only
+@g-go --swarm
+@g-go --swarm tasks 7, 9, 10, 11, 12
+@g-go --swarm bugs-only
 ```
 
-**Work only critical/high priority:**
-```
-@g-go critical and high only
-```
-
-**For independent two-session workflow (recommended):**
+**For manual control (two separate sessions):**
 ```
 Session 1:  @g-go-code
 Session 2 (new agent window):  @g-go-review
 ```
 
-Let's get to work.
+Let's go.
+

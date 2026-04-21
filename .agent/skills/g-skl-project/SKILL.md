@@ -38,7 +38,7 @@ No parent, sibling, or child projects configured yet.
 Use `@g-topology` to manage relationships.
 
 ## Key References
-- **Plan**: `PLAN.md` | **Constraints**: `CONSTRAINTS.md` | **PRDs**: `prds/` | **Tasks**: `TASKS.md`
+- **Plan**: `PLAN.md` | **Constraints**: `CONSTRAINTS.md` | **Feature**: `features/` | **Tasks**: `TASKS.md`
 ```
 
 **Gather goals** (ask if not clear from context):

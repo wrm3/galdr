@@ -21,16 +21,23 @@ Use when the user wants to add a new architectural rule to the project.
    - **In practice**: 3-6 specific rules
    - **Violation examples**: 2-4 concrete examples of what NOT to do
    - **Enforcement**: how/when this is checked
+   - **Scope**: `local-only` (default) | `inheritable` | `shareable` | `ecosystem-wide` (see Scope Definitions below)
+   - *(Optional)* **Expires at**: `YYYY-MM-DD` — date-based auto-expiry
+   - *(Optional)* **Resolved when task**: task ID — auto-expires when that task reaches `[✅]`
+   - *(Optional)* **Resolved when feature**: feature slug — auto-expires when feature is `shipped`
+   - *(Optional)* **Resolved when**: free-text condition (human-reviewed)
+   - *(Optional)* **Auto archive**: `true` (default) or `false` — if false, expiry flags but does not auto-archive
 3. Add a row to `## Constraint Index`:
    ```
-   | C-{ID} | active | {name} | {one-line summary} |
+   | C-{ID} | active | {name} | {scope} | {one-line summary} |
    ```
-4. Add a full `### C-{ID}: {name}` block in `## Constraint Definitions` following the established format
+4. Add a full `### C-{ID}: {name}` block in `## Constraint Definitions` following the established format (includes `**Scope**:` field and optional expiry fields)
 5. Append an entry to `## Change Log`:
    ```
    | {today} | C-{ID} | Initial constraint created — {name} | user |
    ```
 6. Confirm completion: "Constraint C-{ID} ({name}) added. ID it in future task YAMLs as `{slug}`."
+7. **Warning**: If `scope: ecosystem-wide` AND expiry fields are set, warn: "Ecosystem-wide constraints are typically permanent. Confirm expiry is intentional."
 
 ---
 
@@ -57,20 +64,35 @@ Use during `g-go-code` AC gate step (b2), or on demand before claiming a task.
 
 **Steps**:
 1. Read all rows in `## Constraint Index` where Status = `active`
-2. For each active constraint, evaluate: does the current task/implementation potentially violate any rule?
-3. Report verdicts:
+2. **Expiry evaluation** (runs before violation checks):
+   - For each active constraint with expiry fields:
+     a. **Date check**: if `**Expires at**:` ≤ today → mark expired
+     b. **Task check**: if `**Resolved when task**:` is set → read TASKS.md → if task is `[✅]` → mark expired
+     c. **Feature check**: if `**Resolved when feature**:` is set → read FEATURES.md → if feature is `shipped` → mark expired
+     d. **Text condition**: `**Resolved when**:` (string only, no task/feature ID) → display for human confirmation
+   - When a constraint expires:
+     - If `**Auto archive**:` is `true` (or absent): set `**Status**: expired`, move to `## Archived Constraints` section, remove from `## Constraint Index`, append Change Log entry
+     - If `**Auto archive**: false`: flag only — `⏰ C-{id} expiry condition met — review and archive manually`
+   - Report expired constraints: `⏰ C-{id} "{name}" expired — {reason}`
+3. For each remaining active constraint, evaluate: does the current task/implementation potentially violate any rule?
+4. Report verdicts:
    - `✅ PASS` — no conflict found
    - `⚠️ POSSIBLE` — implementation touches this area; review carefully
    - `🚫 VIOLATION` — implementation would violate this constraint
-4. Any `🚫 VIOLATION` → **block task completion**; return to implementation step
-5. Any `⚠️ POSSIBLE` → note it; agent must confirm the concern is addressed before marking `[🔍]`
+5. Any `🚫 VIOLATION` → **block task completion**; return to implementation step
+6. Any `⚠️ POSSIBLE` → note it; agent must confirm the concern is addressed before marking `[🔍]`
+7. For constraints with `inherited_from:` — note the origin project in the output
 
 **Output format**:
 ```
+EXPIRY CHECK:
+  ⏰ C-016 "no-direct-oracle" expired — Task 094 [✅]
+  ⏰ C-018 "mobile-view-required" — resolved_when needs human review: "Sprint policy ends"
+
 CONSTRAINT CHECK:
-  C-001 [file-first vault]: ✅ PASS
-  C-009 [10-target propagation]: ⚠️ POSSIBLE — skill added to template_full; confirm root copies exist
-  C-007 [secrets]: ✅ PASS
+  C-001 [file-first vault] (ecosystem-wide): ✅ PASS
+  C-009 [12-target propagation] (local-only): ⚠️ POSSIBLE — skill added to template_full; confirm root copies exist
+  C-007 [secrets] (inheritable): ✅ PASS
   ...
 ```
 
@@ -83,20 +105,16 @@ Use at every session start (called by `g-rl-25`) to surface the active constrain
 **Output format**:
 ```
 ACTIVE CONSTRAINTS (12):
-  C-001 [file-first vault]: Vault works without Docker or MCP
-  C-002 [obsidian-markdown]: Standard MD + [[wikilinks]]; tags: not topics:
-  C-003 [path-via-identity]: Resolve vault_location from .identity before writes
-  C-004 [mirrors-outside-vault]: Raw repo clones go to repos_location, not vault
-  C-005 [schema-first]: Update VAULT_SCHEMA.md before adding folders/fields
-  C-006 [log-operations]: Append to vault/log.md after non-trivial mutations
-  C-007 [no-secrets]: No tokens/passwords in vault notes or task files
-  C-008 [self-hosting-parity]: Repo works as live project AND install template
-  C-009 [10-target-propagation]: Framework changes go to all 10 IDE targets
-  C-010 [bidirectional-parity]: Public content in root ↔ template_full
-  C-011 [structural-independence]: No symlinks/junctions between targets
-  C-012 [galdr-contract-parity]: template_full/.galdr/ matches root .galdr/ structure
+  C-001 [file-first vault] (ecosystem-wide): Vault works without Docker or MCP
+  C-002 [obsidian-markdown] (local-only): Standard MD + [[wikilinks]]; tags: not topics:
+  C-003 [path-via-identity] (inheritable): Resolve vault_location from .identity before writes
+  ...
 Full detail: .galdr/CONSTRAINTS.md
+Shareable constraints: C-001, C-010 (offer to peers on @g-pcac-sync)
+Inheritable constraints: C-003, C-007 (auto-offered when spawning children)
 ```
+
+Show scope in parentheses after the constraint name. If scope is missing from a constraint definition, treat it as `local-only`.
 
 ---
 
@@ -107,8 +125,9 @@ Each constraint definition block follows this template:
 ```markdown
 ### C-{ID}: {Name}
 
-**Status**: active | superseded | retired
+**Status**: active | superseded | retired | expired
 **Established**: YYYY-MM-DD
+**Scope**: local-only | inheritable | shareable | ecosystem-wide
 **Rationale**: [2-3 sentences]
 
 **Applies to**: [files, behaviors, agents]
@@ -124,6 +143,53 @@ Each constraint definition block follows this template:
 
 **Enforcement**: [How/when checked — g-go-code AC gate, session start, parity sync, etc.]
 ```
+
+### Optional Expiry Fields (for temporary constraints)
+
+Add any combination of these after the core fields:
+
+```markdown
+**Expires at**: YYYY-MM-DD
+**Resolved when task**: {task_id}
+**Resolved when feature**: {feature_slug}
+**Resolved when**: {free-text condition — human-reviewed}
+**Auto archive**: true | false (default: true)
+```
+
+- `expires_at` — auto-expires on this date
+- `resolved_when_task` — auto-expires when the referenced task reaches `[✅]`
+- `resolved_when_feature` — auto-expires when the referenced feature is `shipped`
+- `resolved_when` — free-text condition displayed for human confirmation
+- `auto_archive` — if `false`, expiry flags but does NOT auto-move to archive section
+
+**Permanent constraints** (C-001 style) should NEVER have expiry fields. Expiry is for temporary policies, migration guards, and sprint-scoped rules only.
+
+### Inherited Constraints
+
+For constraints propagated from a parent/peer project, add:
+```markdown
+**Scope**: inheritable
+**Inherited from**: {parent-slug} (propagated {YYYY-MM-DD})
+```
+Constraints with `**Inherited from**:` are **read-only** locally. To change them, coordinate via `@g-pcac-sync` with the originating project.
+
+---
+
+## Constraint Scope Definitions
+
+| Scope | Meaning | Propagation |
+|-------|---------|-------------|
+| `local-only` | Applies only to this project (default) | Never propagated |
+| `inheritable` | Parent → children on spawn (opt-in) | Offered at `@g-pcac-spawn` time |
+| `shareable` | Any linked project can opt in | Offered via `@g-pcac-sync` |
+| `ecosystem-wide` | All topology members should follow | Auto-offered to all linked projects |
+
+**Workflow for propagating constraints:**
+- **At spawn**: `g-skl-pcac-spawn` lists parent's `inheritable` + `ecosystem-wide` constraints and asks "Propagate N constraints to child?"
+- **At link**: `g-skl-pcac-adopt` / `g-skl-pcac-claim` offers to sync `ecosystem-wide` constraints bidirectionally
+- **On update**: when a source constraint changes, owner should run `@g-pcac-sync` to notify peers with copies
+
+**Note**: Scope defaults to `local-only` if the `**Scope**:` field is absent from a constraint definition (backward compatible).
 
 ---
 
@@ -144,5 +210,7 @@ New constraint names must:
 
 - CONSTRAINTS.md is loaded at **every session start** — it must remain a single file, fully in-context
 - Never split into individual `constraints/` files — the single-file model is intentional (D028)
-- The file has four sections: Governance, Constraint Index, Constraint Definitions, Change Log — do not add or remove sections
-- The Change Log is append-only — the `g-go-verify` agent uses it to detect unauthorized constraint changes
+- The file has five sections: Governance, Constraint Index, Constraint Definitions, Archived Constraints, Change Log — do not add or remove sections
+- The Change Log is append-only — the `g-go-review` agent uses it to detect unauthorized constraint changes
+- **Constraint states**: `active` → `expired` (auto, via date/task/feature condition) | `deprecated` (manual) | `violated` (temporary flag). Expired constraints move to `## Archived Constraints` section (unless `auto_archive: false`)
+- **Expiry is additive** — existing constraints without expiry fields are completely unaffected (backward compatible)

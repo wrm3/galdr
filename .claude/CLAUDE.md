@@ -26,11 +26,16 @@ Use `/g-` for all galdr commands. See `docs/COMMANDS.md` for the full reference.
 | `/g-git-commit` | Structured git commit |
 | `/g-idea-capture` | Capture an idea |
 | `/g-idea-review` | Review and promote ideas |
-| `/g-medkit` | Health check and repair `.galdr/` |
+| `/g-medic` | Health check and repair `.galdr/` |
 | `/g-swot-review` | SWOT analysis |
 | `/g-dependency-graph` | Generate task dependency graph |
 | `/g-report` | Project report |
 | `/g-goal-update` | Update project goals |
+| `/g-release-new` | Create a new release (CREATE) |
+| `/g-release-assign` | Assign tasks to a release (ASSIGN) |
+| `/g-release-status` | Show release status (STATUS) |
+| `/g-release-publish` | Publish ROADMAP.md (PUBLISH) |
+| `/g-release-accelerate` | Accelerate a release with cascade shift (ACCELERATE) |
 | `/g-vault-ingest` | Ingest or refresh vault knowledge |
 | `/g-vault-search` | Search the file-first vault |
 | `/g-vault-lint` | Lint vault structure and freshness |

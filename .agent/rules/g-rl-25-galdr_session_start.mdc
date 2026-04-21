@@ -28,6 +28,9 @@ alwaysApply: true
 ├── config/      # HEARTBEAT.md, SPRINT.md, AGENT_CONFIG.md
 ├── experiments/ # EXPERIMENTS.md, SELF_EVOLUTION.md, HYPOTHESIS.md, EXP-NNN.md
 ├── linking/     # README.md, INBOX.md — cross-project coordination
+│   ├── sent_orders/    # Outbound order ledger (order_*.md per dispatched task — see g-skl-pcac-order)
+│   ├── pending_orders/ # Staged orders not yet delivered (target inaccessible)
+│   └── peers/          # Peer capability snapshots
 ├── vault/       # encrypted/sensitive context
 └── phases/      # Legacy v2 only — phase defs / archives
 ```
@@ -60,6 +63,7 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 **Step 0: Constraints Load**
 - Read `.galdr/CONSTRAINTS.md`
 - Count active constraints from the `## Constraint Index` table (Status = active)
+- **Expiry check**: for each active constraint with expiry fields (`**Expires at**:`, `**Resolved when task**:`, `**Resolved when feature**:`), evaluate conditions. If any constraints expired since last session: `⏰ N constraint(s) auto-expired: C-{ids}`. Run the CHECK expiry evaluation from `g-skl-constraints` to auto-archive expired constraints.
 - Display the LIST output from `g-skl-constraints` (compact one-liner per constraint)
 - If any constraint definition block is missing the `**Enforcement**:` field → flag: `⚠️ C-{ID} has no enforcement definition`
 
@@ -97,6 +101,22 @@ This prevents architectural drift and ensures changes respect subsystem boundari
 - Otherwise: count open items by type (requests/broadcasts/syncs) and note in session context
 - Format: `INBOX: N open (N requests, N broadcasts, N syncs)` or `INBOX: clear`
 - `g-hk-pcac-inbox-check.ps1` runs this check automatically at session start
+
+**Step 6b: Cross-Project Dependency Surface** (if `.galdr/linking/sent_orders/` exists)
+- List `.galdr/linking/sent_orders/order_*.md`
+- For each: read frontmatter `status:` field
+  - **Awaiting** = count of records where `status` ∈ {`sent`, `acknowledged`, `in-progress`, `blocked`}
+  - **Resolved-since-last-session** = count of records where `status: completed` AND the record's most-recent Sync History row timestamp is newer than the previous session boundary (use last `[✅]` task completion date in TASKS.md as a cheap proxy when no explicit session-boundary file is available)
+- Display: `🔗 Cross-project: {N_awaiting} awaiting, {M_resolved} resolved`
+  - If `N_awaiting > 0`: also list the awaiting orders compactly:
+    ```
+       ⏳ ord-{shortid} → {sent_to}: {remote_task_title} ({status}, {days_out}d)
+    ```
+  - If `M_resolved > 0`: also list:
+    ```
+       ✅ ord-{shortid} → {sent_to}: {remote_task_title} (resolved {date})
+    ```
+- Skip silently when `sent_orders/` is empty or absent.
 
 **Step 7: Cascade Forward Check** (if `.galdr/PROJECT.md` **Project Linking** section lists children with cascade)
 - Scan `.galdr/tasks/` for any task with `cascade_depth_remaining > 0` AND `cascade_forwarded: false`

@@ -133,6 +133,96 @@ For independent verification: open a NEW agent session and run @g-go-review.
 | Respect CONSTRAINTS.md | Never violate project guardrails |
 | Abort if destructive (schema drop, data loss) | Safety first — log it as a blocker |
 
+## Swarm Mode (`--swarm`)
+
+When `$ARGUMENTS` includes `--swarm`, activate the **COORDINATOR PHASE** before any implementation.
+Swarm mode partitions the work queue into conflict-safe buckets and spawns N parallel agents.
+
+### Coordinator Phase (runs FIRST when --swarm is present)
+
+**Step S1: Build full work queue** — same rules as standard mode (Steps 1–2 above).
+
+**Step S2: Evaluate swarm eligibility**
+- If only 1 qualifying item → fallback to standard single-agent mode:
+  `[SWARM] Single task — running standard mode`
+- If 0 qualifying items → exit with empty queue message
+
+**Step S3: Compute agent count** (Smart Agent Count Formula)
+
+| Queue size | Agents |
+|-----------|--------|
+| 1 | 1 (no swarm — fallback) |
+| 2–4 | 2 |
+| 5–9 | `ceil(count / 3)` (2–3) |
+| 10–14 | 4 |
+| 15+ | 5 (hard cap) |
+
+**Step S4: Partition into conflict-safe buckets**
+
+```
+1. Build conflict_graph:
+   For each pair (A, B) in work_queue:
+     CONFLICT if: shared subsystem in subsystems[] OR A depends_on B OR B depends_on A
+
+2. Greedy partition:
+   Sort work_queue by priority (Critical→Low)
+   For each item:
+     Assign to the first existing bucket with no conflict with any item already in it
+     If no bucket fits → open new bucket (up to agent_count limit)
+     If max buckets hit → assign to smallest bucket (accept conflict; note it)
+
+3. Output: buckets = [[task_ids...], [task_ids...], ...]
+```
+
+**Primary axis**: subsystem boundaries (same subsystem → same bucket).
+**Secondary axis**: file-lock zones (tasks both touching TASKS.md/BUGS.md directly → same bucket).
+**Dependency rule**: if A depends on B → same bucket, or B's bucket runs first.
+
+**Step S5: Display partition plan**
+```
+[SWARM] Work queue: {M} items → {N} agents
+  Bucket 1: Task 7 (vault-knowledge-store), Task 9 (vault-knowledge-store)
+  Bucket 2: Task 10 (task-lifecycle-management), Task 11 (behavioral-rules-engine)
+  Bucket 3: Task 12 (cross-project-coordination-pcac)
+Spawning {N} implementation agents...
+```
+
+**Step S6: Spawn sub-agents**
+- Use the Agent tool to spawn N agents, each receiving:
+  - The full `g-go-code` prompt (this command file content)
+  - A `tasks X, Y, Z` filter argument restricting to that bucket's items only
+- Run all agents. Each follows the standard protocol on its slice.
+
+**Step S7: Collect and merge**
+After all sub-agents complete, write the unified handoff:
+
+```markdown
+## Swarm Implementation Session Summary
+
+### Swarm Configuration
+- Agents spawned: N
+- Partition strategy: subsystem-boundary
+- Total items in queue: M
+
+### Bucket Results
+| Bucket | Agent | Tasks | Status |
+|--------|-------|-------|--------|
+| 1 | Agent-1 | 7, 9 | [🔍] ×2 |
+| 2 | Agent-2 | 10, 11 | [🔍] ×1, Blocked ×1 |
+
+### Moved to [🔍] (Awaiting Verification)
+{merged list from all agents}
+
+### Skipped / Blocked
+{merged list from all agents}
+
+### Handoff
+{total} task(s) / {total} bug(s) moved to [🔍].
+For independent verification: open a NEW agent session and run @g-go-review --swarm.
+```
+
+---
+
 ## Usage Examples
 
 ```
@@ -141,6 +231,9 @@ For independent verification: open a NEW agent session and run @g-go-review.
 @g-go-code bugs BUG-001, BUG-002
 @g-go-code subsystem cross-project
 @g-go-code bugs-only
+@g-go-code --swarm
+@g-go-code --swarm tasks 7, 9, 10, 11, 12
+@g-go-code --swarm bugs-only
 ```
 
 Let's implement.

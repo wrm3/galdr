@@ -13,7 +13,7 @@ First-time setup of galdr in a project. @g-setup command.
 
 | Folder | Slim | Full (galdr_full only) |
 |--------|------|------------------------|
-| `tasks/`, `bugs/`, `prds/`, `subsystems/`, `reports/`, `logs/` | ✅ | ✅ |
+| `tasks/`, `bugs/`, `features/`, `subsystems/`, `reports/`, `logs/` | ✅ | ✅ |
 | `config/` (HEARTBEAT.md, SPRINT.md, AGENT_CONFIG.md) | ❌ | ✅ |
 | `experiments/` (EXPERIMENTS.md, HYPOTHESIS.md, SELF_EVOLUTION.md) | ❌ | ✅ |
 | `linking/` (README.md, INBOX.md) | ❌ | ✅ |
@@ -37,7 +37,7 @@ First-time setup of galdr in a project. @g-setup command.
    ```
 
 3. **If galdr_install unavailable**, create manually:
-   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/prds/`, `.galdr/bugs/`, `.galdr/subsystems/`, `.galdr/reports/`, `.galdr/logs/`, `.galdr/specifications_collection/`
+   - Folders: `.galdr/`, `.galdr/tasks/`, `.galdr/features/`, `.galdr/bugs/`, `.galdr/subsystems/`, `.galdr/reports/`, `.galdr/logs/`, `.galdr/specifications_collection/`
    - Create `.galdr/specifications_collection/README.md` with the index template (see template in `template_full/.galdr/specifications_collection/README.md`)
    - Create `.galdr/learned-facts.md` from the template in `template_full/.galdr/learned-facts.md`
    - If `.galdr/.identity` contains `vault_location`, create `{vault_location}/log.md` as a seed file (one header line — `append_log()` will populate it on first ingest)
@@ -45,6 +45,15 @@ First-time setup of galdr in a project. @g-setup command.
    - If `.galdr/.identity` contains `vault_location` **and** `{vault_location}/obsidian_setup.md` does not already exist, copy `template_full/.galdr/vault/obsidian_setup.md` (or the installed equivalent at `{skill_root}/reference/obsidian_setup.md`) to `{vault_location}/obsidian_setup.md`. This seeds the one-page Obsidian setup guide so vault users can find it immediately.
    - **Research-type projects:** when creating `TASKS.md`, add a research log section below the task list
    - Files: Use g-project (CREATE PROJECT.MD) and g-plan (CREATE PLAN.MD) for all file generation
+   - Seed `CONSTRAINTS.md` with:
+     1. The standard Governance section (including the Constraint Scope table)
+     2. An empty Constraint Index table with columns: `ID | Status | Name | Scope | One-line summary`
+     3. An empty Constraint Definitions section
+     4. An empty Change Log table
+     5. A comment block before the index explaining scope values:
+        ```markdown
+        <!-- CONSTRAINT SCOPE: local-only (default) | inheritable (propagate to children on spawn) | shareable (peers opt-in) | ecosystem-wide (all topology members) -->
+        ```
 
 4. **Generate .identity**:
    ```bash
@@ -63,9 +72,9 @@ First-time setup of galdr in a project. @g-setup command.
    ├── BUGS.md ✅                ← bug index (root)
    ├── SUBSYSTEMS.md ✅
    ├── IDEA_BOARD.md ✅
-   ├── PRDS.md ✅                ← PRD index
+   ├── FEATURES.md ✅                ← PRD index
    ├── learned-facts.md ✅       ← agent-captured learning (updated via /g-learn)
-   ├── prds/ ✅                  ← individual PRD files
+   ├── features/ ✅                  ← individual PRD files
    ├── bugs/ ✅                  ← optional per-bug detail files
    ├── reports/ ✅
    ├── logs/ ✅
@@ -77,6 +86,7 @@ First-time setup of galdr in a project. @g-setup command.
 
    > **NOT in slim:** `config/`, `experiments/`, `linking/`, `vault/`, `phases/`
    > These belong in `galdr_full` only. Do not create them here.
+   > **When `linking/` IS created** (full tier): also seed `.galdr/linking/capabilities.md` using the template at `template_full/.galdr/linking/capabilities.md`. Replace `{project_slug}` and `{project_name}` placeholders with the actual project name. Replace `{YYYY-MM-DD}` with today's date.
 
 6. **Create PROJECT.MD scaffolding**:
    - `.galdr/PROJECT.md` — include a **Project Linking** section (parents, children, siblings); starts with `relationships: none`
@@ -116,6 +126,6 @@ First-time setup of galdr in a project. @g-setup command.
    - Review SUBSYSTEMS.md and adjust detected components
    - Review subsystem spec files in `.galdr/subsystems/` for accuracy
    - Create first task with @g-tasks (CREATE) (sequential task IDs)
-   - Draft or refine `.galdr/PLAN.md` and PRDs under `prds/` as needed
+   - Draft or refine `.galdr/PLAN.md` and Feature under `features/` as needed
    - Declare cross-project relationships in **Project Linking** (`@g-project (Project Linking section)`) when ready
    - **Optional**: Install domain-specific skill packs from `skill_packs/` directory — run `.\skill_packs\{pack}\install.ps1` for infrastructure, ai-ml-dev, startup-tools, and other packs

@@ -36,7 +36,7 @@ Use `/g-command-name` syntax in Gemini:
 | `/g-bug-report` | Report a bug |
 | `/g-code-review` | Code review |
 | `/g-plan` | Create or update project plan |
-| `/g-medkit` | Health check and repair `.galdr/` |
+| `/g-medic` | Health check and repair `.galdr/` |
 | `/g-git-commit` | Structured git commits |
 | `/g-idea-capture` | Capture an idea |
 
@@ -99,6 +99,6 @@ Never update one without the other.
 
 ---
 
-**galdr version**: 1.0.0
+**galdr version**: 1.4.0
 **Platform**: Gemini / Google Antigravity
 **Universal instructions**: See `agents.md`

@@ -1,4 +1,4 @@
-﻿---
+---
 name: g-skl-bugs
 description: Own and manage all bug data — BUGS.md index, bugs/ individual files, bug fixes, quality metrics. Single source of truth for everything bug and quality related.
 ---
@@ -9,7 +9,7 @@ description: Own and manage all bug data — BUGS.md index, bugs/ individual fil
 **Activate for**: report bug, fix bug, quality metrics, "BUG-NNN", any mention of error/defect/warning.
 
 **Auto-trigger (mandatory — no exceptions):**
-- A task is moved back to `[📋]` by `@g-go-verify` → immediately file a bug for each failing criterion
+- A task is moved back to `[📋]` by `@g-go-review` → immediately file a bug for each failing criterion
 - A fix is applied in a session without a prior bug report → retroactively file the bug before the response ends
 - Any error, warning, or "pre-existing" mention appears in a response → file a bug (g-rl-33)
 
@@ -85,7 +85,7 @@ resolved_date: ''
 
 ## Operation: VERIFICATION FAILURE → AUTO BUG
 
-Triggered when `@g-go-verify` marks a task back to `[📋]` for failing one or more criteria.
+Triggered when `@g-go-review` marks a task back to `[📋]` for failing one or more criteria.
 
 1. **For each failing criterion** in the verification result:
    - Classify severity: criterion about core behavior → Medium; cosmetic/doc → Low

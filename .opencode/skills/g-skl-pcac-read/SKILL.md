@@ -45,7 +45,22 @@ description: Review and action all incoming cross-project coordination items —
    - If task missing: create it now from the INBOX entry details
    - Show task status and offer to start work
    - Check for `broadcast_completion` INFO subtypes: display alongside broadcasts as "✅ {title} completed [child_name]"
-   - If `broadcast_completion` received: offer to mark the parent's tracker task `[✅]`
+   - If `broadcast_completion` received:
+     - Offer to mark the parent's tracker task `[✅]`
+     - **Resolve the outbound order ledger record** (Layer 3 of cross-project dependency tracking):
+       1. Search `.galdr/linking/sent_orders/order_*.md` for a record where `sent_to:` matches the sending child project AND (`remote_task_id:` matches the child's source task id from the completion ping, OR `remote_task_title:` matches the original broadcast title — exact string match preferred, fuzzy match as fallback)
+       2. If a matching record is found:
+          - Update its frontmatter: `status: completed`, `last_sync: YYYY-MM-DD`
+          - Append Sync History row: `| YYYY-MM-DD | completed | Completion ping received from {child_project_id} |`
+          - Read the record's `local_depends:` array — for each local task/feature ID:
+            - Open `.galdr/tasks/task{id}_*.md` (or `.galdr/features/feat{id}_*.md`)
+            - Find the `cross_project_ref:` block where `order_id:` matches; update its `status: completed` and `last_synced: YYYY-MM-DD`
+          - Surface to the user:
+            ```
+            🔗 Cross-project order resolved: ord-{shortid} ({child_project_id}: {remote_task_title})
+               Local tasks/features now unblocked: {list of local IDs}
+            ```
+       3. If no matching record is found (legacy completion ping — order was sent before this feature existed): note it in the report and skip silently — no error.
 
 6. **Handle PEER SYNCS** (sibling contract changed):
    - Show: which sibling, which contract, what changed
@@ -56,6 +71,13 @@ description: Review and action all incoming cross-project coordination items —
 
 7. **Handle INFO items** (ℹ️ — no action required):
    - Display each INFO item with sender, subject, and detail
+   - For `capability_update` subtypes: show the capability delta prominently:
+     ```
+     📡 Peer capability update from {sender}:
+        {capability_name}: {old_status} → {new_status}
+        Reason: {reason}
+        Peer snapshot written to: .galdr/linking/peers/{sender}_capabilities.md
+     ```
    - No task to create, no approval needed
    - Ask: "Acknowledge and mark done? [y/n]" (default: yes)
    - On acknowledgment: change `[OPEN]` to `[DONE]` in INBOX.md
@@ -63,9 +85,22 @@ description: Review and action all incoming cross-project coordination items —
      "⚠️ N staged INFO notification(s) in pending_requests/ for [project] — not yet delivered"
    - Also check `pending_orders/` and surface count: "⚠️ N broadcast(s) staged in pending_orders/ for [project] — not yet accessible"
 
-8. **Update INBOX.md** — change reviewed items to `[DONE]`, add resolution notes
+8. **Show peer capabilities summary** (after INBOX processing):
+   - Read all files matching `.galdr/linking/peers/*_capabilities.md`
+   - If any exist, display a compact table:
+     ```
+     Peer Capabilities (last received snapshots):
+     ┌─────────────────────┬────────────────────────────────┬──────────────┐
+     │ Project             │ Ready Capabilities              │ Last Updated │
+     ├─────────────────────┼────────────────────────────────┼──────────────┤
+     │ galdr_valhalla      │ docker-backend, project-registry│ 2026-04-18   │
+     └─────────────────────┴────────────────────────────────┴──────────────┘
+     ```
+   - If no peer snapshots exist: skip silently
 
-9. **Report**:
+9. **Update INBOX.md** — change reviewed items to `[DONE]`, add resolution notes
+
+10. **Report**:
    ```
    INBOX processed:
    - 1 conflict resolved ✅

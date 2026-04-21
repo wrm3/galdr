@@ -6,7 +6,9 @@ description: Own and manage SUBSYSTEMS.md (registry + mermaid graph) and subsyst
 
 **Files Owned**: `.galdr/SUBSYSTEMS.md`, `.galdr/subsystems/{name}.md`
 
-**Activate for**: "add subsystem", "update subsystem spec", "what subsystems exist", sync check for subsystem drift, before modifying any subsystem's code.
+**Activate for**: "add subsystem", "g-subsystem-add", "update subsystem spec", "g-subsystem-upd", "deprecate subsystem", "g-subsystem-del", "what subsystems exist", "@g-subsystems", sync check for subsystem drift, before modifying any subsystem's code.
+
+**Commands**: `@g-subsystem-add` (create), `@g-subsystem-upd` (update), `@g-subsystem-del` (deprecate), `@g-subsystems` (list/sync-check)
 
 **Rule**: Read the subsystem spec BEFORE modifying subsystem code. Append to its Activity Log on task completion or bug fix.
 
@@ -51,6 +53,7 @@ Create `.galdr/subsystems/{name}.md`:
 ---
 name: subsystem-name
 status: active | planned | deprecated
+min_tier: slim | full | adv
 dependencies: [other-subsystem-names]
 dependents: [subsystem-names-that-depend-on-this]
 locations:
@@ -85,6 +88,12 @@ locations:
 
 **Add to SUBSYSTEMS.md** index and update the mermaid graph.
 
+**Prompts during CREATE**:
+- `min_tier:` — What is the minimum galdr tier required to use this subsystem? (default: `slim`)
+  - `slim` — No Docker, no API keys required; pure file-based skill
+  - `full` — Requires API keys or network access (e.g., LLM API, GitHub API)
+  - `adv` — Requires Docker backend, MCP server, or managed cloud service
+
 ---
 
 ## Operation: UPDATE ACTIVITY LOG
@@ -101,6 +110,21 @@ After any task completion or bug fix:
 Collect all unique `subsystems:` values from task files. Compare to SUBSYSTEMS.md entries.
 - In tasks but not in SUBSYSTEMS.md → add stub entry
 - In SUBSYSTEMS.md but no spec file → create spec stub
+- Spec file exists but `min_tier:` is missing from YAML frontmatter → flag as incomplete: `⚠️ {name} — missing min_tier field. Add: min_tier: slim | full | adv`
+
+---
+
+## Operation: DEPRECATE SUBSYSTEM (g-subsystem-del)
+
+1. Read subsystem spec at `.galdr/subsystems/{name}.md`
+2. Update YAML frontmatter: `status: deprecated`
+3. Add deprecation note: `deprecated_reason:` and `deprecated_date:`
+4. Update SUBSYSTEMS.md index: change Status column to `deprecated`
+5. Scan all task files for `subsystems: [{name}]` references — report any that still reference it
+6. If active tasks reference it: prompt "These tasks still reference {name} — reassign? [y/n]"
+7. Append to Activity Log: `| {date} | DEPRECATE | — | {name} | Deprecated — {reason} |`
+
+**Hard rule**: never delete the spec file. Deprecated subsystems are kept for audit trail.
 
 ---
 

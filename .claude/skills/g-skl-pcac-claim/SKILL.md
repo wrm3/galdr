@@ -105,7 +105,24 @@ project_id: <current_project_id>
 claimed: <today_date>
 ```
 
-### 8. Confirm
+### 8. Offer ecosystem-wide constraint sync
+
+After topology link is established, offer to sync `ecosystem-wide` constraints from the parent:
+
+1. Read `ecosystem-wide` and `inheritable` constraints from parent project's `CONSTRAINTS.md`
+2. If parent has constraints current project lacks:
+   ```
+   Parent <parent_project_name> has N constraints eligible for propagation:
+     C-001 [file-first-vault] (ecosystem-wide)
+     C-007 [no-secrets] (ecosystem-wide)
+     C-003 [path-via-identity] (inheritable)
+   Inherit these N constraints? [y/n/select]
+   ```
+3. If **y**: copy constraints to current project's `CONSTRAINTS.md` with `**Inherited from**: <parent_name> (propagated <date>)`
+4. `ecosystem-wide` constraints are pre-selected; `inheritable` are offered but not pre-selected
+5. **Skip silently** if parent's `CONSTRAINTS.md` has no `**Scope**:` fields (backward compatible)
+
+### 9. Confirm
 ```
 CLAIMED ✓
   Child   : <current_project_name> (<current_project_path>)

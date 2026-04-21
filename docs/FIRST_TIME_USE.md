@@ -185,8 +185,8 @@ Tasks are stored in two places:
 
 | Command | What It Does |
 |---------|-------------|
-| `@g-medkit` | Full health check and repair of `.galdr/` |
-| `@g-medkit apply` | Apply all detected repairs |
+| `@g-medic` | Full health check and repair of `.galdr/` |
+| `@g-medic apply` | Apply all detected repairs |
 | `@g-task-sync-check` | Verify TASKS.md matches tasks/ folder |
 
 ### Planning
@@ -219,7 +219,7 @@ galdr agents respond to natural language triggers. You don't always need the `@g
 |-----------------------|----------------|
 | "make a note of this idea" | `g-skl-ideas` → CAPTURE |
 | "create a task for X" | `g-skl-tasks` → CREATE TASK |
-| "the project is out of sync" | `g-skl-medkit` → REPAIR |
+| "the project is out of sync" | `g-skl-medic` → REPAIR |
 | "review this code" | `g-skl-code-review` |
 | "report this bug" | `g-skl-bugs` → REPORT BUG |
 | "what's the project status" | `g-skl-status` |
@@ -283,7 +283,7 @@ Then add to your IDE's MCP config:
 
 ### "galdr doesn't seem to be doing anything"
 
-Run `@g-medkit` — it will diagnose the `.galdr/` folder and report what's wrong.
+Run `@g-medic` — it will diagnose the `.galdr/` folder and report what's wrong.
 
 ### "Tasks are out of sync"
 
@@ -299,7 +299,7 @@ Check that:
 ### "I want to start fresh"
 
 ```
-@g-medkit
+@g-medic
 ```
 
 If the structure is corrupted beyond repair, use the galdr MCP tool:

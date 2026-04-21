@@ -125,7 +125,7 @@ graph TD
 This skill is triggered by:
 1. **g-skl-tasks** — after creating a task with non-empty `dependencies`
 2. **g-skl-tasks** — after updating a task's `dependencies` field
-3. **g-skl-medkit** — Phase 6 routine maintenance
+3. **g-skl-medic** — Phase 6 routine maintenance
 4. **`@g-dependency-graph`** command — direct invocation
 
 The graph is always regenerated from scratch (not incrementally) to avoid drift.

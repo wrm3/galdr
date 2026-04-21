@@ -21,12 +21,35 @@ Written to target project's `.galdr/linking/INBOX.md`:
 ```markdown
 ## [OPEN] INFO-{NNN} — from: {source_project} — {YYYY-MM-DD}
 **Type:** info
-**Subtype:** {general | broadcast_completion | advisory}
+**Subtype:** {general | broadcast_completion | advisory | capability_update}
 **Subject:** {one-line description}
 **Detail:** {optional multi-line context}
 **Action required:** none
 **Status:** unread
 ```
+
+## Capability-Change Notifications (Subtype: capability_update)
+
+When a capability or responsibility status changes in `.galdr/linking/capabilities.md`, use the `capability_update` subtype to notify peers:
+
+```markdown
+## [OPEN] INFO-{NNN} — from: {source_project} — {YYYY-MM-DD}
+**Type:** info
+**Subtype:** capability_update
+**Subject:** Capability status change: {capability_name}
+**Detail:**
+  capability: {name}
+  old_status: {planned|in-progress|ready|deprecated}
+  new_status: {planned|in-progress|ready|deprecated}
+  reason: {why this changed}
+**Snapshot:** Updated capabilities.md attached to peers/{source_slug}_capabilities.md
+**Action required:** none — informational only
+**Status:** unread
+```
+
+When sending a `capability_update`:
+1. Write the INBOX notification as above
+2. Also write/overwrite `.galdr/linking/peers/{this_slug}_capabilities.md` in the target project with the current content of your `capabilities.md`
 
 ## Routing Options
 
@@ -74,4 +97,5 @@ Staged notifications are delivered the next time any PCAC command accesses that 
 @g-pcac-notify --parent "Completed T024 subsystem rename — all subsystem names updated"
 @g-pcac-notify --all-siblings "New g-skl-learn skill available via template propagation"
 @g-pcac-notify --project /path/to/sibling "Bug found in shared API contract (non-blocking, will fix T036)"
+@g-pcac-notify --all-siblings --capability-update "vault-ingestion: planned → ready (T116 complete)"
 ```

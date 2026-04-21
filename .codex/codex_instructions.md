@@ -69,7 +69,7 @@ Unlike Cursor/Claude/Gemini where skills are auto-discovered by folder scanning,
 
 **Currently registered skills** (all 17 galdr core skills):
 - `g-skl-bugs`, `g-skl-code-review`, `g-skl-dependency-graph`
-- `g-skl-git-commit`, `g-skl-ideas`, `g-skl-medkit`
+- `g-skl-git-commit`, `g-skl-ideas`, `g-skl-medic`
 - `g-skl-plan`, `g-skl-project`, `g-skl-qa`, `g-skl-review`
 - `g-skl-setup`, `g-skl-status`
 - `g-skl-subsystems`, `g-skl-swot-review`, `g-skl-tasks`, `g-skl-verify-ladder`

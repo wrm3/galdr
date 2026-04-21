@@ -20,7 +20,7 @@ Each skill "owns" specific `.galdr/` files. Only its owner skill should write to
 | `g-skl-plan` | `PLAN.md`, `FEATURES.md`, `features/` | Plan creation, PRD writing, phase management |
 | `g-skl-project` | `PROJECT.md`, `CONSTRAINTS.md` | Project identity, goals, architectural constraints |
 | `g-skl-subsystems` | `SUBSYSTEMS.md`, `subsystems/` | Subsystem discovery, spec creation, activity logging, sync |
-| `g-skl-medkit` | `.galdr/` (all files) | Health check, structural repair, version migration, routine maintenance |
+| `g-skl-medic` | `.galdr/` (all files) | Health check, structural repair, version migration, routine maintenance |
 | `g-skl-setup` | `.galdr/.identity` (initial) | First-time galdr initialization |
 
 ---

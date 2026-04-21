@@ -83,7 +83,7 @@ Triggered by `/g-learn global`.
 
 ## Session Integration
 
-At end of `g-go-code` and `g-go-verify` sessions, add this to the handoff block:
+At end of `g-go-code` and `g-go-review` sessions, add this to the handoff block:
 
 ```
 > Run /g-learn to capture session insights for the next agent.

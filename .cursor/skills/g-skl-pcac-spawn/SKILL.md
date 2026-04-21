@@ -65,6 +65,7 @@ Before doing anything, validate:
 □ If --features: the specified path exists and contains at least one .md file
 □ If --code: the specified path exists
 □ relationship (--sibling/--child/--parent) is specified
+□ Template source has .gitignore and opencode.json (warn if missing, use inline defaults)
 ```
 
 If `--dry-run`: print a full preview and stop. Do not create anything.
@@ -132,6 +133,8 @@ git init
   - Copy `.cursor/rules/` from the appropriate template tier
   - Copy `.claude/skills/` from `galdr_full/.claude/skills/` (all PCAC and core skills)
   - Copy `AGENTS.md`, `CLAUDE.md` from the appropriate template or galdr_full root
+  - Copy `.gitignore` from the appropriate template (contains galdr-standard ignore section with section markers)
+  - Copy `opencode.json` from the appropriate template (enables OpenCode IDE rule discovery)
 
 **In both cases**, create `.galdr/.identity`:
 ```
@@ -144,6 +147,10 @@ vault_location=<copy from current project's .identity>
 repos_location=<copy from current project's .identity>
 ```
 
+**In both cases**, also ensure the following root files are present (copy from template if not already handled above):
+- `.gitignore` — galdr-standard ignore patterns; uses section markers (`# <!-- galdr GITIGNORE SECTION -->`) so user additions survive upgrades. Prevents `.galdr/`, `.env`, `__pycache__`, and other generated files from being committed.
+- `opencode.json` — enables OpenCode IDE to discover rules. Without it, the spawned project is invisible to OpenCode.
+
 ### Step 4 — Seed with passed description
 
 Create `.galdr/PROJECT.md` using the `g-skl-project` scaffold, with:
@@ -153,6 +160,31 @@ Create `.galdr/PROJECT.md` using the `g-skl-project` scaffold, with:
 
 Create `.galdr/PLAN.md`, `TASKS.md`, `FEATURES.md`, `BUGS.md`, `SUBSYSTEMS.md`, `IDEA_BOARD.md`,
 `CONSTRAINTS.md` from slim templates (empty, numbered headers only).
+
+### Step 4.5 - Propagate parent constraints (scope-aware)
+
+After seeding `CONSTRAINTS.md`, offer to propagate applicable constraints from the current (parent/source) project:
+
+1. Read `<current_project>/.galdr/CONSTRAINTS.md` -- collect all constraints where `**Scope**:` is `inheritable` or `ecosystem-wide`
+2. Display the list:
+   ```
+   Found N constraints eligible for propagation to <new_project_name>:
+     C-001 [file-first-vault] (ecosystem-wide)
+     C-007 [no-secrets] (ecosystem-wide)
+     C-003 [path-via-identity] (inheritable)
+     ...
+   Propagate these N constraints to the child? [y/n/select]
+   ```
+3. If **y**: copy all listed constraints into child's `CONSTRAINTS.md` with:
+   - Same definition block (Status, Established, Scope, Rationale, Applies to, etc.)
+   - Add field: `**Inherited from**: <current_project_name> (propagated <YYYY-MM-DD>)`
+   - Note in child's CONSTRAINTS.md Change Log: `| <date> | C-NNN | Inherited from <source> via spawn | <source_project> |`
+4. If **select**: present numbered list, user picks which to include
+5. If **n**: skip constraint propagation entirely
+6. `ecosystem-wide` constraints are pre-selected by default; `inheritable` are offered but not pre-selected
+
+**Note**: Constraints with `**Inherited from**:` are read-only in the child -- agents should warn if asked to modify them locally.
+
 
 ### Step 5 — Transfer features (if --features provided)
 
@@ -232,6 +264,12 @@ Create `.galdr/linking/INBOX.md`:
 **Seeded with**: <description | features: N files | code: N folders>
 **Next step**: Review .galdr/PROJECT.md, curate features, and run @g-tasks to plan first sprint.
 ```
+
+Create `.galdr/linking/capabilities.md` using the template at `template_full/.galdr/linking/capabilities.md`:
+- Replace `{project_slug}` and `{project_name}` with the actual new project name
+- Replace `{YYYY-MM-DD}` with today's date
+- If `--child` and explicit responsibilities were delegated at spawn time (via `--delegate-responsibility` flag or `$ARGUMENTS` description): add those delegated responsibilities to the `## Responsibilities` table with `status: planned`
+- Prefix delegated responsibilities with `delegated_by: <current_project_slug>` in the Description field
 
 ### Step 9 — Update current project's topology
 
@@ -314,6 +352,8 @@ Next steps:
 | galdr_install MCP available | Prefer calling `galdr_install(project_path=..., use_v2=True)` in Step 3 over manual copy |
 | Symlink detection fails | Default to "copy" style (safe fallback) |
 | Git init fails | Warn but continue — git can be initialized manually |
+| `.gitignore` not found in template | Write a minimal inline default with galdr section markers: `.galdr/`, `.env`, `__pycache__/`, `*.py[cod]`, `node_modules/`, `.DS_Store` |
+| `opencode.json` not found in template | Write inline default: `{"$schema":"https://opencode.ai/config.json","instructions":["AGENTS.md","GUARDRAILS.md",".cursor/rules/*.mdc"]}` |
 
 ---
 

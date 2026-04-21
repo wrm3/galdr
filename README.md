@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.2.0-green.svg" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-1.4.0-green.svg" alt="Version"></a>
   <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python 3.10+"></a>
   <a href="https://github.com/wrm3/galdr/releases"><img src="https://img.shields.io/github/v/release/wrm3/galdr?label=release" alt="Latest Release"></a>
   <a href="https://github.com/wrm3/galdr"><img src="https://img.shields.io/github/stars/wrm3/galdr?style=social" alt="GitHub stars"></a>
@@ -44,23 +44,23 @@ You finish a feature and ask the same agent to verify it. It passes everything �
 
 **Architectural constraints** — Rules agents must follow, loaded at every session start. Not suggestions. If an agent's action would violate a constraint, it must flag the conflict before proceeding.
 
-**5-IDE parity** — Cursor, Claude Code, Gemini, Codex, and OpenCode. Same agents, same skills, same memory, same task state. Switch IDEs mid-task and pick up exactly where you left off.
+**6-IDE parity** — Cursor, Claude Code, Gemini, Codex, OpenCode, and GitHub Copilot. Same agents, same skills, same memory, same task state. Switch IDEs mid-task and pick up exactly where you left off.
 
 ---
 
 ## What's Included
 
-> **How activation works:** All agents, skills, commands, hooks, and rules in this repo are inert markdown/script files until you copy the relevant platform folder into your project. Dropping `.cursor/` into a project activates the full galdr surface for Cursor. Same for `.claude/`, `.agent/`, `.codex/`, and `.opencode/`. You pick which platforms you use — nothing runs without you copying the files first.
+> **How activation works:** All agents, skills, commands, hooks, and rules in this repo are inert markdown/script files until you copy the relevant platform folder into your project. Dropping `.cursor/` into a project activates the full galdr surface for Cursor. Same for `.claude/`, `.agent/`, `.codex/`, `.opencode/`, and `.copilot/`. You pick which platforms you use — nothing runs without you copying the files first.
 
 | Component | Count | What it covers |
 |-----------|-------|----------------|
 | **Agents** | 9 | Task manager, code reviewer, QA engineer, project planner, infrastructure, ideas, verifier, project initializer, PCAC coordinator |
 | **Skill Packs** | 7 | Core task management, feature pipeline, multi-project coordination (PCAC), knowledge vault, code quality, git/workflow, IDE CLI |
-| **Skills** | 49 | 49 individual skills across 7 packs — tasks, bugs, plan, project, features, subsystems, vault, constraints, code review, git, crawl, ingest (docs/URL/YouTube), learn, harvest, harvest-intake, reverse-spec, subsystem-graph, PCAC (10 skills), medkit, IDE CLIs (4), and more |
-| **Commands** | 78 | Full `@g-*` command surface — task management, bug management, feature pipeline, code quality, vault, multi-repo, ideas, constraints, subsystems, and maintenance |
+| **Skills** | 58 | 58 individual skills — recon suite (docs/file/repo/url/yt), research suite (deep/review/apply), release management, platform skills (6 IDEs), medic, tier-setup, PCAC (10 skills), tasks, bugs, plan, project, features, subsystems, vault, constraints, code review, git, crawl, learn, subsystem-graph, swot, verify-ladder, and more |
+| **Commands** | 89 | Full `@g-*` command surface — task management, bug management, feature pipeline, release management, recon, research, code quality, vault, multi-repo, ideas, constraints, subsystems, swarm, and maintenance |
 | **Hooks** | 12 | Session start, agent complete, pre-commit, pre-push, PCAC inbox check, vault operations |
 | **Rules** | 12 | Always-apply: documentation, git workflow, error reporting, task completion gates, TODO/stub lifecycle, bug discovery |
-| **IDE Platforms** | 5 | Cursor, Claude Code, Gemini, Codex, OpenCode |
+| **IDE Platforms** | 6 | Cursor, Claude Code, Gemini, Codex, OpenCode, GitHub Copilot |
 
 ### Agents
 
@@ -109,12 +109,14 @@ The staging layer between idea capture and the task backlog. Features are resear
 | Skill | What it owns |
 |-------|-------------|
 | `g-skl-features` | *(listed above — FEATURES.md and the full staging lifecycle)* |
-| `g-skl-reverse-spec` | 5-pass deep repo analysis: skeleton → module map → feature scan → deep dives → synthesis report |
-| `g-skl-harvest-intake` | Processes approved harvest output into `.galdr/features/` staging entries with dedup |
+| `g-skl-recon-repo` | Deep repo analysis (replaces reverse-spec) — 5-pass: skeleton → module map → feature scan → deep dives → synthesis |
+| `g-skl-res-review` | Review a recon report and mark features approved/rejected before apply |
+| `g-skl-res-apply` | Apply approved recon findings into `.galdr/features/` staging (replaces harvest-intake) |
+| `g-skl-res-deep` | Follow-up deep dive on a specific approved feature from a recon report |
 
 **🔗 Multi-Project Coordination Pack (PCAC)**
 
-The full parent/child/sibling coordination system. Eight skills covering every direction of cross-project communication.
+The full parent/child/sibling coordination system. Ten skills covering every direction of cross-project communication.
 
 | Skill | What it does |
 |-------|-------------|
@@ -131,19 +133,17 @@ The full parent/child/sibling coordination system. Eight skills covering every d
 
 **🧠 Knowledge Vault Pack**
 
-Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All output is Obsidian-compatible YAML frontmatter.
+Everything knowledge. Crawl, recon, learn, audit, and rebuild. All output is Obsidian-compatible YAML frontmatter.
 
 | Skill | What it does |
 |-------|-------------|
 | `g-skl-vault` | Vault CRUD, Obsidian frontmatter compliance, `_INDEX.md` MOC hub rebuild, GitHub repo summaries |
 | `g-skl-learn` | Continual learning — agents self-report insights to vault memory files after each session |
 | `g-skl-crawl` | Native crawl4ai web crawler — clean LLM-optimized markdown from any URL, no Docker required |
-| `g-skl-ingest-docs` | Platform doc ingestion with per-platform freshness tracking and stale-doc surfacing at session start |
-| `g-skl-ingest-url` | One-time URL capture into `research/articles/` with deduplication by source URL |
-| `g-skl-ingest-youtube` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` |
-| `g-skl-harvest` | Analyze external GitHub repos for adoptable patterns — zero writes without human approval |
-| `g-skl-harvest-intake` | *(listed above — processes approved harvest output into feature staging)* |
-| `g-skl-reverse-spec` | *(listed above — 5-pass deep analysis into a structured harvest report)* |
+| `g-skl-recon-docs` | Platform doc recon with per-platform freshness tracking and stale-doc surfacing at session start |
+| `g-skl-recon-url` | One-time URL capture into `research/articles/` with deduplication by source URL |
+| `g-skl-recon-yt` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` |
+| `g-skl-recon-file` | Analyze local files/folders for insights — outputs structured recon report |
 | `g-skl-knowledge-refresh` | Audit vault freshness, detect stale notes and broken links, rebuild MOC hub files |
 | `g-platform-crawl` | Dedicated crawl targets for Cursor, Claude Code, Gemini, and other platform docs |
 
@@ -336,12 +336,15 @@ Ideas don't go straight to tasks. galdr now provides a structured feature pipeli
 @g-feat-add feat-036 --source "github.com/user/repo" --approach "Redis-backed retry queue"
 # Appends approach to the feature's Collected Approaches table
 
-@g-reverse-spec https://github.com/some/project
+@g-recon-repo https://github.com/some/project
 # 5-pass deep analysis: skeleton → module map → feature scan → deep dives → synthesis
-# Output: research/harvests/some__project/FEATURES.md for human review
+# Output: research/harvests/some__project/ for human review
 
-@g-harvest-intake some__project
-# Process approved harvest entries into .galdr/features/ staging
+@g-res-review some__project
+# Review findings — mark individual items approved/rejected
+
+@g-res-apply some__project
+# Apply approved findings into .galdr/features/ staging
 ```
 
 **Feature lifecycle:**
@@ -362,10 +365,10 @@ Features only become tasks (and enter the TASKS.md backlog) when promoted via `@
 Every project gets a file-based knowledge store. All notes use a standardized YAML frontmatter schema compatible with Obsidian's native indexing — so the same vault that stores your AI's memory is also a proper personal knowledge base.
 
 ```
-@g-ingest-docs https://docs.cursor.com    # Crawl platform docs (schedule-aware, freshness tracked)
-@g-ingest-url  https://example.com/post   # One-time article capture
-@g-ingest-youtube https://youtu.be/...    # Extract YouTube transcript (yt-dlp, offline)
-@g-learn                                   # Agents self-report insights to vault memory files
+@g-recon-docs https://docs.cursor.com    # Crawl platform docs (schedule-aware, freshness tracked)
+@g-recon-url  https://example.com/post   # One-time article capture
+@g-recon-yt   https://youtu.be/...       # Extract YouTube transcript (yt-dlp, offline)
+@g-learn                                  # Agents self-report insights to vault memory files
 ```
 
 Open the vault folder directly in **Obsidian** for graph view, tag search, and backlinks over everything your agents have ever learned. The `_INDEX.md` MOC hub files (auto-generated for directories with 10+ notes) create the graph connections.
@@ -446,14 +449,20 @@ The staging layer between idea capture and the task backlog. Features collect ap
 | Skill | What it does |
 |-------|-------------|
 | `g-skl-features` | STAGE a new feature, COLLECT approaches, SPEC requirements, PROMOTE to tasks, RENAME slugs |
-| `g-skl-reverse-spec` | 5-pass deep analysis of any external repo: skeleton → module map → feature scan → deep dives → synthesis. Output lives in `research/harvests/{slug}/` — no `.galdr/` writes until human approves |
-| `g-skl-harvest-intake` | Reads an approved harvest report and creates `.galdr/features/` staging entries; deduplicates by appending a Collected Approach to an existing feature rather than creating a duplicate |
+| `g-skl-recon-repo` | Deep repo analysis — 5-pass: skeleton → module map → feature scan → deep dives → synthesis. Output in `research/harvests/{slug}/` — no `.galdr/` writes until human approves |
+| `g-skl-recon-url` | One-time URL capture and analysis into `research/articles/` with deduplication |
+| `g-skl-recon-docs` | Platform doc recon with freshness tracking; stale docs surfaced at session start |
+| `g-skl-recon-yt` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` |
+| `g-skl-recon-file` | Analyze local files/folders for patterns and insights — structured recon report output |
+| `g-skl-res-review` | Review recon report output — mark findings approved/rejected before apply |
+| `g-skl-res-deep` | Follow-up deep dive on a specific approved finding from a recon report |
+| `g-skl-res-apply` | Apply approved recon findings into `.galdr/features/` staging entries with dedup |
 
 ---
 
 **🔗 Multi-Project Coordination Pack (PCAC)**
 
-The full parent/child/sibling coordination system. Eight skills covering every direction of cross-project communication.
+The full parent/child/sibling coordination system. Ten skills covering every direction of cross-project communication.
 
 | Skill | What it does |
 |-------|-------------|
@@ -472,17 +481,13 @@ The full parent/child/sibling coordination system. Eight skills covering every d
 
 **🧠 Knowledge Vault Pack**
 
-Everything knowledge. Crawl, ingest, learn, audit, and rebuild. All vault output uses a standardized Obsidian-compatible YAML frontmatter schema.
+Everything knowledge. Crawl, recon, learn, audit, and rebuild. All vault output uses a standardized Obsidian-compatible YAML frontmatter schema.
 
 | Skill | What it does |
 |-------|-------------|
 | `g-skl-vault` | Vault CRUD, Obsidian frontmatter compliance, `_INDEX.md` MOC hub rebuild, GitHub repo summaries |
 | `g-skl-learn` | Agents self-report insights to vault memory files after each session — file-only, no external services |
-| `g-skl-crawl` | Native crawl4ai web crawler — LLM-optimized markdown from any URL, no Docker required. Shared primitive for ingest-docs, ingest-url, and harvest |
-| `g-skl-ingest-docs` | Platform doc ingestion (Cursor, Claude, Gemini, etc.) with per-platform freshness tracking; stale docs surfaced at session start |
-| `g-skl-ingest-url` | One-time URL capture into `research/articles/` with deduplication by source URL |
-| `g-skl-ingest-youtube` | YouTube transcript extraction via yt-dlp — offline, no API key, stored in `research/videos/` with full frontmatter |
-| `g-skl-harvest` | Analyze external GitHub repos for adoptable patterns — zero writes to `.galdr/` without human approval |
+| `g-skl-crawl` | Native crawl4ai web crawler — LLM-optimized markdown from any URL, no Docker required. Shared primitive for recon skills |
 | `g-skl-knowledge-refresh` | Audit vault freshness, detect stale notes and broken links, rebuild `_INDEX.md` MOC hub files |
 | `g-platform-crawl` | Dedicated crawl targets for Cursor, Claude Code, Gemini, and other platform documentation |
 
@@ -575,22 +580,25 @@ Headless, multi-agent, and terminal-first usage of each supported IDE. Covers se
 | `@g-feat-promote` | Promote a specced feature to committed — creates tasks |
 | `@g-feat-rename` | Rename a feature slug and update all references |
 | `@g-feat-del` | Delete a feature and remove from FEATURES.md |
-| `@g-reverse-spec` | 5-pass analysis of an external repo → harvest report |
-| `@g-harvest-intake` | Process a harvest report into feature staging entries |
+| `@g-recon-repo` | 5-pass deep analysis of an external repo → recon report |
+| `@g-recon-url` | One-time URL capture into vault |
+| `@g-recon-docs` | Crawl platform docs with freshness tracking |
+| `@g-recon-yt` | Extract and save YouTube transcript |
+| `@g-recon-file` | Analyze local files/folders for patterns |
+| `@g-res-review` | Review recon report — approve/reject findings |
+| `@g-res-deep` | Deep dive on a specific approved finding |
+| `@g-res-apply` | Apply approved findings into feature staging |
 
 **Knowledge & Vault**
 
 | Command | What it does |
 |---------|-------------|
-| `@g-ingest-docs` | Crawl platform docs with freshness tracking |
-| `@g-ingest-url` | Capture a URL into vault |
-| `@g-ingest-youtube` | Extract and save YouTube transcript |
 | `@g-vault-ingest` | Manual vault file ingest with frontmatter |
 | `@g-vault-search` | Search the vault |
 | `@g-vault-status` | Vault health and freshness report |
 | `@g-vault-lint` | Audit vault frontmatter compliance |
+| `@g-vault-process-inbox` | Process pending vault inbox items |
 | `@g-learn` | Capture insights to vault memory files |
-| `@g-harvest` | Analyze external repos for adoptable patterns |
 
 **Multi-Project (PCAC)**
 
@@ -634,16 +642,41 @@ Headless, multi-agent, and terminal-first usage of each supported IDE. Covers se
 | `@g-idea-review` | Review and evaluate IDEA_BOARD entries |
 | `@g-idea-farm` | Proactive codebase scan for improvement opportunities |
 
+**Autonomous Execution**
+
+| Command | What it does |
+|---------|-------------|
+| `@g-go` | Run autonomously through the backlog (self-review mode — both phases) |
+| `@g-go-code` | Implementation-only run — marks tasks `[🔍]`, never `[✅]` |
+| `@g-go-review` | Verification-only run — run in a **new agent session** from the coder |
+| `@g-go-swarm` | Coordinate multi-agent swarm execution across the backlog |
+| `@g-go-code-swarm` | Multi-agent implementation swarm |
+| `@g-go-review-swarm` | Multi-agent review swarm |
+
+**Release Management**
+
+| Command | What it does |
+|---------|-------------|
+| `@g-release-new` | Create a new release entry in `.galdr/releases/` |
+| `@g-release-assign` | Assign tasks/features to a release |
+| `@g-release-status` | Show current release status and progress |
+| `@g-release-accelerate` | Identify what can be fast-tracked to hit a release target |
+| `@g-release-publish` | Finalize and publish a release (CHANGELOG, VERSION, tag) |
+
 **Maintenance**
 
 | Command | What it does |
 |---------|-------------|
 | `@g-medkit` | `.galdr/` health check, repair, and version migration |
+| `@g-medic` | Targeted repair for a specific `.galdr/` file or subsystem |
+| `@g-tier-setup` | Set up or upgrade galdr tier in a project (slim → full → adv) |
 | `@g-swot-review` | SWOT analysis for the current project phase |
 | `@g-dependency-graph` | Generate DEPENDENCY_GRAPH.md from task dependencies |
 | `@g-cli-cursor` | Cursor CLI reference and usage patterns |
 | `@g-cli-claude` | Claude Code CLI reference and usage patterns |
 | `@g-cli-gemini` | Gemini CLI reference and usage patterns |
+| `@g-cli-codex` | Codex CLI reference and usage patterns |
+| `@g-cli-copilot` | GitHub Copilot CLI reference and usage patterns |
 
 ---
 
@@ -692,7 +725,7 @@ project_id=<generated-uuid>
 project_name=my-project
 user_id=<your-user-id>
 user_name=YourName
-galdr_version=1.2.0
+galdr_version=1.4.0
 ```
 
 ### Vault Location
@@ -815,7 +848,7 @@ To uninstall: delete the skill directories listed in the pack's `PACK.md`.
 ## Design Principles
 
 1. **File-first** — Every feature works without Docker or any external service. MCP tools enhance, never gate.
-2. **Platform parity** — 10 IDE targets stay synchronized (5 root + 5 template). Cursor, Claude Code, Gemini, Codex, and OpenCode get identical skills, agents, and commands.
+2. **Platform parity** — 12 IDE targets stay synchronized (6 root + 6 template). Cursor, Claude Code, Gemini, Codex, OpenCode, and GitHub Copilot get identical skills, agents, and commands.
 3. **Adversarial quality** — Implementation and verification are structurally separated. The same agent cannot do both.
 4. **Memory is durable** — Session history, decisions, and research survive across conversations, machines, and IDE switches.
 5. **Single source of truth** — Task state lives in files, not in agent memory. Any agent opening the project sees the same state.

@@ -8,4 +8,6 @@ Update task status or fields. Activates **g-skl-tasks** → UPDATE STATUS operat
 
 The skill handles: file update, TASKS.md sync, Status History append, subsystem Activity Log update.
 
+> **Unpause alignment check**: when a task transitions from `paused` (`[⏸️]`) → `pending` (`[📋]`), an Alignment Check runs automatically. It scans for stale skill/command/path/subsystem references, collects related work since the pause (git log, completed tasks, DECISIONS.md), and may prompt `(A) Update spec now  (B) Proceed anyway  (C) Cancel unpause` before writing the status change. Age-based escalation: <7d advisory, 7–30d prompt on stale findings, >30d always prompt. See `g-skl-tasks` SKILL.md → *Operation: ALIGNMENT CHECK* for full behavior and the well-known renames table.
+
 > **Alias**: `@g-task-update` also works (deprecated; use `@g-task-upd` for new work).

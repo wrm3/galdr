@@ -8,7 +8,7 @@ description: Generate and update .galdr/SUBSYSTEM_GRAPH.md from subsystem spec f
 - After creating a subsystem with non-empty `dependencies` or `dependents`
 - After updating a subsystem's `dependencies` or `dependents` fields in `g-skl-subsystems`
 - During `@g-dependency-graph --subsystems` or `@g-dependency-graph --all`
-- During `g-skl-medkit` Phase 6 routine maintenance
+- During `g-skl-medic` Phase 6 routine maintenance
 - When user asks for "subsystem graph", "subsystem dependencies", "which subsystems depend on which"
 - Explicit: `@g-subsystem-graph`
 
@@ -183,7 +183,7 @@ No dependency data recorded. May need updating.
 This skill is triggered by:
 1. **g-skl-subsystems** — after adding/updating a subsystem with dependency changes (call explicitly after writing the subsystem file)
 2. **g-skl-dependency-graph** — when invoked with `--subsystems` or `--all` flag (dispatcher delegates here)
-3. **g-skl-medkit** — Phase 6 routine maintenance
+3. **g-skl-medic** — Phase 6 routine maintenance
 4. **`@g-subsystem-graph`** command — direct invocation
 
 The graph is always regenerated from scratch (not incrementally) to avoid drift.

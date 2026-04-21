@@ -150,7 +150,24 @@ Before confirming, check if `pending_orders/` contains any orders staged for the
 - If yes: deliver each staged order (create task + append INBOX) and move to `pending_orders/delivered/`
 - If no: leave staged; `g-skl-pcac-order` will deliver at next run
 
-### 9. Confirm
+### 9. Offer ecosystem-wide constraint sync
+
+After topology link is established, offer to sync `ecosystem-wide` constraints bidirectionally:
+
+1. Read `ecosystem-wide` constraints from current project's `CONSTRAINTS.md`
+2. Read `ecosystem-wide` constraints from target project's `CONSTRAINTS.md` (skip if `--one-way`)
+3. If there are constraints in scope that the target lacks:
+   ```
+   Current project has N ecosystem-wide constraints the child doesn't have yet:
+     C-001 [file-first-vault] (ecosystem-wide)
+     C-007 [no-secrets] (ecosystem-wide)
+   Propagate these to <target_project_name>? [y/n]
+   ```
+4. If **y**: copy constraints to target's `CONSTRAINTS.md` with `**Inherited from**:` field
+5. Reverse check: if target has `ecosystem-wide` constraints current project lacks, offer to sync those too
+6. **Skip silently** if both projects are missing `**Scope**:` fields (backward compatible)
+
+### 10. Confirm
 ```
 ADOPTED ✓
   Parent  : <current_project_name> (<current_project_path>)

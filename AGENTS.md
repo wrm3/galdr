@@ -178,7 +178,7 @@ This project is both a live galdr workspace and a source of installable framewor
 
 ## galdr Version
 
-**galdr version**: 1.2.0
+**galdr version**: 1.4.0
 **Supported IDEs**: Cursor, Claude Code, Gemini, Codex, OpenCode
 
 ---

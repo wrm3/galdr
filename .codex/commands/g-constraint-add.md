@@ -15,10 +15,13 @@ Run this command when you want to formalize a new non-negotiable architectural r
 
 The skill will:
 1. Assign the next sequential C-ID
-2. Prompt for name, rationale, applies-to, in-practice rules, violation examples, enforcement
-3. Update `## Constraint Index` table
-4. Add full `## Constraint Definitions` block
-5. Append entry to `## Change Log`
+2. Prompt for name, rationale, applies-to, in-practice rules, violation examples, enforcement, scope
+3. *(Optional)* Offer expiry fields: `expires_at` (date), `resolved_when_task` (task ID), `resolved_when_feature` (feature slug), `resolved_when` (free-text condition), `auto_archive` (default: true)
+4. Update `## Constraint Index` table
+5. Add full `## Constraint Definitions` block (with optional expiry fields)
+6. Append entry to `## Change Log`
+
+**Note**: Expiry fields are for temporary constraints only (migration guards, sprint policies). Permanent architectural rules should never have expiry. The skill warns if `scope: ecosystem-wide` constraints have expiry set.
 
 ## Usage
 

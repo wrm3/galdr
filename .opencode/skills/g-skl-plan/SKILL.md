@@ -1,20 +1,20 @@
 ---
 name: g-skl-plan
-description: Own and manage PLAN.md (master strategy) and prds/ (individual PRD files) — create plans, write PRDs, validate scope, and keep the deliverable index current.
+description: Own and manage PLAN.md (master strategy) and features/ (individual Feature files) — create plans, stage features, validate scope, and keep the deliverable index current.
 ---
 # g-plan
 
-**Files Owned**: `.galdr/PLAN.md`, `.galdr/PRDS.md`, `.galdr/prds/prdNNN_*.md`
+**Files Owned**: `.galdr/PLAN.md`, `.galdr/FEATURES.md`, `.galdr/features/*.md`
 
-**Activate for**: "create plan", "write PRD", "define requirements", "what's the plan", "update PLAN.md", "new PRD".
+**Activate for**: "create plan", "new feature", "stage feature", "define requirements", "what's the plan", "update PLAN.md", "write PRD", "spec this out".
 
-**Hierarchy**: `PLAN.md` is the master strategy above individual PRDs. `PRDS.md` is the index. Each `prds/prdNNN_*.md` is a focused requirements document.
+**Hierarchy**: `PLAN.md` is the master strategy. `FEATURES.md` is the feature index. Each `features/*.md` is a staged feature moving through: `staging → specced → committed → shipped`.
 
 ---
 
 ## Operation: CREATE / UPDATE PLAN.md
 
-`PLAN.md` is the one-page strategy doc — deliverable index, build order, milestone history. Kept short; details live in PRDs.
+`PLAN.md` is the one-page strategy doc — deliverable index, build order, milestone history. Kept short; details live in Feature files.
 
 ```markdown
 # PLAN.md — {project_name} Master Plan
@@ -26,116 +26,109 @@ description: Own and manage PLAN.md (master strategy) and prds/ (individual PRD 
 
 | ID | Title | Status | Subsystems | Notes |
 |----|-------|--------|------------|-------|
-| PRD-001 | Foundation | active | task-mgmt, setup | Started 2026-01-01 |
+| feat-001 | Foundation | shipped | task-mgmt, setup | Completed 2026-01-01 |
 
 ## Build Order
 
 ### Active Work
-{List active PRDs with priority}
+{List committed/specced features with priority}
 
 ### Completed
-{List completed PRDs}
+{List shipped features}
 
 ## Milestone History
 {Record major direction changes with dates}
 ```
 
-> **MANDATORY FOLLOW-THROUGH**: If you add any PRD rows to the Deliverable Index,
+> **MANDATORY FOLLOW-THROUGH**: If you add any feature rows to the Deliverable Index,
 > you MUST in the same response:
-> 1. Create each referenced PRD file at `.galdr/prds/prdNNN_descriptive_name.md` (use the CREATE PRD operation below)
-> 2. Add each PRD to `PRDS.md` index
+> 1. Create each referenced Feature file at `.galdr/features/featNNN_descriptive_name.md` (use the STAGE FEATURE operation below)
+> 2. Add each Feature to `FEATURES.md` index
 >
-> Do NOT leave PLAN.md referencing PRDs that don't have files. "Draft or refine as needed" is NOT acceptable during initial setup — create them now.
+> Do NOT leave PLAN.md referencing features that don't have files.
 
 ---
 
-## Operation: CREATE PRD
+## Operation: STAGE FEATURE (new feature, defaults to staging)
 
-1. **Scope validation** (ask before writing anything):
-   1. Personal / small team (2-10) / broader deployment (10+)?
-   2. Security: minimal / standard / enhanced / enterprise?
-   3. Scalability: basic / moderate / high / enterprise?
-   4. Feature complexity: minimal / standard / feature-rich?
-   5. Integrations: standalone / basic / standard?
+1. **Scope check** (ask before writing anything):
+   1. What user-visible capability does this enable?
+   2. Which subsystems are affected?
+   3. What approach(es) have been identified?
 
-2. **Determine next PRD ID**: read `PRDS.md`, find highest PRD-NNN → increment
+2. **Determine next Feature ID**: read `FEATURES.md`, find highest feat-NNN → increment
 
-3. **Gather requirements** (27-question framework if needed):
-   - Project context (Q1-7): problem, success, users, scale, frequency
-   - Technical (Q8-16): deployment, security, performance, data
-   - Features (Q17-22): MVP, nice-to-have, avoid, priorities
-   - Timeline (Q23-27): drivers, delivery, constraints
-
-4. **Identify shared modules** BEFORE writing feature sections:
-   "What logic will be needed by 2+ features/subsystems?" → plan extraction to `lib/` first
-
-5. **Create PRD file** at `.galdr/prds/prdNNN_descriptive_name.md`:
-```markdown
+3. **Create Feature file** at `.galdr/features/featNNN_descriptive_name.md`:
+```yaml
 ---
-id: NNN
-title: 'PRD Title'
-status: draft | active | completed | cancelled
-subsystems: [affected-subsystems]
+id: feat-NNN
+title: 'Feature Title'
+status: staging          # staging | specced | committed | shipped
+goal: ''                 # optional: G-NN from PROJECT.md
+min_tier: slim           # slim | full | adv
+subsystems: []
+harvest_sources: []
 created_date: 'YYYY-MM-DD'
+promoted_date: ''
+committed_date: ''
+completed_date: ''
 ---
 
-# PRD-NNN: [Title]
+# Feature: {title}
 
-## 1. Product Overview
-### 1.1 Summary
-### 1.2 Goals
-- **Business**: [outcome]
-- **User**: [outcome]
-- **Non-Goals**: [what we're NOT building]
+## Summary
+[1-3 sentence description of the user-visible capability]
 
-## 2. User Personas
-[Who uses this feature]
+## Collected Approaches
+<!-- approaches gathered from harvest tools, discussions, research -->
 
-## 3. Acceptance Criteria
-- [ ] [Measurable outcome 1]
-- [ ] [Measurable outcome 2]
+## Potential Deliverables
+- Deliverable 1
 
-## 4. Milestones
-| Milestone | Tasks | Target |
-|---|---|---|
-| M1: [name] | Task NNN, NNN | YYYY-MM-DD |
-
-## 5. Technical Considerations
-### Shared Modules
-[Logic needed by 2+ subsystems — extract before implementing]
-
-## 6. Success Metrics
-[How we know this PRD is done]
+## Draft Tasks
+<!-- populated manually when promoting to specced -->
+- [ ] Task: description
 ```
 
-6. **Add to PRDS.md** index (atomic):
-   ```
-   | PRD-NNN | Title | draft | subsystem1, subsystem2 | |
-   ```
+4. **Add to FEATURES.md** index under Staging section
 
-7. **Add to PLAN.md** Deliverable Index
-
-8. **Offer initial tasks** — activate g-tasks CREATE for first milestone tasks
+5. **Optionally add to PLAN.md** Deliverable Index if strategically significant
 
 ---
 
-## Operation: UPDATE PRD STATUS
+## Operation: SPEC FEATURE (staging → specced)
 
-Update status in the PRD file YAML and sync to `PRDS.md` index row.
-
-Status flow: `draft → active → completed | cancelled`
+When enough research exists, promote staging → specced by:
+1. Updating `status: specced` in the feature file YAML
+2. Adding `promoted_date: YYYY-MM-DD`
+3. Filling in formal Acceptance Criteria
+4. Moving feature row in `FEATURES.md` to Specced section
 
 ---
 
-## PRDS.md Structure
+## Operation: UPDATE FEATURE STATUS
+
+Status flow: `staging → specced → committed → shipped`
+
+Update status in the Feature file YAML and sync to `FEATURES.md` index row.
+
+---
+
+## FEATURES.md Structure
 
 ```markdown
-# PRDS.md — {project_name}
+# FEATURES.md — {project_name}
 
-## PRD Index
+## Features Index
 
-| ID | Title | Status | Subsystems | Notes |
-|----|-------|--------|------------|-------|
+### Shipped
+| ID | Title | Status | Tasks | Notes |
 
-<!-- Status: draft | active | completed | cancelled -->
+### Committed
+| ID | Title | Status | Tasks | Notes |
+
+### Staging / Specced
+| ID | Title | Status | Notes |
+
+<!-- Status: staging | specced | committed | shipped -->
 ```

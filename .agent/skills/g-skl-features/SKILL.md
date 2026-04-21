@@ -27,8 +27,22 @@ created_date: 'YYYY-MM-DD'
 promoted_date: ''        # date moved from staging → specced
 committed_date: ''       # date first task created (specced → committed)
 completed_date: ''       # date last task verified (committed → shipped)
+# Optional — only present when this feature gates on a cross-project order:
+cross_project_ref:
+  - order_id: "ord-abc123"          # links to .galdr/linking/sent_orders/order_*.md
+    project: "child_project_id"
+    remote_task_title: "Implement JWT auth endpoint"
+    status: in-progress             # cached from last sync; updated by g-skl-pcac-read
+    last_synced: "YYYY-MM-DD"
 ---
 ```
+
+**`cross_project_ref:` semantics**:
+- Optional field. Missing or empty list = no cross-project dependency.
+- Populated when the feature requires work in a child/sibling project that was dispatched via `@g-pcac-order`.
+- Each entry's `status` is a cached snapshot — the authoritative status lives in the matching `.galdr/linking/sent_orders/order_*.md` ledger record.
+- `g-skl-pcac-read` updates the cached `status` and `last_synced` automatically when a `broadcast_completion` ping arrives from the remote project.
+- Session start (`g-rl-25`) and `@g-pcac-status` surface features with at least one entry where `status` is not `completed` as externally-gated.
 
 **Feature body sections**:
 - `## Summary` — 1-3 sentences: what user-visible capability this delivers
@@ -263,4 +277,91 @@ IDEA → [staging] → [specced] → [committed] → [shipped]
 
 **With `g-skl-plan`**: PLAN.md Deliverable Index references feat-NNN IDs for strategic features.
 
-**With `g-skl-medkit`**: upgrade detection — finds projects with `prds/` folder and no `features/` → offers migration.
+**With `g-skl-medic`**: upgrade detection — finds projects with `prds/` folder and no `features/` → offers migration.
+
+---
+
+## Cross-Project Split Check on STAGE (T119)
+
+When **STAGE** is invoked (after step 2 scope check, before writing the file), perform a topology split check identical to the one in `g-skl-tasks` CREATE — but applied to the feature being staged.
+
+### Split Check Steps
+
+```
+1. Load topology from .galdr/linking/link_topology.md (if exists)
+2. Extract domain tags from feature title + summary
+3. Cross-check domains against peer capabilities
+4. If a domain belongs to another project → suggest split or cross-project staging
+5. If a domain has no owner → suggest spawn
+```
+
+### Feature Split Suggestion Format
+
+```
+⚡ TOPOLOGY CHECK: This feature spans domains that may belong elsewhere:
+
+  Domain "frontend" → galdr_frontend owns this capability
+  Domain "real-time" → no project owns this — consider spawning
+
+Options:
+  [1] Stage here (single-project feature)
+  [2] Stage as cross-project feature with cross_project_ref slug
+  [3] Stage cross-project + spawn new project for unowned capability
+  [s] Skip topology check
+
+Choice [1/2/3/s]:
+```
+
+### Cross-Project Feature Staging (Option 2 or 3)
+
+When user confirms cross-project staging, add `cross_project_ref:` to the feature YAML:
+
+```yaml
+---
+id: feat-NNN
+title: 'Feature Title'
+status: staging
+goal: ''
+min_tier: slim
+subsystems: []
+harvest_sources: []
+cross_project_ref: "domain-feature-slug"   # shared canonical name across participating projects
+participating_projects:
+  - "this-project-slug"
+  - "galdr_frontend"
+created_date: 'YYYY-MM-DD'
+promoted_date: ''
+committed_date: ''
+completed_date: ''
+---
+```
+
+Then send a **`[BROADCAST]` INBOX notification** to each participating peer project:
+
+```
+[BROADCAST] New cross-project feature staged: "{title}"
+cross_project_ref: "domain-feature-slug"
+This project is co-owner. Stage your slice in your features/ to track progress.
+Originator: {this-project-slug}
+```
+
+### `cross_project_ref` Slug Convention
+
+- Format: `{primary-domain}-{short-description}` (kebab-case, max 40 chars)
+- Examples: `auth-unified-login`, `data-pipeline-etl`, `frontend-dashboard-v2`
+- ALL participating projects must use the **identical** slug string
+- `g-pcac-status` displays cross-project features grouped by their `cross_project_ref` slug
+
+### `cross_project_ref` Status Tracking
+
+When `g-skl-features STATUS` is called and any features have `cross_project_ref`:
+
+```
+📡 Cross-Project Features:
+  "auth-unified-login"
+    → galdr_full:     [committed] feat-090
+    → galdr_frontend: [staging]   feat-012 (last sync: 2026-04-18)
+    → galdr_valhalla: [specced]   feat-047 (last sync: 2026-04-20)
+```
+
+Peer statuses are cached from the last PCAC sync; `[unknown]` if never synced.

@@ -121,5 +121,5 @@ If code files were modified and no task or bug is referenced — create a retroa
 
 ---
 
-**galdr version**: 1.2.0
+**galdr version**: 1.4.0
 **Supported IDEs**: Cursor, Claude Code, Gemini, Codex, OpenCode

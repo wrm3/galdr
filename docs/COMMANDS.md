@@ -53,14 +53,14 @@ All commands are thin wrappers — they activate the underlying skill. See `docs
 
 | Command | Activates Skill | Description |
 |---------|----------------|-------------|
-| `g-medkit` | `g-skl-medkit` | Health check, repair, or upgrade `.galdr/` |
+| `g-medic` | `g-skl-medic` | Health check, repair, or upgrade `.galdr/` |
 | `g-setup` | `g-skl-setup` | Initialize galdr in a project |
 | `g-report` | `g-skl-report` | Generate a project health report |
 | `g-swot-review` | `g-skl-swot-review` | Run SWOT analysis on the project |
 
 > **Deprecated** (now route to `g-medkit`):
-> - `@g-cleanup` → use `@g-medkit` instead
-> - `@g-grooming` → use `@g-medkit` instead
+> - `@g-cleanup` → use `@g-medic` instead
+> - `@g-grooming` → use `@g-medic` instead
 
 ---
 
@@ -87,9 +87,9 @@ All commands are thin wrappers — they activate the underlying skill. See `docs
 
 ## Usage Notes
 
-- **Cursor**: `@g-task-new`, `@g-medkit`, `@g-status`
-- **Claude Code**: `/g-task-new`, `/g-medkit`, `/g-status`
-- **OpenCode**: `/g-task-new`, `/g-medkit`, `/g-status`
-- **Gemini (.agent/workflows/)**: `/g-task-new`, `/g-medkit`, `/g-status`
+- **Cursor**: `@g-task-new`, `@g-medic`, `@g-status`
+- **Claude Code**: `/g-task-new`, `/g-medic`, `/g-status`
+- **OpenCode**: `/g-task-new`, `/g-medic`, `/g-status`
+- **Gemini (.agent/workflows/)**: `/g-task-new`, `/g-medic`, `/g-status`
 
 All platforms use the same `g-` command names. In Gemini, commands are backed by workflow files in `.agent/workflows/` rather than `.agent/commands/`, but the user-facing slash invocation is identical.

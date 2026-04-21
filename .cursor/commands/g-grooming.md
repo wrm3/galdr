@@ -1,3 +1,3 @@
-Deprecated — use **g-medkit** instead.
+Deprecated — use **g-medic** instead.
 
-@g-medkit handles all cleanup, grooming, and upgrade operations.
+@g-medic handles all cleanup, grooming, and upgrade operations.

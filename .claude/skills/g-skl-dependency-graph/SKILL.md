@@ -1,16 +1,40 @@
 ---
 name: g-skl-dependency-graph
-description: Generate and update .galdr/DEPENDENCY_GRAPH.md from task file dependencies. Auto-triggered when tasks are created or updated with dependency changes. Also callable via @g-dependency-graph.
+description: Generate and update dependency graphs for galdr artifacts. Dispatches to task graph (.galdr/DEPENDENCY_GRAPH.md) or subsystem graph (.galdr/SUBSYSTEM_GRAPH.md) based on flags or context. Auto-triggered when tasks or subsystems are created/updated with dependency changes. Also callable via @g-dependency-graph.
 ---
 # galdr-dependency-graph
 
-## When to Use
+## Dispatcher Routing
+
+This skill is the unified entry point for all dependency graph generation.
+
+| Invocation | Behavior |
+|------------|----------|
+| `@g-dependency-graph` | Auto-detect from context: subsystem flow → subsystem graph; task flow or no context → task graph |
+| `@g-dependency-graph --tasks` | Task graph only → `.galdr/DEPENDENCY_GRAPH.md` |
+| `@g-dependency-graph --subsystems` | Subsystem graph only → `.galdr/SUBSYSTEM_GRAPH.md` (reads `g-skl-subsystem-graph`) |
+| `@g-dependency-graph --all` | Both graphs in sequence |
+
+**Context auto-detection rules:**
+- If the triggering action involved `.galdr/subsystems/` files → route to `--subsystems`
+- If the triggering action involved `.galdr/tasks/` files → route to `--tasks`
+- If invoked directly with no flag → run `--tasks` (default, preserves existing behavior)
+- If `--all` → run `--tasks` first, then `--subsystems`
+
+For `--subsystems` or the subsystem branch of `--all`, read and follow [`g-skl-subsystem-graph`](./../g-skl-subsystem-graph/SKILL.md) in full.
+
+---
+
+## Task Dependency Graph
+
+*The following sections apply when running in `--tasks` mode (the default).*
+
+### When to Use
 - After creating a task with `dependencies: [...]`
 - After updating a task's `dependencies` field
 - During `@g-cleanup` (Step 8)
 - When user asks for "dependency graph", "task dependencies", "what blocks what"
-
-## Generation Steps
+- Explicit: `@g-dependency-graph --tasks`
 
 ### 1. Collect Task Data
 Read all `.galdr/tasks/task*.md` files. For each, extract from YAML frontmatter:
@@ -117,7 +141,7 @@ graph TD
 
 ---
 
-*Auto-regenerated on task dependency changes. Manual: `@g-dependency-graph`*
+*Auto-regenerated on task dependency changes. Manual: `@g-dependency-graph --tasks`*
 ```
 
 ## Integration Points
@@ -125,7 +149,9 @@ graph TD
 This skill is triggered by:
 1. **g-skl-tasks** — after creating a task with non-empty `dependencies`
 2. **g-skl-tasks** — after updating a task's `dependencies` field
-3. **g-skl-medkit** — Phase 6 routine maintenance
-4. **`@g-dependency-graph`** command — direct invocation
+3. **g-skl-subsystems** — after adding/updating a subsystem with dependency changes (routes to `--subsystems`)
+4. **g-skl-medic** — Phase 6 routine maintenance (runs `--all`)
+5. **`@g-dependency-graph`** command — direct invocation with optional flags
 
 The graph is always regenerated from scratch (not incrementally) to avoid drift.
+

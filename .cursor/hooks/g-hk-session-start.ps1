@@ -143,6 +143,22 @@ if ($VaultMessages.Count -gt 0) {
 
 $vaultBanner += "`n---`n"
 
+# ── Vault raw inbox check ─────────────────────────────────────────────────────
+$rawInboxBanner = ""
+try {
+    $rawPath = Join-Path $VaultPath "raw"
+    if (Test-Path $rawPath) {
+        $rawFiles = @(
+            Get-ChildItem -Path $rawPath -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -ne "README.md" }
+        )
+        if ($rawFiles.Count -gt 0) {
+            $rawInboxBanner = "- 📥 $($rawFiles.Count) file(s) in vault raw/ inbox — drop processed via ``@g-vault-process-inbox`` (planned) or route manually via ``g-skl-ingest-*```n"
+            $vaultBanner += $rawInboxBanner
+        }
+    }
+} catch {}
+
 # ── Cross-project INBOX check ─────────────────────────────────────────────────
 $inboxBanner = ""
 try {
